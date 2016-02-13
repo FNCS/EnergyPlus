@@ -8,6 +8,12 @@ import json
 
 TOOL_NAME = 'license-check'
 
+print(json.dumps({'tool':TOOL_NAME,
+                  'file':'LICENSE.txt',
+                  'line':1,
+                  'messagetype':'error',
+                  'message':'Test error message'}))
+
 #
 # Directories to check
 #
