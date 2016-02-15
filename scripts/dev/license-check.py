@@ -9,7 +9,7 @@ import json
 TOOL_NAME = 'license-check'
 
 print(json.dumps({'tool':TOOL_NAME,
-                  'file':'LICENSE.txt',
+                  'filename':'LICENSE.txt',
                   'line':1,
                   'messagetype':'error',
                   'message':'Test error message'}))
@@ -116,13 +116,13 @@ class Checker:
             else:
                 if n > 1:
                     messages.append({'tool':TOOL_NAME,
-                                     'file':file,
+                                     'filename':file,
                                      'line':1,
                                      'messagetype':'error',
                                      'message':'Multiple instances of license text'})
                 if not txt.startswith(self.text):
                     messages.append({'tool':TOOL_NAME,
-                                     'file':file,
+                                     'filename':file,
                                      'line':1,
                                      'messagetype':'error',
                                      'message':'License text is not at top of file'})
@@ -145,7 +145,7 @@ filetxt = ''.join(filetxt.split())
 lictxt = ''.join(oldtxt.replace('//','').split())
 if filetxt != lictxt:
     messages.append({'tool':TOOL_NAME,
-                     'file':'LICENSE.txt',
+                     'filename':'LICENSE.txt',
                      'line':1,
                      'messagetype':'error',
                      'message':'LICENSE.txt does not match'})
