@@ -414,8 +414,7 @@ EndEnergyPlus()
 	using General::RoundSigDigits;
 	using SolarShading::ReportSurfaceErrors;
 	using ExternalInterface::NumExternalInterfaces;
-	using ExternalInterface::CloseSocket;
-	using ExternalInterface::haveExternalInterfaceBCVTB;
+	using ExternalInterface::CloseExternalInterface;
 
 	// Locals
 	// SUBROUTINE ARGUMENT DEFINITIONS:
@@ -496,7 +495,7 @@ EndEnergyPlus()
 	CloseOutOpenFiles();
 	// Close the ExternalInterface socket. This call also sends the flag "1" to the ExternalInterface,
 	// indicating that E+ finished its simulation
-	if ( ( NumExternalInterfaces > 0 ) && haveExternalInterfaceBCVTB ) CloseSocket( 1 );
+    if ( NumExternalInterfaces > 0 ) CloseExternalInterface();
 	std::cerr << "EnergyPlus Completed Successfully." << std::endl; std::exit( EXIT_SUCCESS );
 
 }

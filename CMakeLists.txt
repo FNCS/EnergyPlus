@@ -39,6 +39,14 @@ else()
   set(GIT_DIR "")
 endif()
 
+find_package(FNCS)
+if (FNCS_FOUND)
+    message( "FNCS found, including ${FNCS_INCLUDE_DIRS}" )
+    message( "FNCS found, including ${FNCS_LIBRARIES}" )
+    add_definitions(-DFNCS)
+include_directories(${FNCS_INCLUDE_DIRS})
+endif ()
+
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to 'Release' as none was specified.")
