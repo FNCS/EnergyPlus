@@ -290,11 +290,13 @@ namespace ExternalInterface {
 	extern FArray1D< checkFMUInstanceNameType > checkInstanceName; // Variable Types structure for checking instance names
 	extern int NumExternalInterfaces; //Number of ExternalInterface objects
 	extern int NumExternalInterfacesBCVTB; //Number of BCVTB ExternalInterface objects
+	extern int NumExternalInterfacesFNCS; //Number of FNCS ExternalInterface objects
 	extern int NumExternalInterfacesFMUImport; //Number of FMU ExternalInterface objects
 	extern int NumExternalInterfacesFMUExport; //Number of FMU ExternalInterface objects
 	extern int NumFMUObjects; //Number of FMU objects
 	extern int FMUExportActivate; //FMU Export flag
 	extern bool haveExternalInterfaceBCVTB; //Flag for BCVTB interface
+	extern bool haveExternalInterfaceFNCS; //Flag for FNCS interface
 	extern bool haveExternalInterfaceFMUImport; //Flag for FMU-Import interface
 	extern bool haveExternalInterfaceFMUExport; //Flag for FMU-Export interface
 	extern int simulationStatus; // Status flag. Used to report during
@@ -305,6 +307,8 @@ namespace ExternalInterface {
 	extern FArray1D< int > varTypes; // Types of variables in keyVarIndexes
 	extern FArray1D< int > varInd; // Index of ErlVariables for ExternalInterface
 	extern int socketFD; // socket file descriptor
+	extern bool fncsInitialized; // Set to true once fncs::initialize() returns
+	extern bool fncsEncode; // Set to true if subscriptions can't use spaces
 	extern bool ErrorsFound; // Set to true if errors are found
 	extern bool noMoreValues; //Flag, true if no more values
 	// will be sent by the server
@@ -323,17 +327,26 @@ namespace ExternalInterface {
 	ExternalInterfaceExchangeVariables();
 
 	void
-	CloseSocket( int const FlagToWriteToSocket ); 
+	CloseSocket( int const FlagToWriteToSocket );
+
+	void
+	CloseExternalInterface( int const FlagToWriteToSocket );
 
 	void
 	InitExternalInterface();
-	
+
+	void
+	InitExternalInterfaceFNCS();
+
 	void
 	GetExternalInterfaceInput();
 	
 	void
 	CalcExternalInterface();
-	
+
+	void
+	CalcExternalInterfaceFNCS();
+
 	void
 	ParseString(
 		std::string const & str,

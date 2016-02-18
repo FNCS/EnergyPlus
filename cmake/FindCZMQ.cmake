@@ -1,0 +1,26 @@
+include(FindPkgConfig)
+PKG_CHECK_MODULES(PC_CZMQ "libczmq")
+
+find_path(
+    CZMQ_INCLUDE_DIR
+    NAMES czmq.h
+    HINTS ${PC_CZMQ_INCLUDEDIR} ${PC_CZMQ_INCLUDE_DIRS}
+)
+
+find_library(
+    CZMQ_LIBRARY
+    NAMES czmq
+    HINTS ${PC_CZMQ_LIBDIR} ${PC_CZMQ_LIBRARY_DIRS}
+)
+
+find_package(ZeroMQ)
+if (ZEROMQ_FOUND)
+    message("ZEROMQ found")
+endif ()
+
+set(CZMQ_LIBRARIES ${CZMQ_LIBRARY} ${ZEROMQ_LIBRARIES})
+set(CZMQ_INCLUDE_DIRS ${CZMQ_INCLUDE_DIR} ${ZEROMQ_INCLUDE_DIRS})
+
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(CZMQ DEFAULT_MSG CZMQ_LIBRARY CZMQ_INCLUDE_DIR)
+mark_as_advanced(CZMQ_LIBRARY CZMQ_INCLUDE_DIR)
