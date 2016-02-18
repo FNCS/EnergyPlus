@@ -5,6 +5,19 @@ extern "C" {
 #include <BCVTB/utilXml.h>
 }
 
+#ifdef FNCS
+#include "fncs.hpp"
+
+#include <algorithm>
+static inline std::string& fncs_encode(std::string &name) {
+    std::replace(name.begin(), name.end(), ' ', '+');
+    return name;
+}
+static inline std::string& fncs_decode(std::string &name) {
+    std::replace(name.begin(), name.end(), '+', ' ');
+    return name;
+}
+#endif
 
 // C++ Headers
 #include <string>
@@ -18,6 +31,7 @@ extern "C" {
 #include <ExternalInterface.hh>
 #include <DataEnvironment.hh>
 #include <DataIPShortCuts.hh>
+#include <DataOutputs.hh>
 #include <DataPrecisionGlobals.hh>
 #include <DataStringGlobals.hh>
 #include <DataSystemVariables.hh>
@@ -80,11 +94,13 @@ namespace ExternalInterface {
 
 	int NumExternalInterfaces( 0 ); // Number of ExternalInterface objects
 	int NumExternalInterfacesBCVTB( 0 ); // Number of BCVTB ExternalInterface objects
+	int NumExternalInterfacesFNCS( 0 ); // Number of FNCS ExternalInterface objects
 	int NumExternalInterfacesFMUImport( 0 ); // Number of FMU ExternalInterface objects
 	int NumExternalInterfacesFMUExport( 0 ); // Number of FMU ExternalInterface objects
 	int NumFMUObjects( 0 ); // Number of FMU objects
 	int FMUExportActivate( 0 ); // FMU Export flag
 	bool haveExternalInterfaceBCVTB( false ); // Flag for BCVTB interface
+	bool haveExternalInterfaceFNCS( false ); // Flag for FNCS interface
 	bool haveExternalInterfaceFMUImport( false ); // Flag for FMU-Import interface
 	bool haveExternalInterfaceFMUExport( false ); // Flag for FMU-Export interface
 	int simulationStatus( 1 ); // Status flag. Used to report during
@@ -95,6 +111,8 @@ namespace ExternalInterface {
 	Array1D_int varTypes; // Types of variables in keyVarIndexes
 	Array1D_int varInd; // Index of ErlVariables for ExternalInterface
 	int socketFD( -1 ); // socket file descriptor
+    bool fncsInitialized( false ); // Set to true once fncs::initalize() returns
+    bool fncsEncode( false ); // Set to true if subscriptions can't use spaces
 	bool ErrorsFound( false ); // Set to true if errors are found
 	bool noMoreValues( false ); // Flag, true if no more values
 	// will be sent by the server
@@ -154,6 +172,16 @@ namespace ExternalInterface {
 			}
 		}
 
+        if ( haveExternalInterfaceFNCS ) {
+            InitExternalInterfaceFNCS();
+			// Exchange data only after sizing and after warm-up.
+			// Note that checking for ZoneSizingCalc SysSizingCalc does not work here, hence we
+			// use the KindOfSim flag
+			if ( !WarmupFlag && ( KindOfSim == ksRunPeriodWeather ) ) {
+				CalcExternalInterfaceFNCS();
+			}
+        }
+
 		if ( haveExternalInterfaceFMUImport ) {
 			char * errorMessagePtr( &errorMessage[0] );
 			retValErrMsg = checkOperatingSystem( errorMessagePtr );
@@ -211,6 +239,8 @@ namespace ExternalInterface {
 			GetObjectItem( cCurrentModuleObject, Loop, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames );
 			if ( SameString( cAlphaArgs( 1 ), "PtolemyServer" ) ) { // The BCVTB interface is activated.
 				++NumExternalInterfacesBCVTB;
+            } else if ( SameString( cAlphaArgs( 1 ), "FNCS" ) ) { // The FNCS interface is activated.
+				++NumExternalInterfacesFNCS;
 			} else if ( SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitImport" ) ) { // The functional mock up unit import interface is activated.
 				++NumExternalInterfacesFMUImport;
 			} else if ( SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitExport" ) ) { // The functional mock up unit export interface is activated.
@@ -219,7 +249,7 @@ namespace ExternalInterface {
 		}
 
 		// Check if objects are used although BCVTB interface object is not defined
-		if ( NumExternalInterfacesBCVTB == 0 ) {
+		if ( NumExternalInterfacesBCVTB == 0 && NumExternalInterfacesFNCS == 0 ) {
 			WarnIfExternalInterfaceObjectsAreUsed( "ExternalInterface:Schedule" );
 			WarnIfExternalInterfaceObjectsAreUsed( "ExternalInterface:Variable" );
 			WarnIfExternalInterfaceObjectsAreUsed( "ExternalInterface:Actuator" );
@@ -239,7 +269,7 @@ namespace ExternalInterface {
 			WarnIfExternalInterfaceObjectsAreUsed( "ExternalInterface:FunctionalMockupUnitImport:To:Actuator" );
 		}
 
-		if ( ( NumExternalInterfacesBCVTB == 1 ) && ( NumExternalInterfacesFMUExport == 0 ) ) {
+		if ( ( NumExternalInterfacesBCVTB == 1 ) && ( NumExternalInterfacesFNCS == 0 ) && ( NumExternalInterfacesFMUExport == 0 ) ) {
 			haveExternalInterfaceBCVTB = true;
 			DisplayString( "Instantiating Building Controls Virtual Test Bed" );
 			varKeys.allocate( maxVar ); // Keys of report variables used for data exchange
@@ -247,7 +277,15 @@ namespace ExternalInterface {
 			inpVarTypes.dimension( maxVar, 0 ); // Names of report variables used for data exchange
 			inpVarNames.allocate( maxVar ); // Names of report variables used for data exchange
 			VerifyExternalInterfaceObject();
-		} else if ( ( NumExternalInterfacesBCVTB == 0 ) && ( NumExternalInterfacesFMUExport == 1 ) ) {
+        } else if ( ( NumExternalInterfacesBCVTB == 0 ) && ( NumExternalInterfacesFNCS == 1 ) && ( NumExternalInterfacesFMUExport == 0 ) ) {
+			haveExternalInterfaceFNCS = true;
+			DisplayString( "Instantiating Framework for Network Co-Simulation" );
+			varKeys.allocate( maxVar ); // Keys of report variables used for data exchange
+			varNames.allocate( maxVar ); // Names of report variables used for data exchange
+			inpVarTypes.dimension( maxVar, 0 ); // Names of report variables used for data exchange
+			inpVarNames.allocate( maxVar ); // Names of report variables used for data exchange
+			VerifyExternalInterfaceObject();
+		} else if ( ( NumExternalInterfacesBCVTB == 0 ) && ( NumExternalInterfacesFNCS == 0 ) && ( NumExternalInterfacesFMUExport == 1 ) ) {
 			haveExternalInterfaceFMUExport = true;
 			FMUExportActivate = 1;
 			DisplayString( "Instantiating FunctionalMockupUnitExport interface" );
@@ -258,6 +296,12 @@ namespace ExternalInterface {
 			VerifyExternalInterfaceObject();
 		} else if ( ( NumExternalInterfacesBCVTB == 1 ) && ( NumExternalInterfacesFMUExport != 0 ) ) {
 			ShowSevereError( "GetExternalInterfaceInput: Cannot have Ptolemy and FMU-Export interface simultaneously." );
+			ErrorsFound = true;
+		} else if ( ( NumExternalInterfacesBCVTB == 1 ) && ( NumExternalInterfacesFNCS != 0 ) ) {
+			ShowSevereError( "GetExternalInterfaceInput: Cannot have Ptolemy and FNCS interface simultaneously." );
+			ErrorsFound = true;
+		} else if ( ( NumExternalInterfacesFNCS == 1 ) && ( NumExternalInterfacesFMUExport != 0 ) ) {
+			ShowSevereError( "GetExternalInterfaceInput: Cannot have FNCS and FMU-Export interface simultaneously." );
 			ErrorsFound = true;
 		}
 
@@ -274,6 +318,12 @@ namespace ExternalInterface {
 
 		if ( NumExternalInterfacesBCVTB > 1 ) {
 			ShowSevereError( "GetExternalInterfaceInput: Cannot have more than one Ptolemy interface." );
+			ShowContinueError( "GetExternalInterfaceInput: Errors found in input." );
+			ErrorsFound = true;
+		}
+
+		if ( NumExternalInterfacesFNCS > 1 ) {
+			ShowSevereError( "GetExternalInterfaceInput: Cannot have more than one FNCS interface." );
 			ShowContinueError( "GetExternalInterfaceInput: Errors found in input." );
 			ErrorsFound = true;
 		}
@@ -317,7 +367,7 @@ namespace ExternalInterface {
 		int const flag1( -10 );
 		int const flag2( -20 );
 
-		if ( ( NumExternalInterfacesBCVTB != 0 ) || ( NumExternalInterfacesFMUExport != 0 ) ) {
+		if ( ( NumExternalInterfacesBCVTB != 0 ) || ( NumExternalInterfacesFMUExport != 0 ) || ( NumExternalInterfacesFNCS != 0 ) ) {
 			if ( ErrorsFound ) {
 				// Check if the socket is open
 				if ( socketFD >= 0 ) {
@@ -328,7 +378,17 @@ namespace ExternalInterface {
 						retVal = sendclientmessage( &socketFD, &flag2 );
 					}
 				}
-				ShowFatalError( "Error in ExternalInterface: Check EnergyPlus *.err file." );
+#ifdef FNCS
+                if ( fncsInitialized ) {
+				    ShowSevereError( "Error in ExternalInterface: Check EnergyPlus *.err file." );
+                    fncs::die();
+                }
+                else {
+				    ShowFatalError( "Error in ExternalInterface: Check EnergyPlus *.err file." );
+                }
+#else
+                ShowFatalError( "Error in ExternalInterface: Check EnergyPlus *.err file." );
+#endif
 			}
 		}
 		if ( NumExternalInterfacesFMUImport != 0 ) {
@@ -377,6 +437,21 @@ namespace ExternalInterface {
 
 
 	}
+
+    void
+    CloseExternalInterface( int const FlagToWriteToSocket )
+    {
+        if ( haveExternalInterfaceBCVTB ) {
+            CloseSocket( FlagToWriteToSocket );
+        }
+        if ( haveExternalInterfaceFNCS ) {
+#ifdef FNCS
+            fncs::finalize();
+#else
+            ShowSevereError( "ExternalInterface: Error, FNCS desired but not linked." );
+#endif
+        }
+    }
 
 	void
 	ParseString(
@@ -623,6 +698,248 @@ namespace ExternalInterface {
 			}
 			configuredControlPoints = true;
 		}
+		StopExternalInterfaceIfError();
+
+	}
+
+	void
+	InitExternalInterfaceFNCS()
+	{
+#ifdef FNCS
+		// SUBROUTINE INFORMATION:
+		//       AUTHOR         Jeff Daily
+		//       DATE WRITTEN   4Jun2015
+		//       MODIFIED       na
+		//       RE-ENGINEERED  na
+
+		// PURPOSE OF THIS SUBROUTINE:
+		// This subroutine is for initializations of the ExternalInterface for FNCS
+
+		// Using/Aliasing
+		using ScheduleManager::GetDayScheduleIndex;
+		using RuntimeLanguageProcessor::isExternalInterfaceErlVariable;
+		using RuntimeLanguageProcessor::FindEMSVariable;
+		using General::TrimSigDigits;
+		using DataGlobals::MinutesPerTimeStep;
+        using DataOutputs::NumConsideredOutputVariables;
+        using DataOutputs::OutputVariablesForSimulation;
+		using InputProcessor::MakeUPPERCase;
+		using InputProcessor::GetNumObjectsFound;
+		using InputProcessor::GetObjectItem;
+		using DataIPShortCuts::cCurrentModuleObject;
+		using DataIPShortCuts::cAlphaArgs;
+		using DataIPShortCuts::rNumericArgs;
+		using DataIPShortCuts::cAlphaFieldNames;
+		using DataIPShortCuts::cNumericFieldNames;
+
+		// SUBROUTINE PARAMETER DEFINITIONS:
+
+		static bool firstCall( true ); // First time, input has been read
+
+		// SUBROUTINE LOCAL VARIABLE DECLARATIONS:
+		int i; // loop counters
+		static int nOutVal; // Number of output values (E+ -> ExternalInterface)
+		static int nInpVar; // Number of input values (ExternalInterface -> E+)
+		std::string validateErrMsg; // error returned when xml Schema validate failed
+		int NumAlphas( 0 ); // Number of Alphas for each GetObjectItem call
+		int NumNumbers( 0 ); // Number of Numbers for each GetObjectItem call
+		int IOStatus( 0 ); // Used in GetObjectItem
+        int NumObjects;
+		int varType( 0 ); // 0=not found, 1=integer, 2=real, 3=meter
+		int numKeys( 0 ); // Number of keys found
+		int varAvgSum( 0 ); // Variable  is Averaged=1 or Summed=2
+		int varStepType( 0 ); // Variable time step is Zone=1 or HVAC=2
+		std::string varUnits; // Units sting, may be blank
+        Array1D_int keyIndexes; // Array index for
+        Array1D_string NamesOfKeys; // Specific key name
+        int Loop, iKey; // Loop counters
+        std::string fncs_config_str;
+        std::string tab( "    " );
+
+		if ( firstCall ) {
+
+			DisplayString( "ExternalInterface initializes. (FNCS)" );
+			// do one time initializations
+
+			// Make sure that idf file specified a run period other than
+			// design day and system sizing.
+			ValidateRunControl();
+
+			StopExternalInterfaceIfError();
+
+            nOutVal = 0;
+            nInpVar = 0;
+
+            for ( Loop = 1; Loop <= NumConsideredOutputVariables; ++Loop ) {
+                std::string VarName = OutputVariablesForSimulation( Loop ).VarName;
+                std::string Key = OutputVariablesForSimulation( Loop ).Key;
+                DisplayString( "FNCS: " + Key + " (" + VarName + ")");
+                if ( Key == "*" ) {
+			        GetVariableKeyCountandType( VarName, numKeys, varType, varAvgSum, varStepType, varUnits );
+                    if ( varType != 0 ) {
+                        if ( numKeys > 0 ) {
+                            NamesOfKeys.allocate( numKeys );
+                            keyIndexes.allocate( numKeys );
+                            GetVariableKeys( VarName, varType, NamesOfKeys, keyIndexes );
+                            for ( iKey = 1; iKey <= numKeys; ++iKey ) {
+                                DisplayString( "    : " + NamesOfKeys( iKey ) );
+                                nOutVal++;
+                                varKeys( nOutVal ) = MakeUPPERCase( NamesOfKeys( iKey ) );
+                                varNames( nOutVal ) = MakeUPPERCase( VarName );
+                            }
+                            keyIndexes.deallocate();
+                            NamesOfKeys.deallocate();
+                        }
+                        else {
+                            // Assume this is an EMS output variable.
+                            nOutVal++;
+                            varKeys( nOutVal ) = "EMS";
+                            varNames( nOutVal ) = MakeUPPERCase( VarName );
+                        }
+                    }
+                    else {
+                        ShowSevereError( "ExternalInterface: FNCS can't lookup keys for \"" + VarName + "\"." );
+                        ErrorsFound = true;
+                    }
+                }
+                else {
+                    nOutVal++;
+                    varKeys( nOutVal ) = MakeUPPERCase( Key );
+                    varNames( nOutVal ) = MakeUPPERCase( VarName );
+                }
+            }
+
+			cCurrentModuleObject = "ExternalInterface:Actuator";
+            NumObjects = GetNumObjectsFound( cCurrentModuleObject );
+            if ( NumObjects > 0 ) {
+                DisplayString( "FNCS: ExternalInterface:Actuator" );
+            }
+			for ( i = 1; i <= NumObjects; ++i ) {
+				GetObjectItem( cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames );
+                DisplayString( "FNCS: Actuator: " + cAlphaArgs( 1 ) );
+                nInpVar++;
+                inpVarNames( nInpVar ) = cAlphaArgs( 1 );
+                inpVarTypes( nInpVar ) = indexActuator;
+            }
+
+			cCurrentModuleObject = "ExternalInterface:Schedule";
+            NumObjects = GetNumObjectsFound( cCurrentModuleObject );
+            if ( NumObjects > 0 ) {
+                DisplayString( "FNCS: ExternalInterface:Schedule" );
+            }
+			for ( i = 1; i <= NumObjects; ++i ) {
+				GetObjectItem( cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames );
+                DisplayString( "FNCS: Schedule: " + cAlphaArgs( 1 ) );
+                nInpVar++;
+                inpVarNames( nInpVar ) = cAlphaArgs( 1 );
+                inpVarTypes( nInpVar ) = indexSchedule;
+            }
+
+			cCurrentModuleObject = "ExternalInterface:Variable";
+            NumObjects = GetNumObjectsFound( cCurrentModuleObject );
+            if ( NumObjects > 0 ) {
+                DisplayString( "FNCS: ExternalInterface:Variable" );
+            }
+			for ( i = 1; i <= NumObjects; ++i ) {
+				GetObjectItem( cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames );
+                DisplayString( "FNCS: Variable: " + cAlphaArgs( 1 ) );
+                nInpVar++;
+                inpVarNames( nInpVar ) = cAlphaArgs( 1 );
+                inpVarTypes( nInpVar ) = indexVariable;
+            }
+
+			StopExternalInterfaceIfError();
+
+			if ( nOutVal + nInpVar > maxVar ) {
+				ShowSevereError( "ExternalInterface: Too many variables to be exchanged." );
+				ShowContinueError( "Attempted to exchange " + TrimSigDigits( nOutVal ) + " outputs" );
+				ShowContinueError( "plus " + TrimSigDigits( nOutVal ) + " inputs." );
+				ShowContinueError( "Maximum allowed is sum is " + TrimSigDigits( maxVar ) + '.' );
+				ShowContinueError( "To fix, increase maxVar in ExternalInterface.cc" );
+				ErrorsFound = true;
+			}
+			StopExternalInterfaceIfError();
+
+			DisplayString( "Number of outputs in ExternalInterface = " + TrimSigDigits( nOutVal ) );
+			DisplayString( "Number of inputs  in ExternalInterface = " + TrimSigDigits( nInpVar ) );
+
+            fncs::initialize( );
+            if ( fncs::is_initialized() ) {
+                fncsInitialized = true;
+                /* if FNCS configuration file was in ZPL format, the
+                 * spaces in the key names were translated to '+' */
+                std::vector<std::string> keys = fncs::get_keys();
+                for (std::vector<std::string>::iterator it=keys.begin();
+                        it!=keys.end(); ++it) {
+                    if (it->find('+') != string::npos) {
+                        fncsEncode = true;
+                        break;
+                    }
+                }
+            }
+            else {
+                ShowSevereError( "ExternalInterface: FNCS failed to initialize." );
+                ErrorsFound = true;
+            }
+
+            fncs::time delta = fncs::get_time_delta();
+            delta = delta / (60ULL * 1000000000ULL);
+            if ( delta != (unsigned long long)MinutesPerTimeStep ) {
+                ShowSevereError( "ExternalInterface: FNCS time delta does not match MinutesPerTimeStep" );
+                ErrorsFound = true;
+            }
+
+			StopExternalInterfaceIfError();
+
+			firstCall = false;
+
+            // Establish connection to FNCS broker.
+
+		} else if ( ! configuredControlPoints ) {
+			keyVarIndexes.allocate( nOutVal );
+			varTypes.allocate( nOutVal );
+			GetReportVariableKey( varKeys, nOutVal, varNames, keyVarIndexes, varTypes );
+			varInd.allocate( nInpVar );
+			for ( i = 1; i <= nInpVar; ++i ) {
+				if ( inpVarTypes( i ) == indexSchedule ) {
+					varInd( i ) = GetDayScheduleIndex( inpVarNames( i ) );
+				} else if ( inpVarTypes( i ) == indexVariable ) {
+					varInd( i ) = FindEMSVariable( inpVarNames( i ), 0 );
+				} else if ( inpVarTypes( i ) == indexActuator ) {
+					varInd( i ) = FindEMSVariable( inpVarNames( i ), 0 );
+				}
+				if ( varInd( i ) <= 0 ) {
+					ShowSevereError( "ExternalInterface: Error, variable \"" + inpVarNames( i ) + "\" " );
+					ShowContinueError( "was not found in idf file." );
+					ErrorsFound = true;
+				}
+			}
+			StopExternalInterfaceIfError();
+			// Configure Erl variables
+			for ( i = 1; i <= nInpVar; ++i ) {
+				if ( inpVarTypes( i ) == indexVariable ) { // ems-globalvariable
+					useEMS = true;
+					if ( ! isExternalInterfaceErlVariable( varInd( i ) ) ) {
+						ShowSevereError( "ExternalInterface: Error, variable \"" + inpVarNames( i ) + "\" " );
+						ShowContinueError( "is an ordinary Erl variable, not an ExternalInterface variable." );
+						ShowContinueError( "You must specify a variable of type \"ExternalInterface:Variable\"." );
+						ErrorsFound = true;
+					}
+				} else if ( inpVarTypes( i ) == indexActuator ) { // ems-actuator
+					useEMS = true;
+					if ( ! isExternalInterfaceErlVariable( varInd( i ) ) ) {
+						ShowSevereError( "ExternalInterface: Error, variable \"" + inpVarNames( i ) + "\" " );
+						ShowContinueError( "is an ordinary Erl actuator, not an ExternalInterface actuator." );
+						ShowContinueError( "You must specify a variable of type \"ExternalInterface:Actuator\"." );
+						ErrorsFound = true;
+					}
+				}
+			}
+			configuredControlPoints = true;
+		}
+#else
+        ShowSevereError( "ExternalInterface: Error, FNCS desired but not linked." );
+#endif
 		StopExternalInterfaceIfError();
 
 	}
@@ -2112,6 +2429,104 @@ namespace ExternalInterface {
 	}
 
 	void
+	CalcExternalInterfaceFNCS()
+	{
+#ifdef FNCS
+		// SUBROUTINE INFORMATION:
+		//       AUTHOR         Jeff Daily
+		//       DATE WRITTEN   6May2015
+		//       MODIFIED       na
+		//       RE-ENGINEERED  na
+
+		// Using/Aliasing
+		using DataGlobals::SimTimeSteps;
+		using DataGlobals::MinutesPerTimeStep;
+		using DataGlobals::emsCallFromExternalInterface;
+		using ScheduleManager::ExternalInterfaceSetSchedule;
+		using RuntimeLanguageProcessor::ExternalInterfaceSetErlVariable;
+		using EMSManager::ManageEMS;
+		using General::TrimSigDigits;
+		//using DataPrecisionGlobals;
+
+		// SUBROUTINE PARAMETER DEFINITIONS:
+		
+		// SUBROUTINE LOCAL VARIABLE DECLARATIONS:
+		int i; // Loop counter
+
+		int nDblWri; // number of doubles to write to socket
+        fncs::time preSimTim; // previous time step's simulation time
+
+		static bool firstCall( true );
+
+		if ( firstCall ) {
+			DisplayString( "ExternalInterface starts first data exchange. (FNCS)" );
+			simulationStatus = 2;
+			preSimTim = 0; // In the first call, E+ did not reset SimTimeSteps to zero
+		} else {
+			preSimTim = SimTimeSteps * MinutesPerTimeStep;
+		}
+
+        //DisplayString( "preSimTim=" + TrimSigDigits( preSimTim ) );
+
+        fncs::time time_returned = fncs::time_request( preSimTim );
+        if ( preSimTim != time_returned ) {
+            ShowFatalError( "fncs::time_request() was interrupted with earlier time" );
+            ErrorsFound = true;
+            StopExternalInterfaceIfError();
+        }
+
+		// Usual branch, control is configured and simulation should continue
+        if ( configuredControlPoints ) {
+            // Data to be exchanged
+            nDblWri = size( varTypes );
+
+            // Publish EnergyPlus variables.
+            if ( firstCall ) { // bug fix causing external interface to send zero at the beginning of sim, Thierry Nouidui
+                for ( i = 1; i <= nDblWri; ++i ) {
+                    Real64 value = GetInternalVariableValue( varTypes( i ), keyVarIndexes( i ) );
+                    fncs::publish( varKeys( i ) + " " + varNames( i ), TrimSigDigits( value ) );
+                }
+            } else {
+                for ( i = 1; i <= nDblWri; ++i ) {
+                    Real64 value = GetInternalVariableValueExternalInterface( varTypes( i ), keyVarIndexes( i ) );
+                    fncs::publish( varKeys( i ) + " " + varNames( i ), TrimSigDigits( value ) );
+                }
+            }
+
+            // Read and assign inputs.
+            for ( i = 1; i <= isize( varInd ); ++i ) {
+                std::string value;
+                if (fncsEncode) {
+                    value = fncs::get_value( fncs_encode( inpVarNames( i ) ) );
+                } else {
+                    value = fncs::get_value( inpVarNames( i ) );
+                }
+                Real64 dblVal = std::stod(value);
+                if ( inpVarTypes( i ) == indexSchedule ) {
+                    ExternalInterfaceSetSchedule( varInd( i ), dblVal );
+                } else if ( ( inpVarTypes( i ) == indexVariable ) || ( inpVarTypes( i ) == indexActuator ) ) {
+                    ExternalInterfaceSetErlVariable( varInd( i ), dblVal );
+                } else {
+                    ShowContinueError( "ExternalInterface: Error in finding the type of the input variable for EnergyPlus" );
+                    ShowContinueError( "variable index: " + std::to_string( i ) + ". Variable will not be updated." );
+                }
+            }
+        }
+
+		// If we have Erl variables, we need to call ManageEMS so that they get updated in the Erl data structure
+		if ( useEMS ) {
+			ManageEMS( emsCallFromExternalInterface );
+		}
+
+		firstCall = false; // bug fix causing external interface to send zero at the beginning of sim, Thierry Nouidui
+
+#else
+        ShowSevereError( "ExternalInterface: Error, FNCS desired but not linked." );
+#endif
+		StopExternalInterfaceIfError();
+	}
+
+	void
 	GetReportVariableKey(
 		Array1S_string const varKeys, // Standard variable name
 		int const numberOfKeys, // Number of keys=size(varKeys)
@@ -2220,9 +2635,9 @@ namespace ExternalInterface {
 
 		cCurrentModuleObject = "ExternalInterface";
 		GetObjectItem( cCurrentModuleObject, 1, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames );
-		if ( ( ! SameString( cAlphaArgs( 1 ), "PtolemyServer" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitImport" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitExport" ) ) ) {
+		if ( ( ! SameString( cAlphaArgs( 1 ), "PtolemyServer" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FNCS" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitImport" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitExport" ) ) ) {
 			ShowSevereError( "VerifyExternalInterfaceObject: " + cCurrentModuleObject + ", invalid " + cAlphaFieldNames( 1 ) + "=\"" + cAlphaArgs( 1 ) + "\"." );
-			ShowContinueError( "only \"PtolemyServer or FunctionalMockupUnitImport or FunctionalMockupUnitExport\" allowed." );
+			ShowContinueError( "only \"PtolemyServer or FNCS or FunctionalMockupUnitImport or FunctionalMockupUnitExport\" allowed." );
 			ErrorsFound = true;
 		}
 

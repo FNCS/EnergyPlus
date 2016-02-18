@@ -39,6 +39,13 @@ else()
   set(GIT_DIR "")
 endif()
 
+find_package(FNCS)
+if (FNCS_FOUND)
+    message( "FNCS found, including ${FNCS_INCLUDE_DIRS}" )
+    message( "FNCS found, including ${FNCS_LIBRARIES}" )
+    add_definitions(-DFNCS)
+include_directories(${FNCS_INCLUDE_DIRS})
+endif ()
 
 set(CPACK_PACKAGE_CONTACT "Kyle Benne <Kyle.Benne@nrel.gov>")
 
