@@ -2670,9 +2670,9 @@ namespace ExternalInterface {
 
 		cCurrentModuleObject = "ExternalInterface";
 		GetObjectItem( cCurrentModuleObject, 1, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames );
-		if ( ( ! SameString( cAlphaArgs( 1 ), "PtolemyServer" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitImport" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitExport" ) ) ) {
+		if ( ( ! SameString( cAlphaArgs( 1 ), "PtolemyServer" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FNCS" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitImport" ) ) && ( ! SameString( cAlphaArgs( 1 ), "FunctionalMockupUnitExport" ) ) ) {
 			ShowSevereError( "VerifyExternalInterfaceObject: " + cCurrentModuleObject + ", invalid " + cAlphaFieldNames( 1 ) + "=\"" + cAlphaArgs( 1 ) + "\"." );
-			ShowContinueError( "only \"PtolemyServer or FunctionalMockupUnitImport or FunctionalMockupUnitExport\" allowed." );
+			ShowContinueError( "only \"PtolemyServer or FNCS or FunctionalMockupUnitImport or FunctionalMockupUnitExport\" allowed." );
 			ErrorsFound = true;
 		}
 
