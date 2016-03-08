@@ -805,8 +805,8 @@ namespace ExternalInterface {
                         }
                     }
                     else {
-                        ShowSevereError( "ExternalInterface: FNCS can't lookup keys for \"" + VarName + "\"." );
-                        ErrorsFound = true;
+                        ShowWarningError( "ExternalInterface: FNCS can't lookup keys for \"" + VarName + "\"." );
+                        DisplayString( "    : (failed key lookup)" );
                     }
                 }
                 else {
