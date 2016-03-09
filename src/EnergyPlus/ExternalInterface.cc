@@ -2519,12 +2519,16 @@ namespace ExternalInterface {
             if ( firstCall ) { // bug fix causing external interface to send zero at the beginning of sim, Thierry Nouidui
                 for ( i = 1; i <= nDblWri; ++i ) {
                     Real64 value = GetInternalVariableValue( varTypes( i ), keyVarIndexes( i ) );
-                    fncs::publish( varKeys( i ) + " " + varNames( i ), TrimSigDigits( value ) );
+                    std::string key = varKeys( i ) + " " + varNames( i );
+                    fncs::publish( key, TrimSigDigits( value, 10 ) );
+                    fncs::publish( fncs_encode( key ), TrimSigDigits( value, 10 ) );
                 }
             } else {
                 for ( i = 1; i <= nDblWri; ++i ) {
                     Real64 value = GetInternalVariableValueExternalInterface( varTypes( i ), keyVarIndexes( i ) );
-                    fncs::publish( varKeys( i ) + " " + varNames( i ), TrimSigDigits( value ) );
+                    std::string key = varKeys( i ) + " " + varNames( i );
+                    fncs::publish( key, TrimSigDigits( value, 10 ) );
+                    fncs::publish( fncs_encode( key ), TrimSigDigits( value, 10 ) );
                 }
             }
 
