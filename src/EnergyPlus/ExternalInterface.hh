@@ -18,7 +18,9 @@ extern "C" {
 #include <UtilityRoutines.hh>
 
 // C++ Standard Library Headers
+#include <set>
 #include <string>
+#include <vector>
 
 // Objexx Headers
 #include <ObjexxFCL/FArray1D.hh>
@@ -309,6 +311,8 @@ namespace ExternalInterface {
 	extern int socketFD; // socket file descriptor
 	extern bool fncsInitialized; // Set to true once fncs::initialize() returns
 	extern bool fncsEncode; // Set to true if subscriptions can't use spaces
+    extern std::set< std::string > fncsKeys; // The subscriptions that FNCS knows about.
+    extern std::set< std::string > fncsKeysWarned; // So that we only warn once per missing subscription.
 	extern bool ErrorsFound; // Set to true if errors are found
 	extern bool noMoreValues; //Flag, true if no more values
 	// will be sent by the server

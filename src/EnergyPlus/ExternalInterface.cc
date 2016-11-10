@@ -20,7 +20,10 @@ static inline std::string& fncs_decode(std::string &name) {
 #endif
 
 // C++ Headers
+#include <set>
+#include <sstream>
 #include <string>
+#include <vector>
 
 // ObjexxFCL Headers
 #include <ObjexxFCL/FArray.functions.hh>
@@ -113,6 +116,8 @@ namespace ExternalInterface {
 	int socketFD( -1 ); // socket file descriptor
     bool fncsInitialized( false ); // Set to true once fncs::initalize() returns
     bool fncsEncode( false ); // Set to true if subscriptions can't use spaces
+    std::set< std::string > fncsKeys;
+    std::set< std::string > fncsKeysWarned;
 	bool ErrorsFound( false ); // Set to true if errors are found
 	bool noMoreValues( false ); // Flag, true if no more values
 	// will be sent by the server
@@ -875,7 +880,8 @@ namespace ExternalInterface {
                 fncsInitialized = true;
                 /* if FNCS configuration file was in ZPL format, the
                  * spaces in the key names were translated to '+' */
-                std::vector<std::string> keys = fncs::get_keys();
+                std::vector<string> keys = fncs::get_keys();
+                fncsKeys.insert(keys.begin(), keys.end());
                 for (std::vector<std::string>::iterator it=keys.begin();
                         it!=keys.end(); ++it) {
                     if (it->find('+') != string::npos) {
@@ -890,9 +896,13 @@ namespace ExternalInterface {
             }
 
             fncs::time delta = fncs::get_time_delta();
-            delta = delta / (60ULL * 1000000000ULL);
+            // FNCS time delta is already in minutes, not nanoseconds
+            //delta = delta / (60ULL * 1000000000ULL);
             if ( delta != (unsigned long long)MinutesPerTimeStep ) {
+                std::ostringstream str;
+                str << "delta " << delta << " != " << MinutesPerTimeStep << " MinutesPerTimeStep";
                 ShowSevereError( "ExternalInterface: FNCS time delta does not match MinutesPerTimeStep" );
+                ShowContinueError(str.str());
                 ErrorsFound = true;
             }
 
@@ -2535,6 +2545,15 @@ namespace ExternalInterface {
             // Read and assign inputs.
             for ( i = 1; i <= isize( varInd ); ++i ) {
                 std::string value;
+                if ( 0 == fncsKeys.count( inpVarNames( i ) ) ) {
+                    // The model has an input but is missing a subscription.
+                    if ( 0 == fncsKeysWarned.count( inpVarNames( i ) ) ) {
+                        fncsKeysWarned.insert( inpVarNames( i ) );
+                        ShowWarningError( "IDF file contains object \"" + inpVarNames( i ) + "\"," );
+                        ShowContinueError( "but FNCS config file does not contain a subscription for it." );
+                    }
+                    continue;
+                }
                 if (fncsEncode) {
                     value = fncs::get_value( fncs_encode( inpVarNames( i ) ) );
                 } else {
