@@ -8,6 +8,8 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 #configure_file( CreateNewIDFUsingRulesV8_3_0.in.f90 "${CMAKE_CURRENT_BINARY_DIR}/CreateNewIDFUsingRulesV8_3_0.f90" )
 #configure_file( IDDAssignV8_3_0.in.f90 "${CMAKE_CURRENT_BINARY_DIR}/IDDAssignV8_3_0.f90" )
 
+set(STATIC_EXE FALSE)
+
 # first create a static library of shared stuff
 SET(LIB_SRC
   DataGlobals.f90
@@ -68,11 +70,13 @@ elseif(UNIX)
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-line-length-none")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fbounds-check")
+    set(STATIC_EXE TRUE)
   else()
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fpp")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -static-intel")
   endif()
 else()  # Windows
+  set(STATIC_EXE TRUE)
   if( "${CMAKE_Fortran_COMPILER_ID}" MATCHES "GNU" )
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -static")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -cpp")
@@ -90,33 +94,35 @@ list( LENGTH VERSIONS VERSIONS_SIZE)
 
 math(EXPR end "${VERSIONS_SIZE} - 1")
 
-FOREACH( i RANGE 1 ${end} )
-
-math(EXPR ii "${i} - 1")
-
-LIST(GET VERSIONS ${ii} OLD_VERSION)
-LIST(GET VERSIONS ${i} NEW_VERSION)
-
-# then create all the binaries using just the Transition source and the appropriate version of the main sub
-SET(SRC
-  Transition.f90
-  CreateNewIDFUsingRulesV${NEW_VERSION}.f90
-)
-
-STRING( REPLACE _ - OLD-VERSION ${OLD_VERSION} )
-STRING( REPLACE _ - NEW-VERSION ${NEW_VERSION} )
-
-SET(LAST_NAME "Transition-V${OLD-VERSION}-to-V${NEW-VERSION}" )
-
-SET(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${LAST_NAME} )
-ADD_EXECUTABLE( "${LAST_NAME}" ${SRC} )
-TARGET_LINK_LIBRARIES( "${LAST_NAME}" TransitionLib )
-
-#SET_PROPERTY( TARGET "${LAST_NAME}"
-#              PROPERTY COMPILE_DEFINITIONS "V${NEW_VERSION}" )
-
-ENDFOREACH()
-
 include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/ProjectMacros.cmake")
-install_and_fixup_exe_target( "${LAST_NAME}" PreProcess/IDFVersionUpdater )
 
+foreach( i RANGE 1 ${end} )
+
+  math(EXPR ii "${i} - 1")
+
+  list(GET VERSIONS ${ii} OLD_VERSION)
+  list(GET VERSIONS ${i} NEW_VERSION)
+
+  # then create all the binaries using just the Transition source and the appropriate version of the main sub
+  set(SRC
+    Transition.f90
+    CreateNewIDFUsingRulesV${NEW_VERSION}.f90
+  )
+
+  string( REPLACE _ - OLD-VERSION ${OLD_VERSION} )
+  string( REPLACE _ - NEW-VERSION ${NEW_VERSION} )
+
+  set(LAST_NAME "Transition-V${OLD-VERSION}-to-V${NEW-VERSION}" )
+
+  set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${LAST_NAME} )
+  add_executable( "${LAST_NAME}" ${SRC} )
+  target_link_libraries( "${LAST_NAME}" TransitionLib )
+
+  if( "${i}" GREATER "22" )
+    install( TARGETS "${LAST_NAME}" DESTINATION PreProcess/IDFVersionUpdater )
+    if(NOT ${STATIC_EXE})
+      install_target_prereqs( "${LAST_NAME}" PreProcess/IDFVersionUpdater )
+    endif()
+  endif()
+
+endforeach()

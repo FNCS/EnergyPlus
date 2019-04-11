@@ -6,6 +6,8 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products"
 
 SET(SRC ReadVarsESO.f90) 
 
+SET(STATIC_EXE FALSE)
+
 if(APPLE)
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -static-intel" )
@@ -16,6 +18,7 @@ elseif(UNIX)
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -static-intel" )
   else()
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -static" )
+   set(STATIC_EXE TRUE)
   endif()
 else()
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
@@ -30,6 +33,8 @@ endif()
 set(SKIP_BUILD_RPATH true)
 ADD_EXECUTABLE( ReadVarsESO ${SRC} )
 
-include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/ProjectMacros.cmake")
-install_and_fixup_exe_target( ReadVarsESO PostProcess )
-
+install( TARGETS ReadVarsESO DESTINATION PostProcess )
+if(NOT ${STATIC_EXE})
+  include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/ProjectMacros.cmake")
+  install_target_prereqs( ReadVarsESO PostProcess )
+endif()

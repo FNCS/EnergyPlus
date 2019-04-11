@@ -16,6 +16,8 @@ SET(SRC
   BasementSimData.f90
 )
 
+set(STATIC_EXE FALSE)
+
 if(APPLE)
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -static-intel")
@@ -29,8 +31,10 @@ elseif(UNIX)
   else()
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffloat-store" )
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -static" )
+    set(STATIC_EXE TRUE)
   endif()
 else()  # Windows
+  set(STATIC_EXE TRUE)
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
     # Set release flags to be empty
     set(CMAKE_Fortran_FLAGS_RELEASE "")
@@ -48,7 +52,10 @@ SET_TARGET_PROPERTIES(Basement PROPERTIES
   COMPILE_FLAGS "-O1 -ffree-line-length-200 ${SHARED_FLAGS}"
 )
 
-include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/ProjectMacros.cmake")
-install_and_fixup_exe_target( Basement PreProcess/GrndTempCalc )
+install( TARGETS Basement DESTINATION PreProcess/GrndTempCalc )
+if(NOT ${STATIC_EXE})
+  include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/ProjectMacros.cmake")
+  install_target_prereqs( Basement PreProcess/GrndTempCalc )
+endif()
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../../idd/BasementGHT.idd" DESTINATION "PreProcess/GrndTempCalc/")
 
