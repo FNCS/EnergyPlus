@@ -11,6 +11,8 @@ This will give the following display of options:
     Usage: energyplus [options] [input-file]
     Options:
       -a, --annual                 Force annual simulation
+      -c, --convert                Output IDF->epJSON or epJSON->IDF, dependent on
+                                   input file type
       -d, --output-directory ARG   Output directory path (default: current directory)
       -D, --design-day             Force design-day-only simulation
       -h, --help                   Display help information
@@ -74,4 +76,4 @@ Examples
 Legacy Mode
 -----------
 
-The command line interface is a new feature as of EnergyPlus 8.X. Prior to version 8.X, the EnergyPlus executable took no command line arguments, and instead expected the IDD (Input Data Dictionary) file and the IDF files to be located in the current working directory and named `Energy+.idd` and `in.idf` respectively. If a weather file was required by the simulation, then an `in.epw` file was also required in the same directory. This behavior is still respected if no arguments are passed on the command line.
+The command line interface is a new feature as of EnergyPlus 8.3. Prior to version 8.3, the EnergyPlus executable took no command line arguments, and instead expected the IDD (Input Data Dictionary) file and the IDF files to be located in the current working directory and named `Energy+.idd` and `in.idf` respectively. If a weather file was required by the simulation, then an `in.epw` file was also required in the same directory. This behavior is still respected if no arguments are passed on the command line.

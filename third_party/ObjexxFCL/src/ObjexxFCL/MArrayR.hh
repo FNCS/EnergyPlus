@@ -3,13 +3,13 @@
 
 // MArrayR: Rank Member Array Proxy Abstract Base Class Template
 //
-// Project: Objexx Fortran Compatibility Library (ObjexxFCL)
+// Project: Objexx Fortran-C++ Library (ObjexxFCL)
 //
-// Version: 4.0.0
+// Version: 4.2.0
 //
 // Language: C++
 //
-// Copyright (c) 2000-2014 Objexx Engineering, Inc. All Rights Reserved.
+// Copyright (c) 2000-2017 Objexx Engineering, Inc. All Rights Reserved.
 // Use of this source code or any derivative of it is restricted by license.
 // Licensing is available from Objexx Engineering, Inc.:  http://objexx.com
 
@@ -33,7 +33,7 @@ private: // Friend
 
 public: // Types
 
-	typedef  typename Super::Array  Array;
+	typedef  typename Super::ArrayType  ArrayType;
 	typedef  typename Super::Class  Class;
 	typedef  typename Super::MPtr  MPtr;
 	typedef  typename Super::Traits  Traits;
@@ -57,19 +57,21 @@ public: // Types
 	typedef  typename Super::Size  Size;
 	typedef  typename Super::Difference  Difference;
 
-	// Using
-	using Super::in_range;
 	using Super::isize;
 	using Super::l;
 	using Super::u;
 	using Super::size;
+
+protected: // Types
+
+	using Super::in_range;
+
 	using Super::array_;
 	using Super::pmem_;
 
 protected: // Creation
 
 	// Copy Constructor
-	inline
 	MArrayR( MArrayR const & a ) :
 	 Super( a )
 	{
@@ -77,7 +79,6 @@ protected: // Creation
 	}
 
 	// Constructor
-	inline
 	MArrayR( A & a, T Class::* pmem ) :
 	 Super( a, pmem )
 	{}
@@ -85,7 +86,6 @@ protected: // Creation
 public: // Creation
 
 	// Destructor
-	inline
 	virtual
 	~MArrayR()
 	{}
@@ -93,14 +93,12 @@ public: // Creation
 protected: // Assignment
 
 	// Copy Assignment
-	inline
 	MArrayR &
 	operator =( MArrayR const & a ); // Disallow
 
 public: // Inspector
 
 	// Rank
-	inline
 	int
 	rank() const
 	{

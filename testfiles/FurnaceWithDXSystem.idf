@@ -13,8 +13,8 @@
 !
 ! Location:                Chicago, IL
 !
-! Design Days:             Chicago Ohare Intl Ap IL USA Annual Heating 99%, MaxDB=-16.6캜
-!                          Chicago Ohare Intl Ap IL USA Annual Cooling (DB=>MWB) 1%, MaxDB=31.6캜 MWB=23캜
+! Design Days:             Chicago Ohare Intl Ap IL USA Annual Heating 99%, MaxDB=-16.6째C
+!                          Chicago Ohare Intl Ap IL USA Annual Cooling (DB=>MWB) 1%, MaxDB=31.6째C MWB=23째C
 !
 ! Run Period (Weather File): Winter 1/14, Summer 7/7.
 !
@@ -24,7 +24,7 @@
 !           There is a single window in the West Zone south wall. The walls are 1 in stucco over 4 in common brick
 !           and gypboard. The roof is a built up roof with 1/2 in stone over 3/8 in felt over 1 in dense insulation
 !           supported by 2 in heavy weight concrete. The window is single pane 3mm clear.
-!           The window to wall ratio is approxomately 0.07.
+!           The window to wall ratio is approximately 0.07.
 !
 !           The building is oriented due north.
 !
@@ -84,7 +84,7 @@
 ! Purchased Chilled Water:        Yes (not used)
 ! Purchased Hot Water:            Yes
 ! HVAC System:                    AirLoopHVAC:Unitary:Furnace:HeatCool
-! Coils:                          Coil:Cooling:DX:SingleSpeed, Coil:Heating:Gas
+! Coils:                          Coil:Cooling:DX:SingleSpeed, Coil:Heating:Fuel
 ! Pumps:                          None
 ! Boilers:                        None
 ! Chillers:                       None
@@ -99,13 +99,13 @@
 ! Utility Tariffs:                None
 !
 
-  Version,8.3;
+  Version,9.3;
 
   Building,
     NONE,                    !- Name
     0,                       !- North Axis {deg}
     Suburbs,                 !- Terrain
-    3.9999999E-02,           !- Loads Convergence Tolerance Value
+    3.9999999E-02,           !- Loads Convergence Tolerance Value {W}
     0.4000000,               !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -129,11 +129,13 @@
     No;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     14,                      !- Begin Day of Month
+    ,                        !- Begin Year
     1,                       !- End Month
     14,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -142,11 +144,13 @@
     Yes;                     !- Use Weather File Snow Indicators
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 2,            !- Name
     7,                       !- Begin Month
     7,                       !- Begin Day of Month
+    ,                        !- Begin Year
     7,                       !- End Month
     7,                       !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -163,7 +167,7 @@
     -6.00,                   !- Time Zone {hr}
     205.00;                  !- Elevation {m}
 
- ! Chicago Ohare Intl Ap IL USA Annual Heating 99%, MaxDB=-16.6캜
+ ! Chicago Ohare Intl Ap IL USA Annual Heating 99%, MaxDB=-16.6째C
 
   SizingPeriod:DesignDay,
     Chicago Ohare Intl Ap Ann Htg 99% Condns DB,  !- Name
@@ -193,7 +197,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
- ! Chicago Ohare Intl Ap IL USA Annual Cooling (DB=>MWB) 1%, MaxDB=31.6캜 MWB=23캜
+ ! Chicago Ohare Intl Ap IL USA Annual Cooling (DB=>MWB) 1%, MaxDB=31.6째C MWB=23째C
 
   SizingPeriod:DesignDay,
     Chicago Ohare Intl Ap Ann Clg 1% Condns DB=>MWB,  !- Name
@@ -738,7 +742,6 @@
     Zn001:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1109,13 +1112,11 @@
 
   Branch,
     Air Loop Main Branch,    !- Name
-    1.3,                     !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:Unitary:Furnace:HeatCool,  !- Component 1 Object Type
     GasHeat DXAC Furnace 1,  !- Component 1 Name
     Air Loop Inlet Node,     !- Component 1 Inlet Node Name
-    Air Loop Outlet Node,    !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Air Loop Outlet Node;    !- Component 1 Outlet Node Name
 
   AirLoopHVAC,
     Typical Furnace 1,       !- Name
@@ -1144,7 +1145,7 @@
     Zone1Inlets,             !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Zone 1 Node,             !- Zone Air Node Name
-    Zone 1 Outlet Node;      !- Zone Return Air Node Name
+    Zone 1 Outlet Node;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     EAST ZONE,               !- Zone Name
@@ -1152,7 +1153,7 @@
     Zone2Inlets,             !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Zone 2 Node,             !- Zone Air Node Name
-    Zone 2 Outlet Node;      !- Zone Return Air Node Name
+    Zone 2 Outlet Node;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     NORTH ZONE,              !- Zone Name
@@ -1160,28 +1161,37 @@
     Zone3Inlets,             !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Zone 3 Node,             !- Zone Air Node Name
-    Zone 3 Outlet Node;      !- Zone Return Air Node Name
+    Zone 3 Outlet Node;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Zone1Equipment,          !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone1DirectAir,          !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone1DirectAir ADU,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Zone2Equipment,          !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone2DirectAir,          !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone2DirectAir ADU,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Zone3Equipment,          !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone3DirectAir,          !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone3DirectAir ADU,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:Unitary:Furnace:HeatCool,
     GasHeat DXAC Furnace 1,  !- Name
@@ -1190,36 +1200,72 @@
     Air Loop Outlet Node,    !- Furnace Air Outlet Node Name
     CyclingFanSchedule,      !- Supply Air Fan Operating Mode Schedule Name
     80,                      !- Maximum Supply Air Temperature {C}
-    1.3,                     !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    1.3,                     !- Supply Air Flow Rate During Heating Operation {m3/s}
-    0.0,                     !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    1.3,                     !- Cooling Supply Air Flow Rate {m3/s}
+    1.3,                     !- Heating Supply Air Flow Rate {m3/s}
+    0.0,                     !- No Load Supply Air Flow Rate {m3/s}
     East Zone,               !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     Supply Fan 1,            !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     Furnace Heating Coil 1,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     Furnace ACDXCoil 1,      !- Cooling Coil Name
     None;                    !- Dehumidification Control Type
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone1DirectAir,          !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    Zone 1 Inlet Node,       !- Zone Supply Air Node Name
-    0.47;                    !- Maximum Air Flow Rate {m3/s}
+    Zone 1 Inlet Node ATInlet,  !- Air Inlet Node Name
+    Zone 1 Inlet Node,       !- Air Outlet Node Name
+    0.47,                    !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    Zone1DirectAir ADU,      !- Name
+    Zone 1 Inlet Node,       !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone1DirectAir,          !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone2DirectAir,          !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    Zone 2 Inlet Node,       !- Zone Supply Air Node Name
-    0.36;                    !- Maximum Air Flow Rate {m3/s}
+    Zone 2 Inlet Node ATInlet,  !- Air Inlet Node Name
+    Zone 2 Inlet Node,       !- Air Outlet Node Name
+    0.36,                    !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    Zone2DirectAir ADU,      !- Name
+    Zone 2 Inlet Node,       !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone2DirectAir,          !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone3DirectAir,          !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    Zone 3 Inlet Node,       !- Zone Supply Air Node Name
-    0.47;                    !- Maximum Air Flow Rate {m3/s}
+    Zone 3 Inlet Node ATInlet,  !- Air Inlet Node Name
+    Zone 3 Inlet Node,       !- Air Outlet Node Name
+    0.47,                    !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone3DirectAir ADU,      !- Name
+    Zone 3 Inlet Node,       !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone3DirectAir,          !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   ZoneControl:Thermostat,
     Zone 2 Thermostat,       !- Name
@@ -1253,9 +1299,9 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter,!- Name
     Zone Equipment Inlet Node,  !- Inlet Node Name
-    Zone 1 Inlet Node,       !- Outlet 1 Node Name
-    Zone 2 Inlet Node,       !- Outlet 2 Node Name
-    Zone 3 Inlet Node;       !- Outlet 3 Node Name
+    Zone 1 Inlet Node ATInlet,  !- Outlet 1 Node Name
+    Zone 2 Inlet Node ATInlet,  !- Outlet 2 Node Name
+    Zone 3 Inlet Node ATInlet;  !- Outlet 3 Node Name
 
   AirLoopHVAC:ZoneMixer,
     Zone Return Air Mixer,   !- Name
@@ -1264,10 +1310,11 @@
     Zone 2 Outlet Node,      !- Inlet 2 Node Name
     Zone 3 Outlet Node;      !- Inlet 3 Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Furnace Heating Coil 1,  !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     25000,                   !- Nominal Capacity {W}
     Heating Coil Air Inlet Node,  !- Air Inlet Node Name
     Air Loop Outlet Node;    !- Air Outlet Node Name

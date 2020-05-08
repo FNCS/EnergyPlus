@@ -1,12 +1,12 @@
 // ObjexxFCL::fmt Unit Tests
 //
-// Project: Objexx Fortran Compatibility Library (ObjexxFCL)
+// Project: Objexx Fortran-C++ Library (ObjexxFCL)
 //
-// Version: 4.0.0
+// Version: 4.2.0
 //
 // Language: C++
 //
-// Copyright (c) 2000-2014 Objexx Engineering, Inc. All Rights Reserved.
+// Copyright (c) 2000-2017 Objexx Engineering, Inc. All Rights Reserved.
 // Use of this source code or any derivative of it is restricted by license.
 // Licensing is available from Objexx Engineering, Inc.:  http://objexx.com
 
@@ -79,12 +79,6 @@ TEST( fmtTest, E )
 		stream << E(0.0,12,6);
 		EXPECT_EQ( "0.000000E+00", stream.str() );
 	}
-
-	{
-		std::ostringstream stream;
-		stream << E(-0.0,12,6);
-		EXPECT_EQ( "************", stream.str() );
-	}
 }
 
 TEST( fmtTest, ES )
@@ -106,12 +100,6 @@ TEST( fmtTest, ES )
 		stream << ES(0.0,12,6);
 		EXPECT_EQ( "0.000000E+00", stream.str() );
 	}
-
-	{
-		std::ostringstream stream;
-		stream << ES(-0.0,12,6);
-		EXPECT_EQ( "************", stream.str() );
-	}
 }
 
 TEST( fmtTest, EN )
@@ -132,12 +120,6 @@ TEST( fmtTest, EN )
 		std::ostringstream stream;
 		stream << EN(0.0,12,6);
 		EXPECT_EQ( "0.000000E+00", stream.str() );
-	}
-
-	{
-		std::ostringstream stream;
-		stream << EN(-0.0,12,6);
-		EXPECT_EQ( "************", stream.str() );
 	}
 }
 

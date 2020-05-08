@@ -37,7 +37,6 @@
     ZONE SURFACE EAST,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -53,7 +52,6 @@
     ZONE SURFACE WEST,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -77,13 +75,13 @@
 !
 !
 
-  VERSION,8.3;
+  Version,9.3;
 
   Building,
     Exercise 1B,             !- Name
     0.0,                     !- North Axis {deg}
     Country,                 !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     ,                        !- Maximum Number of Warmup Days
@@ -98,8 +96,9 @@
   HeatBalanceAlgorithm,ConductionTransferFunction;
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    20;                      !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    20;                      !- Shading Calculation Update Frequency
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
@@ -284,7 +283,7 @@
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     Counterclockwise,        !- Vertex Entry Direction
-    WorldCoordinateSystem;   !- Coordinate System
+    World;                   !- Coordinate System
 
   BuildingSurface:Detailed,
     SURFACE NORTH,           !- Name
@@ -412,20 +411,24 @@
     ZONE ONE Supply Inlet,   !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZONE ONE Zone Air Node,  !- Zone Air Node Name
-    ZONE ONE Return Outlet;  !- Zone Return Air Node Name
+    ZONE ONE Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZONE ONE Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZONE ONE Purchased Air,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE ONE Purchased Air,  !- Name
     ,                        !- Availability Schedule Name
     ZONE ONE Supply Inlet,   !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}

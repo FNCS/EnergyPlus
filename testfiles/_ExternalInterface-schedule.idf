@@ -75,13 +75,13 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.3;
+  Version,9.3;
 
   Building,
     Building,                !- Name
     0,                       !- North Axis {deg}
     City,                    !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -100,28 +100,18 @@
     No,                      !- Run Simulation for Sizing Periods
     Yes;                     !- Run Simulation for Weather File Run Periods
 
-!!  RunPeriod,
-!!    10,                      !- Begin Month
-!!    1,                       !- Begin Day Of Month
-!!    9,                       !- End Month
-!!    30,                      !- End Day Of Month
-!!    Tuesday,                 !- Day Of Week For Start Day
-!!    Yes,                     !- Use WeatherFile Holidays/Special Days
-!!    Yes,                     !- Use WeatherFile DaylightSavingPeriod
-!!    No,                      !- Apply Weekend Holiday Rule
-!!    Yes,                     !- Use WeatherFile Rain Indicators
-!!    Yes;                     !- Use WeatherFile Snow Indicators
-
   Timestep,4;
 
 ! 6, 16 to 6, 19
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     6,                       !- Begin Month
     16,                      !- Begin Day of Month
+    ,                        !- Begin Year
     6,                       !- End Month
     19,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -136,7 +126,7 @@
     -6.00,                   !- Time Zone {hr}
     190.00;                  !- Elevation {m}
 
-! CHICAGO_IL_USA Annual Heating 99% Design Conditions DB, MaxDB= -17.3°C
+! CHICAGO_IL_USA Annual Heating 99% Design Conditions DB, MaxDB= -17.3Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO_IL_USA Annual Heating 99% Design Conditions DB,  !- Name
@@ -166,7 +156,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.0;                     !- Sky Clearness
 
-! CHICAGO_IL_USA Annual Cooling 1% Design Conditions, MaxDB=  31.5°C MCWB=  23.0°C
+! CHICAGO_IL_USA Annual Cooling 1% Design Conditions, MaxDB=  31.5Â°C MCWB=  23.0Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO_IL_USA Annual Cooling 1% Design Conditions DB/MCWB,  !- Name
@@ -359,12 +349,6 @@
     .0063;                   !- Thickness {m}
 
   Construction,
-    Dbl Clr 6mm/6mm Air,     !- Name
-    CLEAR 6MM,               !- Outside Layer
-    AIR 6MM,                 !- Layer 2
-    CLEAR 6MM;               !- Layer 3
-
-  Construction,
     Dbl LoE (e2=.1) Clr 6mm/6mm Air,  !- Name
     LoE CLEAR 6MM,           !- Outside Layer
     AIR 6MM,                 !- Layer 2
@@ -411,8 +395,8 @@
     0,                       !- Z Origin {m}
     1,                       !- Type
     1,                       !- Multiplier
-    3.048000336,             !- Ceiling Height {m}
-    453.119995117;           !- Volume {m3}
+    autocalculate,           !- Ceiling Height {m}
+    autocalculate;           !- Volume {m3}
 
   Zone,
     ZNF1,                    !- Name
@@ -422,8 +406,8 @@
     0,                       !- Z Origin {m}
     1,                       !- Type
     1,                       !- Multiplier
-    3.048000336,             !- Ceiling Height {m}
-    453.119995117;           !- Volume {m3}
+    autocalculate,           !- Ceiling Height {m}
+    autocalculate;           !- Volume {m3}
 
   Zone,
     ZSF2,                    !- Name
@@ -433,8 +417,8 @@
     3.352800369,             !- Z Origin {m}
     1,                       !- Type
     1,                       !- Multiplier
-    3.048000336,             !- Ceiling Height {m}
-    453.119995117;           !- Volume {m3}
+    autocalculate,           !- Ceiling Height {m}
+    autocalculate;           !- Volume {m3}
 
   Zone,
     ZNF2,                    !- Name
@@ -444,8 +428,8 @@
     0,                       !- Z Origin {m}
     1,                       !- Type
     1,                       !- Multiplier
-    3.048000336,             !- Ceiling Height {m}
-    453.119995117;           !- Volume {m3}
+    autocalculate,           !- Ceiling Height {m}
+    autocalculate;           !- Volume {m3}
 
   Zone,
     BASE-1,                  !- Name
@@ -455,8 +439,8 @@
     -2.438400269,            !- Z Origin {m}
     1,                       !- Type
     1,                       !- Multiplier
-    2.438400269,             !- Ceiling Height {m}
-    724.992004395;           !- Volume {m3}
+    autocalculate,           !- Ceiling Height {m}
+    autocalculate;           !- Volume {m3}
 
   GlobalGeometryRules,
     LowerLeftCorner,         !- Starting Vertex Position
@@ -831,6 +815,70 @@
     17.588914871,0,-2.4384,  !- X,Y,Z ==> Vertex 3 {m}
     0,0,-2.4384;  !- X,Y,Z ==> Vertex 4 {m}
 
+  BuildingSurface:Detailed,
+    BASE-E,                  !- Name
+    WALL,                    !- Surface Type
+    SLABL,                   !- Construction Name
+    BASE-1,                  !- Zone Name
+    Ground,                  !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    17.588914871,0,-2.4384,  !- X,Y,Z ==> Vertex 1 {m}
+    17.588914871,17.588914871,-2.4384,  !- X,Y,Z ==> Vertex 2 {m}
+    17.588914871,17.588914871,0,  !- X,Y,Z ==> Vertex 3 {m}
+    17.588914871,0,0;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    BASE-W,                  !- Name
+    WALL,                    !- Surface Type
+    SLABL,                   !- Construction Name
+    BASE-1,                  !- Zone Name
+    Ground,                  !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    0,17.588914871,-2.4384,  !- X,Y,Z ==> Vertex 1 {m}
+    0,0,-2.4384,  !- X,Y,Z ==> Vertex 2 {m}
+    0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
+    0,17.588914871,0;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    BASE-N,                  !- Name
+    WALL,                    !- Surface Type
+    SLABL,                   !- Construction Name
+    BASE-1,                  !- Zone Name
+    Ground,                  !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    17.588914871,17.588914871,-2.4384,  !- X,Y,Z ==> Vertex 1 {m}
+    0,17.588914871,-2.4384,  !- X,Y,Z ==> Vertex 2 {m}
+    0,17.588914871,0,  !- X,Y,Z ==> Vertex 3 {m}
+    17.588914871,17.588914871,0;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    BASE-S,                  !- Name
+    WALL,                    !- Surface Type
+    SLABL,                   !- Construction Name
+    BASE-1,                  !- Zone Name
+    Ground,                  !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    0,0,-2.4384,  !- X,Y,Z ==> Vertex 1 {m}
+    17.588914871,0,-2.4384,  !- X,Y,Z ==> Vertex 2 {m}
+    17.588914871,0,0,  !- X,Y,Z ==> Vertex 3 {m}
+    0,0,0;  !- X,Y,Z ==> Vertex 4 {m}
+
   FenestrationSurface:Detailed,
     EWWndw,                  !- Name
     Window,                  !- Surface Type
@@ -838,7 +886,6 @@
     EWall,                   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -854,7 +901,6 @@
     SWall,                   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -870,7 +916,6 @@
     WWall,                   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -886,7 +931,6 @@
     zE-W-5,                  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -902,7 +946,6 @@
     NWall,                   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -918,7 +961,6 @@
     zE-W-8,                  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -934,7 +976,6 @@
     zE-W-11,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -950,7 +991,6 @@
     zE-W-13,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -966,7 +1006,6 @@
     zE-W-15,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -982,7 +1021,6 @@
     zE-W-17,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -998,7 +1036,6 @@
     zE-W-19,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1014,7 +1051,6 @@
     zE-W-21,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1026,25 +1062,25 @@
   InternalMass,
     ZSF1-MASS,               !- Name
     FURNITURE,               !- Construction Name
-    ZSF1,                    !- Zone Name
+    ZSF1,                    !- Zone or ZoneList Name
     77;                      !- Surface Area {m2}
 
   InternalMass,
     ZNF1-MASS,               !- Name
     FURNITURE,               !- Construction Name
-    ZNF1,                    !- Zone Name
+    ZNF1,                    !- Zone or ZoneList Name
     77;                      !- Surface Area {m2}
 
   InternalMass,
     ZSF2-MASS,               !- Name
     FURNITURE,               !- Construction Name
-    ZSF2,                    !- Zone Name
+    ZSF2,                    !- Zone or ZoneList Name
     77;                      !- Surface Area {m2}
 
   InternalMass,
     ZNF2-MASS,               !- Name
     FURNITURE,               !- Construction Name
-    ZNF2,                    !- Zone Name
+    ZNF2,                    !- Zone or ZoneList Name
     77;                      !- Surface Area {m2}
 
   ScheduleTypeLimits,
@@ -2068,12 +2104,13 @@
 
   OtherEquipment,
     BASE-1 OthEq 1,          !- Name
+    None,                    !- Fuel Type
     BASE-1,                  !- Zone or ZoneList Name
     AlwaysOn,                !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     726,                     !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0,                       !- Fraction Latent
     0.7,                     !- Fraction Radiant
     0;                       !- Fraction Lost
@@ -2170,7 +2207,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZSF1,            !- Name
@@ -2201,7 +2243,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZNF1,            !- Name
@@ -2232,7 +2279,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZSF2,            !- Name
@@ -2263,7 +2315,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZNF2,            !- Name
@@ -2406,103 +2463,83 @@
 
   Branch,
     Air Loop 1 Main Branch,  !- Name
-    0.71,                    !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys 1,                !- Component 1 Name
     Air Loop 1 Inlet Node,   !- Component 1 Inlet Node Name
     Mixed Air 1 Node,        !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     DX Cooling Coil System 1,!- Component 2 Name
     Mixed Air 1 Node,        !- Component 2 Inlet Node Name
     DX Cooling Coil 1 Outlet Node,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     Main Heating Coil 1,     !- Component 3 Name
     DX Cooling Coil 1 Outlet Node,  !- Component 3 Inlet Node Name
     Main Heating Coil 1 Air Outlet Node,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     Supply Fan 1,            !- Component 4 Name
     Main Heating Coil 1 Air Outlet Node,  !- Component 4 Inlet Node Name
-    Air Loop 1 Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    Air Loop 1 Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     Air Loop 2 Main Branch,  !- Name
-    0.67,                    !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys 2,                !- Component 1 Name
     Air Loop 2 Inlet Node,   !- Component 1 Inlet Node Name
     Mixed Air 2 Node,        !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     DX Cooling Coil System 2,!- Component 2 Name
     Mixed Air 2 Node,        !- Component 2 Inlet Node Name
     DX Cooling Coil 2 Outlet Node,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     Main Heating Coil 2,     !- Component 3 Name
     DX Cooling Coil 2 Outlet Node,  !- Component 3 Inlet Node Name
     Main Heating Coil 2 Air Outlet Node,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     Supply Fan 2,            !- Component 4 Name
     Main Heating Coil 2 Air Outlet Node,  !- Component 4 Inlet Node Name
-    Air Loop 2 Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    Air Loop 2 Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     Air Loop 3 Main Branch,  !- Name
-    0.79,                    !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys 3,                !- Component 1 Name
     Air Loop 3 Inlet Node,   !- Component 1 Inlet Node Name
     Mixed Air 3 Node,        !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     DX Cooling Coil System 3,!- Component 2 Name
     Mixed Air 3 Node,        !- Component 2 Inlet Node Name
     DX Cooling Coil 3 Outlet Node,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     Main Heating Coil 3,     !- Component 3 Name
     DX Cooling Coil 3 Outlet Node,  !- Component 3 Inlet Node Name
     Main Heating Coil 3 Air Outlet Node,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     Supply Fan 3,            !- Component 4 Name
     Main Heating Coil 3 Air Outlet Node,  !- Component 4 Inlet Node Name
-    Air Loop 3 Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    Air Loop 3 Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     Air Loop 4 Main Branch,  !- Name
-    0.75,                    !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys 4,                !- Component 1 Name
     Air Loop 4 Inlet Node,   !- Component 1 Inlet Node Name
     Mixed Air 4 Node,        !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     DX Cooling Coil System 4,!- Component 2 Name
     Mixed Air 4 Node,        !- Component 2 Inlet Node Name
     DX Cooling Coil 4 Outlet Node,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     Main Heating Coil 4,     !- Component 3 Name
     DX Cooling Coil 4 Outlet Node,  !- Component 3 Inlet Node Name
     Main Heating Coil 4 Air Outlet Node,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     Supply Fan 4,            !- Component 4 Name
     Main Heating Coil 4 Air Outlet Node,  !- Component 4 Inlet Node Name
-    Air Loop 4 Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    Air Loop 4 Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC,
     Air Loop 1,              !- Name
@@ -2631,7 +2668,7 @@
     ZSF1Inlet,               !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZSF1 Node,               !- Zone Air Node Name
-    ZSF1 Outlet Node;        !- Zone Return Air Node Name
+    ZSF1 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZNF1,                    !- Zone Name
@@ -2639,7 +2676,7 @@
     ZNF1Inlet,               !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZNF1 Node,               !- Zone Air Node Name
-    ZNF1 Outlet Node;        !- Zone Return Air Node Name
+    ZNF1 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZSF2,                    !- Zone Name
@@ -2647,7 +2684,7 @@
     ZSF2Inlet,               !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZSF2 Node,               !- Zone Air Node Name
-    ZSF2 Outlet Node;        !- Zone Return Air Node Name
+    ZSF2 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZNF2,                    !- Zone Name
@@ -2655,7 +2692,7 @@
     ZNF2Inlet,               !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZNF2 Node,               !- Zone Air Node Name
-    ZNF2 Outlet Node;        !- Zone Return Air Node Name
+    ZNF2 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     South zone1,             !- Name
@@ -2692,55 +2729,115 @@
 
   ZoneHVAC:EquipmentList,
     ZSF1Equipment,           !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    ZSF1DirectAir,           !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    ZSF1DirectAir ADU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZNF1Equipment,           !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    ZNF1DirectAir,           !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    ZNF1DirectAir ADU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZSF2Equipment,           !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    ZSF2DirectAir,           !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    ZSF2DirectAir ADU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZNF2Equipment,           !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    ZNF2DirectAir,           !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    ZNF2DirectAir ADU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     ZSF1DirectAir,           !- Name
     FAN-SCHED,               !- Availability Schedule Name
-    ZSF1 Inlet Node,         !- Zone Supply Air Node Name
-    0.71;                    !- Maximum Air Flow Rate {m3/s}
+    ZSF1 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZSF1 Inlet Node,         !- Air Outlet Node Name
+    0.71,                    !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    ZSF1DirectAir ADU,       !- Name
+    ZSF1 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    ZSF1DirectAir,           !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     ZNF1DirectAir,           !- Name
     FAN-SCHED,               !- Availability Schedule Name
-    ZNF1 Inlet Node,         !- Zone Supply Air Node Name
-    0.67;                    !- Maximum Air Flow Rate {m3/s}
+    ZNF1 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZNF1 Inlet Node,         !- Air Outlet Node Name
+    0.67,                    !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    ZNF1DirectAir ADU,       !- Name
+    ZNF1 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    ZNF1DirectAir,           !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     ZSF2DirectAir,           !- Name
     FAN-SCHED,               !- Availability Schedule Name
-    ZSF2 Inlet Node,         !- Zone Supply Air Node Name
-    0.79;                    !- Maximum Air Flow Rate {m3/s}
+    ZSF2 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZSF2 Inlet Node,         !- Air Outlet Node Name
+    0.79,                    !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    ZSF2DirectAir ADU,       !- Name
+    ZSF2 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    ZSF2DirectAir,           !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     ZNF2DirectAir,           !- Name
     FAN-SCHED,               !- Availability Schedule Name
-    ZNF2 Inlet Node,         !- Zone Supply Air Node Name
-    0.75;                    !- Maximum Air Flow Rate {m3/s}
+    ZNF2 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZNF2 Inlet Node,         !- Air Outlet Node Name
+    0.75,                    !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    ZNF2DirectAir ADU,       !- Name
+    ZNF2 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    ZNF2DirectAir,           !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   AirLoopHVAC:SupplyPath,
     Supply Path 1,           !- Name
@@ -2793,22 +2890,22 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter 1,  !- Name
     Zone Equipment 1 Inlet Node,  !- Inlet Node Name
-    ZSF1 Inlet Node;         !- Outlet 1 Node Name
+    ZSF1 Inlet Node ATInlet; !- Outlet 1 Node Name
 
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter 2,  !- Name
     Zone Equipment 2 Inlet Node,  !- Inlet Node Name
-    ZNF1 Inlet Node;         !- Outlet 1 Node Name
+    ZNF1 Inlet Node ATInlet; !- Outlet 1 Node Name
 
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter 3,  !- Name
     Zone Equipment 3 Inlet Node,  !- Inlet Node Name
-    ZSF2 Inlet Node;         !- Outlet 1 Node Name
+    ZSF2 Inlet Node ATInlet; !- Outlet 1 Node Name
 
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter 4,  !- Name
     Zone Equipment 4 Inlet Node,  !- Inlet Node Name
-    ZNF2 Inlet Node;         !- Outlet 1 Node Name
+    ZNF2 Inlet Node ATInlet; !- Outlet 1 Node Name
 
   AirLoopHVAC:ZoneMixer,
     Zone Return Air Mixer 1, !- Name
@@ -2894,37 +2991,41 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil 4;              !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil 1,     !- Name
     FAN-SCHED,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     15000,                   !- Nominal Capacity {W}
     DX Cooling Coil 1 Outlet Node,  !- Air Inlet Node Name
     Main Heating Coil 1 Air Outlet Node,  !- Air Outlet Node Name
     Main Heating Coil 1 Air Outlet Node;  !- Temperature Setpoint Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil 2,     !- Name
     FAN-SCHED,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     15000,                   !- Nominal Capacity {W}
     DX Cooling Coil 2 Outlet Node,  !- Air Inlet Node Name
     Main Heating Coil 2 Air Outlet Node,  !- Air Outlet Node Name
     Main Heating Coil 2 Air Outlet Node;  !- Temperature Setpoint Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil 3,     !- Name
     FAN-SCHED,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     15000,                   !- Nominal Capacity {W}
     DX Cooling Coil 3 Outlet Node,  !- Air Inlet Node Name
     Main Heating Coil 3 Air Outlet Node,  !- Air Outlet Node Name
     Main Heating Coil 3 Air Outlet Node;  !- Temperature Setpoint Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil 4,     !- Name
     FAN-SCHED,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     15000,                   !- Nominal Capacity {W}
     DX Cooling Coil 4 Outlet Node,  !- Air Inlet Node Name
     Main Heating Coil 4 Air Outlet Node,  !- Air Outlet Node Name

@@ -1,156 +1,245 @@
+// EnergyPlus, Copyright (c) 1996-2020, The Board of Trustees of the University of Illinois,
+// The Regents of the University of California, through Lawrence Berkeley National Laboratory
+// (subject to receipt of any required approvals from the U.S. Dept. of Energy), Oak Ridge
+// National Laboratory, managed by UT-Battelle, Alliance for Sustainable Energy, LLC, and other
+// contributors. All rights reserved.
+//
+// NOTICE: This Software was developed under funding from the U.S. Department of Energy and the
+// U.S. Government consequently retains certain rights. As such, the U.S. Government has been
+// granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable,
+// worldwide license in the Software to reproduce, distribute copies to the public, prepare
+// derivative works, and perform publicly and display publicly, and to permit others to do so.
+//
+// Redistribution and use in source and binary forms, with or without modification, are permitted
+// provided that the following conditions are met:
+//
+// (1) Redistributions of source code must retain the above copyright notice, this list of
+//     conditions and the following disclaimer.
+//
+// (2) Redistributions in binary form must reproduce the above copyright notice, this list of
+//     conditions and the following disclaimer in the documentation and/or other materials
+//     provided with the distribution.
+//
+// (3) Neither the name of the University of California, Lawrence Berkeley National Laboratory,
+//     the University of Illinois, U.S. Dept. of Energy nor the names of its contributors may be
+//     used to endorse or promote products derived from this software without specific prior
+//     written permission.
+//
+// (4) Use of EnergyPlus(TM) Name. If Licensee (i) distributes the software in stand-alone form
+//     without changes from the version obtained under this License, or (ii) Licensee makes a
+//     reference solely to the software portion of its product, Licensee must refer to the
+//     software as "EnergyPlus version X" software, where "X" is the version number Licensee
+//     obtained under this License and may not use a different name for the software. Except as
+//     specifically required in this Section (4), Licensee shall not use in a company name, a
+//     product name, in advertising, publicity, or other promotional activities any name, trade
+//     name, trademark, logo, or other designation of "EnergyPlus", "E+", "e+" or confusingly
+//     similar designation, without the U.S. Department of Energy's prior written consent.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+// AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 // ObjexxFCL Headers
 #include <ObjexxFCL/string.functions.hh>
 
 // EnergyPlus Headers
-#include <DataOutputs.hh>
+#include <EnergyPlus/UtilityRoutines.hh>
+#include <EnergyPlus/DataOutputs.hh>
 
 namespace EnergyPlus {
 
 namespace DataOutputs {
 
-	// Module containing the data and routines dealing with prescanning for
-	// requested output variables to limit the number being processed in OutputProcessor
-	// Also any input counts (such as autosize counts/records that are used
-	// by later program modules.
+    // Module containing the data and routines dealing with prescanning for
+    // requested output variables to limit the number being processed in OutputProcessor
+    // Also any input counts (such as autosize counts/records that are used
+    // by later program modules.
 
-	// MODULE INFORMATION:
-	//       AUTHOR         Linda Lawrie
-	//       DATE WRITTEN   July 2010
-	//       MODIFIED       April 2011; to include autosize counts
-	//       RE-ENGINEERED  na
+    // MODULE INFORMATION:
+    //       AUTHOR         Linda Lawrie
+    //       DATE WRITTEN   July 2010
+    //       MODIFIED       April 2011; to include autosize counts
+    //       RE-ENGINEERED  na
 
-	// PURPOSE OF THIS MODULE:
-	// The module contains structure for output variables that are used in a small number of modules.
+    // PURPOSE OF THIS MODULE:
+    // The module contains structure for output variables that are used in a small number of modules.
 
-	// METHODOLOGY EMPLOYED:
-	// na
+    // METHODOLOGY EMPLOYED:
+    // na
 
-	// REFERENCES:
-	// na
+    // REFERENCES:
+    // na
 
-	// OTHER NOTES:
-	// na
+    // OTHER NOTES:
+    // na
 
-	// Using/Aliasing
+    // Using/Aliasing
 
-	// Data
-	// MODULE PARAMETER DEFINITIONS:
-	int const NumMonthlyReports( 62 );
-	FArray1D_string const MonthlyNamedReports( NumMonthlyReports, { "ZONECOOLINGSUMMARYMONTHLY", "ZONEHEATINGSUMMARYMONTHLY", "ZONEELECTRICSUMMARYMONTHLY", "SPACEGAINSMONTHLY", "PEAKSPACEGAINSMONTHLY", "SPACEGAINCOMPONENTSATCOOLINGPEAKMONTHLY", "ENERGYCONSUMPTIONELECTRICITYNATURALGASMONTHLY", "ENERGYCONSUMPTIONELECTRICITYGENERATEDPROPANEMONTHLY", "ENERGYCONSUMPTIONDIESELFUELOILMONTHLY", "ENERGYCONSUMPTIONDISTRICTHEATINGCOOLINGMONTHLY", "ENERGYCONSUMPTIONCOALGASOLINEMONTHLY", "ENERGYCONSUMPTIONOTHERFUELSMONTHLY", "ENDUSEENERGYCONSUMPTIONELECTRICITYMONTHLY", "ENDUSEENERGYCONSUMPTIONNATURALGASMONTHLY", "ENDUSEENERGYCONSUMPTIONDIESELMONTHLY", "ENDUSEENERGYCONSUMPTIONFUELOILMONTHLY", "ENDUSEENERGYCONSUMPTIONCOALMONTHLY", "ENDUSEENERGYCONSUMPTIONPROPANEMONTHLY", "ENDUSEENERGYCONSUMPTIONGASOLINEMONTHLY", "ENDUSEENERGYCONSUMPTIONOTHERFUELSMONTHLY", "PEAKENERGYENDUSEELECTRICITYPART1MONTHLY", "PEAKENERGYENDUSEELECTRICITYPART2MONTHLY", "ELECTRICCOMPONENTSOFPEAKDEMANDMONTHLY", "PEAKENERGYENDUSENATURALGASMONTHLY", "PEAKENERGYENDUSEDIESELMONTHLY", "PEAKENERGYENDUSEFUELOILMONTHLY", "PEAKENERGYENDUSECOALMONTHLY", "PEAKENERGYENDUSEPROPANEMONTHLY", "PEAKENERGYENDUSEGASOLINEMONTHLY", "PEAKENERGYENDUSEOTHERFUELSMONTHLY", "SETPOINTSNOTMETWITHTEMPERATURESMONTHLY", "COMFORTREPORTSIMPLE55MONTHLY", "UNGLAZEDTRANSPIREDSOLARCOLLECTORSUMMARYMONTHLY", "OCCUPANTCOMFORTDATASUMMARYMONTHLY", "CHILLERREPORTMONTHLY", "TOWERREPORTMONTHLY", "BOILERREPORTMONTHLY", "DXREPORTMONTHLY", "WINDOWREPORTMONTHLY", "WINDOWENERGYREPORTMONTHLY", "WINDOWZONESUMMARYMONTHLY", "WINDOWENERGYZONESUMMARYMONTHLY", "AVERAGEOUTDOORCONDITIONSMONTHLY", "OUTDOORCONDITIONSMAXIMUMDRYBULBMONTHLY", "OUTDOORCONDITIONSMINIMUMDRYBULBMONTHLY", "OUTDOORCONDITIONSMAXIMUMWETBULBMONTHLY", "OUTDOORCONDITIONSMAXIMUMDEWPOINTMONTHLY", "OUTDOORGROUNDCONDITIONSMONTHLY", "WINDOWACREPORTMONTHLY", "WATERHEATERREPORTMONTHLY", "GENERATORREPORTMONTHLY", "DAYLIGHTINGREPORTMONTHLY", "COILREPORTMONTHLY", "PLANTLOOPDEMANDREPORTMONTHLY", "FANREPORTMONTHLY", "PUMPREPORTMONTHLY", "CONDLOOPDEMANDREPORTMONTHLY", "ZONETEMPERATUREOSCILLATIONREPORTMONTHLY", "AIRLOOPSYSTEMENERGYANDWATERUSEMONTHLY", "AIRLOOPSYSTEMCOMPONENTLOADSMONTHLY", "AIRLOOPSYSTEMCOMPONENTENERGYUSEMONTHLY", "MECHANICALVENTILATIONLOADSMONTHLY" } );
+    // Data
+    // MODULE PARAMETER DEFINITIONS:
+    int const NumMonthlyReports(63);
+    Array1D_string const MonthlyNamedReports(NumMonthlyReports,
+                                             {"ZONECOOLINGSUMMARYMONTHLY",
+                                              "ZONEHEATINGSUMMARYMONTHLY",
+                                              "ZONEELECTRICSUMMARYMONTHLY",
+                                              "SPACEGAINSMONTHLY",
+                                              "PEAKSPACEGAINSMONTHLY",
+                                              "SPACEGAINCOMPONENTSATCOOLINGPEAKMONTHLY",
+                                              "ENERGYCONSUMPTIONELECTRICITYNATURALGASMONTHLY",
+                                              "ENERGYCONSUMPTIONELECTRICITYGENERATEDPROPANEMONTHLY",
+                                              "ENERGYCONSUMPTIONDIESELFUELOILMONTHLY",
+                                              "ENERGYCONSUMPTIONDISTRICTHEATINGCOOLINGMONTHLY",
+                                              "ENERGYCONSUMPTIONCOALGASOLINEMONTHLY",
+                                              "ENERGYCONSUMPTIONOTHERFUELSMONTHLY",
+                                              "ENDUSEENERGYCONSUMPTIONELECTRICITYMONTHLY",
+                                              "ENDUSEENERGYCONSUMPTIONNATURALGASMONTHLY",
+                                              "ENDUSEENERGYCONSUMPTIONDIESELMONTHLY",
+                                              "ENDUSEENERGYCONSUMPTIONFUELOILMONTHLY",
+                                              "ENDUSEENERGYCONSUMPTIONCOALMONTHLY",
+                                              "ENDUSEENERGYCONSUMPTIONPROPANEMONTHLY",
+                                              "ENDUSEENERGYCONSUMPTIONGASOLINEMONTHLY",
+                                              "ENDUSEENERGYCONSUMPTIONOTHERFUELSMONTHLY",
+                                              "PEAKENERGYENDUSEELECTRICITYPART1MONTHLY",
+                                              "PEAKENERGYENDUSEELECTRICITYPART2MONTHLY",
+                                              "ELECTRICCOMPONENTSOFPEAKDEMANDMONTHLY",
+                                              "PEAKENERGYENDUSENATURALGASMONTHLY",
+                                              "PEAKENERGYENDUSEDIESELMONTHLY",
+                                              "PEAKENERGYENDUSEFUELOILMONTHLY",
+                                              "PEAKENERGYENDUSECOALMONTHLY",
+                                              "PEAKENERGYENDUSEPROPANEMONTHLY",
+                                              "PEAKENERGYENDUSEGASOLINEMONTHLY",
+                                              "PEAKENERGYENDUSEOTHERFUELSMONTHLY",
+                                              "SETPOINTSNOTMETWITHTEMPERATURESMONTHLY",
+                                              "COMFORTREPORTSIMPLE55MONTHLY",
+                                              "UNGLAZEDTRANSPIREDSOLARCOLLECTORSUMMARYMONTHLY",
+                                              "OCCUPANTCOMFORTDATASUMMARYMONTHLY",
+                                              "CHILLERREPORTMONTHLY",
+                                              "TOWERREPORTMONTHLY",
+                                              "BOILERREPORTMONTHLY",
+                                              "DXREPORTMONTHLY",
+                                              "WINDOWREPORTMONTHLY",
+                                              "WINDOWENERGYREPORTMONTHLY",
+                                              "WINDOWZONESUMMARYMONTHLY",
+                                              "WINDOWENERGYZONESUMMARYMONTHLY",
+                                              "AVERAGEOUTDOORCONDITIONSMONTHLY",
+                                              "OUTDOORCONDITIONSMAXIMUMDRYBULBMONTHLY",
+                                              "OUTDOORCONDITIONSMINIMUMDRYBULBMONTHLY",
+                                              "OUTDOORCONDITIONSMAXIMUMWETBULBMONTHLY",
+                                              "OUTDOORCONDITIONSMAXIMUMDEWPOINTMONTHLY",
+                                              "OUTDOORGROUNDCONDITIONSMONTHLY",
+                                              "WINDOWACREPORTMONTHLY",
+                                              "WATERHEATERREPORTMONTHLY",
+                                              "GENERATORREPORTMONTHLY",
+                                              "DAYLIGHTINGREPORTMONTHLY",
+                                              "COILREPORTMONTHLY",
+                                              "PLANTLOOPDEMANDREPORTMONTHLY",
+                                              "FANREPORTMONTHLY",
+                                              "PUMPREPORTMONTHLY",
+                                              "CONDLOOPDEMANDREPORTMONTHLY",
+                                              "ZONETEMPERATUREOSCILLATIONREPORTMONTHLY",
+                                              "AIRLOOPSYSTEMENERGYANDWATERUSEMONTHLY",
+                                              "AIRLOOPSYSTEMCOMPONENTLOADSMONTHLY",
+                                              "AIRLOOPSYSTEMCOMPONENTENERGYUSEMONTHLY",
+                                              "MECHANICALVENTILATIONLOADSMONTHLY",
+                                              "HEATEMISSIONSREPORTMONTHLY"});
 
-	// DERIVED TYPE DEFINITIONS:
+    // DERIVED TYPE DEFINITIONS:
 
-	// MODULE VARIABLE DECLARATIONS:
-	int MaxConsideredOutputVariables( 0 ); // Max Array size for OutputVariable pre-scanned
-	int NumConsideredOutputVariables( 0 ); // Number of variables - pre-scanned, allowed for output
-	int iNumberOfRecords; // Number of records in input
-	int iNumberOfDefaultedFields; // number of defaulted fields
-	int iTotalFieldsWithDefaults; // number of fields that can be defaulted
-	int iNumberOfAutoSizedFields; // number of autosized fields
-	int iTotalAutoSizableFields; // number of fields that can be autosized
-	int iNumberOfAutoCalcedFields; // number of autocalculated fields
-	int iTotalAutoCalculatableFields; // number of fields that can be autocalculated
+    // MODULE VARIABLE DECLARATIONS:
+    int MaxConsideredOutputVariables(0); // Max Array size for OutputVariable pre-scanned
+    int NumConsideredOutputVariables(0); // Number of variables - pre-scanned, allowed for output
+    int iNumberOfRecords;                // Number of records in input
+    int iNumberOfDefaultedFields;        // number of defaulted fields
+    int iTotalFieldsWithDefaults;        // number of fields that can be defaulted
+    int iNumberOfAutoSizedFields;        // number of autosized fields
+    int iTotalAutoSizableFields;         // number of fields that can be autosized
+    int iNumberOfAutoCalcedFields;       // number of autocalculated fields
+    int iTotalAutoCalculatableFields;    // number of fields that can be autocalculated
 
-	// Object Data
-	FArray1D< OutputReportingVariables > OutputVariablesForSimulation;
+    // Object Data
+    std::unordered_map<std::string, std::unordered_map<std::string, OutputReportingVariables,
+                                                      UtilityRoutines::case_insensitive_hasher,
+                                                      UtilityRoutines::case_insensitive_comparator>,
+                       UtilityRoutines::case_insensitive_hasher,
+                       UtilityRoutines::case_insensitive_comparator> OutputVariablesForSimulation;
+    // Functions
 
-	// Functions
+    OutputReportingVariables::OutputReportingVariables(std::string const &KeyValue, std::string const &VariableName)
+        : key(KeyValue), variableName(VariableName)
+    {
+        if (KeyValue == "*") return;
+        for (auto const &c : KeyValue) {
+            if (c == ' ' || c == '_' || std::isalnum(c)) continue;
+            is_simple_string = false;
+            break;
+        }
+        if (is_simple_string) return;
+        pattern = std::unique_ptr<RE2>(new RE2(KeyValue));
+        case_insensitive_pattern = std::unique_ptr<RE2>(new RE2("(?i)" + KeyValue));
+        if (!pattern->ok()) {
+            ShowSevereError("Regular expression \"" + KeyValue + "\" for variable name \"" + VariableName + "\" in input file is incorrect");
+            ShowContinueError(pattern->error());
+            ShowFatalError("Error found in regular expression. Previous error(s) cause program termination.");
+        }
+    }
 
-	bool
-	FindItemInVariableList(
-		std::string const & KeyedValue,
-		std::string const & VariableName
-	)
-	{
+    // Clears the global data in DataOutputs.
+    // Needed for unit tests, should not be normally called.
+    void clear_state()
+    {
+        MaxConsideredOutputVariables = 0;
+        NumConsideredOutputVariables = 0;
+        iNumberOfRecords = int();
+        iNumberOfDefaultedFields = int();
+        iTotalFieldsWithDefaults = int();
+        iNumberOfAutoSizedFields = int();
+        iTotalAutoSizableFields = int();
+        iNumberOfAutoCalcedFields = int();
+        iTotalAutoCalculatableFields = int();
+        OutputVariablesForSimulation.clear();
+    }
 
-		// FUNCTION INFORMATION:
-		//       AUTHOR         Linda Lawrie
-		//       DATE WRITTEN   July 2010
-		//       MODIFIED       na
-		//       RE-ENGINEERED  na
+    bool FindItemInVariableList(std::string const &KeyedValue, std::string const &VariableName)
+    {
 
-		// PURPOSE OF THIS FUNCTION:
-		// This function looks up a key and variable name value and determines if they are
-		// in the list of required variables for a simulation.
+        // FUNCTION INFORMATION:
+        //       AUTHOR         Linda Lawrie
+        //       DATE WRITTEN   July 2010
+        //       MODIFIED       December 2016
+        //       RE-ENGINEERED  na
 
-		// METHODOLOGY EMPLOYED:
-		// na
+        // PURPOSE OF THIS FUNCTION:
+        // This function looks up a key and variable name value and determines if they are
+        // in the list of required variables for a simulation.
 
-		// REFERENCES:
-		// na
+        auto const found_variable = OutputVariablesForSimulation.find(VariableName);
+        if (found_variable == OutputVariablesForSimulation.end()) return false;
 
-		// USE STATEMENTS:
-		// na
+        auto found_key = found_variable->second.find(KeyedValue);
+        if (found_key != found_variable->second.end()) return true;
 
-		// Return value
-		bool InVariableList;
+        found_key = found_variable->second.find("*");
+        if (found_key != found_variable->second.end()) return true;
 
-		// Locals
-		// FUNCTION ARGUMENT DEFINITIONS:
+        for (auto it = found_variable->second.begin(); it != found_variable->second.end(); ++it) {
+            if (equali(KeyedValue, it->second.key)) return true;
+            if (it->second.is_simple_string) continue;
+            if ((it->second.pattern != nullptr && RE2::FullMatch(KeyedValue, *it->second.pattern)) || // match against regex as written
+                (it->second.case_insensitive_pattern != nullptr &&
+                 RE2::FullMatch(KeyedValue, *it->second.case_insensitive_pattern)) // attempt case-insensitive regex comparison
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		// FUNCTION PARAMETER DEFINITIONS:
-		// na
+} // namespace DataOutputs
 
-		// INTERFACE BLOCK SPECIFICATIONS:
-		// na
-
-		// DERIVED TYPE DEFINITIONS:
-		// na
-
-		// FUNCTION LOCAL VARIABLE DECLARATIONS:
-		int Found;
-		int Item;
-
-		InVariableList = false;
-		Found = 0;
-		for ( Item = 1; Item <= NumConsideredOutputVariables; ++Item ) {
-			if ( ! equali( VariableName, OutputVariablesForSimulation( Item ).VarName ) ) continue;
-			Found = Item;
-			break;
-		}
-		if ( Found != 0 ) {
-			if ( equali( KeyedValue, OutputVariablesForSimulation( Found ).Key ) || OutputVariablesForSimulation( Found ).Key == "*" ) {
-				InVariableList = true;
-			} else {
-				while ( Found != 0 ) {
-					Found = OutputVariablesForSimulation( Found ).Next;
-					if ( Found != 0 ) {
-						if ( equali( KeyedValue, OutputVariablesForSimulation( Found ).Key ) || OutputVariablesForSimulation( Found ).Key == "*" ) {
-							InVariableList = true;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		return InVariableList;
-
-	}
-
-	//     NOTICE
-
-	//     Copyright © 1996-2014 The Board of Trustees of the University of Illinois
-	//     and The Regents of the University of California through Ernest Orlando Lawrence
-	//     Berkeley National Laboratory.  All rights reserved.
-
-	//     Portions of the EnergyPlus software package have been developed and copyrighted
-	//     by other individuals, companies and institutions.  These portions have been
-	//     incorporated into the EnergyPlus software package under license.   For a complete
-	//     list of contributors, see "Notice" located in main.cc.
-
-	//     NOTICE: The U.S. Government is granted for itself and others acting on its
-	//     behalf a paid-up, nonexclusive, irrevocable, worldwide license in this data to
-	//     reproduce, prepare derivative works, and perform publicly and display publicly.
-	//     Beginning five (5) years after permission to assert copyright is granted,
-	//     subject to two possible five year renewals, the U.S. Government is granted for
-	//     itself and others acting on its behalf a paid-up, non-exclusive, irrevocable
-	//     worldwide license in this data to reproduce, prepare derivative works,
-	//     distribute copies to the public, perform publicly and display publicly, and to
-	//     permit others to do so.
-
-	//     TRADEMARKS: EnergyPlus is a trademark of the US Department of Energy.
-
-} // DataOutputs
-
-} // EnergyPlus
+} // namespace EnergyPlus

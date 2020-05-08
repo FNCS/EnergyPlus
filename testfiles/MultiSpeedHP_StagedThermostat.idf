@@ -12,8 +12,8 @@
 !
 ! Location:                Chicago, IL
 !
-! Design Days:             CHICAGO_IL_USA Annual Heating 99% Design Conditions DB, MaxDB= -17.3øC
-!                          CHICAGO_IL_USA Annual Cooling 1% Design Conditions, MaxDB=  31.5øC MCWB=  23.0øC
+! Design Days:             CHICAGO_IL_USA Annual Heating 99% Design Conditions DB, MaxDB= -17.3Â°C
+!                          CHICAGO_IL_USA Annual Cooling 1% Design Conditions, MaxDB=  31.5Â°C MCWB=  23.0Â°C
 !
 ! Run Period (Weather File): Winter 1/14, Summer 7/7, CHICAGO_IL_USA TMY2-94846
 !
@@ -23,7 +23,7 @@
 !           There is a single window in West Zone's south wall. The walls are 1 in stucco over 4 in common brick
 !           and gypboard. The roof is a built up roof with 1/2 in stone over 3/8 in felt over 1 in dense insulation
 !           supported by 2 in heavy weight concrete. The window is single pane 3mm clear.
-!           The window to wall ratio is approxomately 0.07.
+!           The window to wall ratio is approximately 0.07.
 !
 !           The building is oriented due north.
 !
@@ -85,7 +85,7 @@
 ! Purchased Heating:              No
 ! Purchased Chilled Water:        No
 ! Purchased Hot Water:            No
-! Coils:                          Coil:Cooling:DX:MultiSpeed, Coil:Heating:DX:MultiSpeed, Coil:Heating:Gas
+! Coils:                          Coil:Cooling:DX:MultiSpeed, Coil:Heating:DX:MultiSpeed, Coil:Heating:Fuel
 ! Pumps:                          None
 ! Boilers:                        None
 ! Chillers:                       None
@@ -99,7 +99,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,6;
 
@@ -107,7 +107,7 @@
     NONE,                    !- Name
     0.0000000E+00,           !- North Axis {deg}
     Suburbs,                 !- Terrain
-    3.9999999E-02,           !- Loads Convergence Tolerance Value
+    3.9999999E-02,           !- Loads Convergence Tolerance Value {W}
     0.4000000,               !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -120,11 +120,13 @@
   SurfaceConvectionAlgorithm:Outside,DOE-2;
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     14,                      !- Begin Day of Month
+    ,                        !- Begin Year
     1,                       !- End Month
     14,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -133,11 +135,13 @@
     Yes;                     !- Use Weather File Snow Indicators
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 2,            !- Name
     7,                       !- Begin Month
     7,                       !- Begin Day of Month
+    ,                        !- Begin Year
     7,                       !- End Month
     7,                       !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -159,7 +163,7 @@
     -6.00,                   !- Time Zone {hr}
     190.00;                  !- Elevation {m}
 
-! CHICAGO_IL_USA Annual Heating 99% Design Conditions DB, MaxDB= -17.3øC
+! CHICAGO_IL_USA Annual Heating 99% Design Conditions DB, MaxDB= -17.3Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO_IL_USA Annual Heating 99% Design Conditions DB,  !- Name
@@ -189,7 +193,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.0;                     !- Sky Clearness
 
- ! CHICAGO_IL_USA Annual Cooling 1% Design Conditions, MaxDB=  31.5øC MCWB=  23.0øC
+ ! CHICAGO_IL_USA Annual Cooling 1% Design Conditions, MaxDB=  31.5Â°C MCWB=  23.0Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO_IL_USA Annual Cooling 1% Design Conditions DB/MCWB,  !- Name
@@ -651,7 +655,6 @@
     Zn001:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1104,18 +1107,15 @@
 
   Branch,
     Air Loop Main Branch,    !- Name
-    1.7,                     !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys 1,                !- Component 1 Name
     Outdoor Air Mixer Inlet Node,  !- Component 1 Inlet Node Name
     Mixed Air Node,          !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,  !- Component 2 Object Type
     DXAC Heat Pump 1,        !- Component 2 Name
     Mixed Air Node,          !- Component 2 Inlet Node Name
-    Air Loop Outlet Node,    !- Component 2 Outlet Node Name
-    ACTIVE;                  !- Component 2 Branch Control Type
+    Air Loop Outlet Node;    !- Component 2 Outlet Node Name
 
   AvailabilityManagerAssignmentList,
     Heat Pump 1 Avail List,  !- Name
@@ -1183,9 +1183,9 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter,!- Name
     Zone Equipment Inlet Node,  !- Inlet Node Name
-    Zone 1 Inlet Node,       !- Outlet 1 Node Name
-    Zone 2 Inlet Node,       !- Outlet 2 Node Name
-    Zone 3 Inlet Node;       !- Outlet 3 Node Name
+    Zone 1 Inlet Node ATInlet,  !- Outlet 1 Node Name
+    Zone 2 Inlet Node ATInlet,  !- Outlet 2 Node Name
+    Zone 3 Inlet Node ATInlet;  !- Outlet 3 Node Name
 
   AirLoopHVAC:ZoneMixer,
     Zone Return Air Mixer,   !- Name
@@ -1200,7 +1200,7 @@
     Zone1Inlets,             !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Zone 1 Node,             !- Zone Air Node Name
-    Zone 1 Outlet Node;      !- Zone Return Air Node Name
+    Zone 1 Outlet Node;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     EAST ZONE,               !- Zone Name
@@ -1208,7 +1208,7 @@
     Zone2Inlets,             !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Zone 2 Node,             !- Zone Air Node Name
-    Zone 2 Outlet Node;      !- Zone Return Air Node Name
+    Zone 2 Outlet Node;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     NORTH ZONE,              !- Zone Name
@@ -1216,46 +1216,91 @@
     Zone3Inlets,             !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Zone 3 Node,             !- Zone Air Node Name
-    Zone 3 Outlet Node;      !- Zone Return Air Node Name
+    Zone 3 Outlet Node;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Zone1Equipment,          !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone1DirectAir,          !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone1DirectAir ADU,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Zone2Equipment,          !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone2DirectAir,          !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone2DirectAir ADU,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Zone3Equipment,          !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone3DirectAir,          !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone3DirectAir ADU,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone1DirectAir,          !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    Zone 1 Inlet Node,       !- Zone Supply Air Node Name
-    0.612;                   !- Maximum Air Flow Rate {m3/s}
+    Zone 1 Inlet Node ATInlet,  !- Air Inlet Node Name
+    Zone 1 Inlet Node,       !- Air Outlet Node Name
+    0.612,                   !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    Zone1DirectAir ADU,      !- Name
+    Zone 1 Inlet Node,       !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone1DirectAir,          !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone2DirectAir,          !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    Zone 2 Inlet Node,       !- Zone Supply Air Node Name
-    0.476;                   !- Maximum Air Flow Rate {m3/s}
+    Zone 2 Inlet Node ATInlet,  !- Air Inlet Node Name
+    Zone 2 Inlet Node,       !- Air Outlet Node Name
+    0.476,                   !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    Zone2DirectAir ADU,      !- Name
+    Zone 2 Inlet Node,       !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone2DirectAir,          !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone3DirectAir,          !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    Zone 3 Inlet Node,       !- Zone Supply Air Node Name
-    0.612;                   !- Maximum Air Flow Rate {m3/s}
+    Zone 3 Inlet Node ATInlet,  !- Air Inlet Node Name
+    Zone 3 Inlet Node,       !- Air Outlet Node Name
+    0.612,                   !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone3DirectAir ADU,      !- Name
+    Zone 3 Inlet Node,       !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone3DirectAir,          !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   NodeList,
     Zone1Inlets,             !- Name
@@ -1303,7 +1348,7 @@
     -8.0,                    !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     Coil:Cooling:DX:MultiSpeed,  !- Cooling Coil Object Type
     Heat Pump ACDXCoil 1,    !- Cooling Coil Name
-    Coil:Heating:Gas,        !- Supplemental Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Supplemental Heating Coil Object Type
     Supp Gas Heating Coil 1, !- Supplemental Heating Coil Name
     55.0,                    !- Maximum Supply Air Temperature from Supplemental Heater {C}
     21,                      !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
@@ -1313,17 +1358,17 @@
     80.0,                    !- Maximum Temperature for Heat Recovery {C}
     ,                        !- Heat Recovery Water Inlet Node Name
     ,                        !- Heat Recovery Water Outlet Node Name
-    0.2,                     !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    0.2,                     !- No Load Supply Air Flow Rate {m3/s}
     4,                       !- Number of Speeds for Heating
     4,                       !- Number of Speeds for Cooling
-    0.4,                     !- Speed 1 Supply Air Flow Rate During Heating Operation {m3/s}
-    0.8,                     !- Speed 2 Supply Air Flow Rate During Heating Operation {m3/s}
-    1.2,                     !- Speed 3 Supply Air Flow Rate During Heating Operation {m3/s}
-    1.7,                     !- Speed 4 Supply Air Flow Rate During Heating Operation {m3/s}
-    0.4,                     !- Speed 1 Supply Air Flow Rate During Cooling Operation {m3/s}
-    0.8,                     !- Speed 2 Supply Air Flow Rate During Cooling Operation {m3/s}
-    1.2,                     !- Speed 3 Supply Air Flow Rate During Cooling Operation {m3/s}
-    1.7;                     !- Speed 4 Supply Air Flow Rate During Cooling Operation {m3/s}
+    0.4,                     !- Heating Speed 1 Supply Air Flow Rate {m3/s}
+    0.8,                     !- Heating Speed 2 Supply Air Flow Rate {m3/s}
+    1.2,                     !- Heating Speed 3 Supply Air Flow Rate {m3/s}
+    1.7,                     !- Heating Speed 4 Supply Air Flow Rate {m3/s}
+    0.4,                     !- Cooling Speed 1 Supply Air Flow Rate {m3/s}
+    0.8,                     !- Cooling Speed 2 Supply Air Flow Rate {m3/s}
+    1.2,                     !- Cooling Speed 3 Supply Air Flow Rate {m3/s}
+    1.7;                     !- Cooling Speed 4 Supply Air Flow Rate {m3/s}
 
   Coil:Heating:DX:MultiSpeed,
     Heat Pump DX Heating Coil 1,  !- Name
@@ -1700,6 +1745,7 @@
     Heating Coil Air Inlet Node,  !- Air Outlet Node Name
     Outdoor Condenser Air Node,  !- Condenser Air Inlet Node Name
     AirCooled,               !- Condenser Type
+    -8.0,                    !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
     No,                      !- Apply Part Load Fraction to Speeds Greater than 1
@@ -1715,7 +1761,7 @@
     0.75,                    !- Speed 1 Gross Rated Sensible Heat Ratio
     3.0,                     !- Speed 1 Gross Rated Cooling COP {W/W}
     0.40,                    !- Speed 1 Rated Air Flow Rate {m3/s}
-    453.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    453.3,                   !- Speed 1 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     HPACCoolCapFT Speed 1,   !- Speed 1 Total Cooling Capacity Function of Temperature Curve Name
     HPACCoolCapFF Speed 1,   !- Speed 1 Total Cooling Capacity Function of Flow Fraction Curve Name
     HPACCOOLEIRFT Speed 1,   !- Speed 1 Energy Input Ratio Function of Temperature Curve Name
@@ -1734,7 +1780,7 @@
     0.75,                    !- Speed 2 Gross Rated Sensible Heat Ratio
     3.0,                     !- Speed 2 Gross Rated Cooling COP {W/W}
     0.85,                    !- Speed 2 Rated Air Flow Rate {m3/s}
-    523.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    523.3,                   !- Speed 2 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     HPACCoolCapFT Speed 2,   !- Speed 2 Total Cooling Capacity Function of Temperature Curve Name
     HPACCoolCapFF Speed 2,   !- Speed 2 Total Cooling Capacity Function of Flow Fraction Curve Name
     HPACCOOLEIRFT Speed 2,   !- Speed 2 Energy Input Ratio Function of Temperature Curve Name
@@ -1753,7 +1799,7 @@
     0.75,                    !- Speed 3 Gross Rated Sensible Heat Ratio
     3.0,                     !- Speed 3 Gross Rated Cooling COP {W/W}
     1.25,                    !- Speed 3 Rated Air Flow Rate {m3/s}
-    573.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    573.3,                   !- Speed 3 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     HPACCoolCapFT Speed 3,   !- Speed 3 Total Cooling Capacity Function of Temperature Curve Name
     HPACCoolCapFF Speed 3,   !- Speed 3 Total Cooling Capacity Function of Flow Fraction Curve Name
     HPACCOOLEIRFT Speed 3,   !- Speed 3 Energy Input Ratio Function of Temperature Curve Name
@@ -1772,7 +1818,7 @@
     0.75,                    !- Speed 4 Gross Rated Sensible Heat Ratio
     3.0,                     !- Speed 4 Gross Rated Cooling COP {W/W}
     1.75,                    !- Speed 4 Rated Air Flow Rate {m3/s}
-    673.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    673.3,                   !- Speed 4 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     HPACCoolCapFT Speed 4,   !- Speed 4 Total Cooling Capacity Function of Temperature Curve Name
     HPACCoolCapFF Speed 4,   !- Speed 4 Total Cooling Capacity Function of Flow Fraction Curve Name
     HPACCOOLEIRFT Speed 4,   !- Speed 4 Energy Input Ratio Function of Temperature Curve Name
@@ -2128,10 +2174,11 @@
     Temperature,             !- Input Unit Type for Y
     Dimensionless;           !- Output Unit Type
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Supp Gas Heating Coil 1, !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     45000,                   !- Nominal Capacity {W}
     SuppHeating Coil Air Inlet Node,  !- Air Inlet Node Name
     Air Loop Outlet Node;    !- Air Outlet Node Name
@@ -2204,9 +2251,9 @@
 
   Output:Variable,*,Heating Coil Defrost Gas Rate,timestep;
 
-  Output:Variable,*,Heating Coil Air Heating Energy,timestep;
+  Output:Variable,*,Heating Coil Heating Energy,timestep;
 
-  Output:Variable,*,Heating Coil Air Heating Rate,timestep;
+  Output:Variable,*,Heating Coil Heating Rate,timestep;
 
   Output:Variable,*,Heating Coil Gas Rate,timestep;
 

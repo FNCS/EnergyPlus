@@ -10,8 +10,8 @@
 !
 ! Location:                Orlando, FL
 !
-! Design Days:             Orlando_FL_USA Annual Heating 99.6%, MaxDB=4캜
-!                          Orlando_FL_USA Annual Cooling (WB=>MDB) .4%, MDB=30.7캜 WB=26.8캜
+! Design Days:             Orlando_FL_USA Annual Heating 99.6%, MaxDB=4째C
+!                          Orlando_FL_USA Annual Cooling (WB=>MDB) .4%, MDB=30.7째C WB=26.8째C
 !
 ! Run Period (Weather File): Full year ORLANDO FL USA TMY
 !
@@ -55,19 +55,19 @@
 ! Environmental Emissions:
 ! Utility Tariffs:
 
-  Version,8.3;
+  Version,9.3;
 
   Building,
     AutoBuilt Model,         !- Name
     0.00,                    !- North Axis {deg}
     City,                    !- Terrain
-    0.040,                   !- Loads Convergence Tolerance Value
+    0.040,                   !- Loads Convergence Tolerance Value {W}
     0.200,                   !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
 
-  Timestep,12;
+  Timestep,60;
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -78,8 +78,9 @@
 ! Shadow Update Interval
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    30;                      !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    30;                      !- Shading Calculation Update Frequency
 
 !Zone/System/Plant/DesignDay/Weather
 
@@ -91,11 +92,13 @@
     Yes;                     !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
@@ -180,10 +183,10 @@
 
 ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
 ! Orlando_FL_USA Extreme Annual Wind Speeds, 1%=8.5m/s, 2.5%=7.8m/s, 5%=7m/s
-! Orlando_FL_USA Extreme Annual Temperatures, Max Drybulb=35.9캜 Min Drybulb=0.1캜
+! Orlando_FL_USA Extreme Annual Temperatures, Max Drybulb=35.9째C Min Drybulb=0.1째C
 ! Orlando_FL_USA Annual Heating Design Conditions Wind Speed=3.7m/s Wind Dir=330
 ! Coldest Month=JAN
-! Orlando_FL_USA Annual Heating 99.6%, MaxDB=4캜
+! Orlando_FL_USA Annual Heating 99.6%, MaxDB=4째C
 
   SizingPeriod:DesignDay,
     Orlando Ann Htg 99.6% Condns DB,  !- Name
@@ -213,7 +216,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
-! Orlando_FL_USA Annual Cooling (WB=>MDB) .4%, MDB=30.7캜 WB=26.8캜
+! Orlando_FL_USA Annual Cooling (WB=>MDB) .4%, MDB=30.7째C WB=26.8째C
 
   SizingPeriod:DesignDay,
     Orlando Ann Clg .4% Condns WB=>MDB,  !- Name
@@ -560,36 +563,6 @@
     MAT-CC05 4  MW CONCRETE; !- Layer 2
 
   Construction,
-    INT-FLOOR-SLAB,          !- Name
-    MAT-CC05 4  MW CONCRETE; !- Outside Layer
-
-  Construction,
-    DropCeiling,             !- Name
-    AC02;                    !- Outside Layer
-
-  Construction,
-    Raised-Floor-TopSide,    !- Name
-    1.5  MW CONCRETE,        !- Outside Layer
-    CP02 CARPET PAD;         !- Layer 2
-
-  Construction,
-    Raised-Floor-UnderSide,  !- Name
-    CP02 CARPET PAD,         !- Outside Layer
-    1.5  MW CONCRETE;        !- Layer 2
-
-  Construction,
-    TDD_Pipe,                !- Name
-    Very High Reflectivity Surface;  !- Outside Layer
-
-  Construction,
-    TDD_Dome,                !- Name
-    Clear Acrylic Plastic;   !- Outside Layer
-
-  Construction,
-    TDD_Diffuser,            !- Name
-    Diffusing Acrylic Plastic;  !- Outside Layer
-
-  Construction,
     ASHRAE 90.1-2004_Sec 5.5-2_Roof,  !- Name
     BaseEco,                 !- Outside Layer
     ASHRAE 90.1-2004_Sec 5.5-2_Roof Insulation_1,  !- Layer 2
@@ -626,10 +599,6 @@
   Construction,
     ASHRAE 90.1-2004_Sec 5.5-2_west_window,  !- Name
     ASHRAE 90.1-2004_Sec 5.5-2_Theoretical Glass 6;  !- Outside Layer
-
-  Construction,
-    ASHRAE 90.1-2004_Sec 5.5-2_skylight_window,  !- Name
-    ASHRAE 90.1-2004_Sec 5.5-2_Theoretical Glass 0;  !- Outside Layer
 
   Zone,
     ZN1_S_Space_1,           !- Name
@@ -784,7 +753,7 @@
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     CounterClockWise,        !- Vertex Entry Direction
-    relative;                !- Coordinate System
+    Relative;                !- Coordinate System
 
   BuildingSurface:Detailed,
     ZN1_S_Space_1:ExtWall:South,  !- Name
@@ -1753,7 +1722,6 @@
     ZN1_S_Space_1:ExtWall:South,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1769,7 +1737,6 @@
     ZN2_E_Space_1:ExtWall:East,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1785,7 +1752,6 @@
     ZN3_N_Space_1:ExtWall:North,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1801,7 +1767,6 @@
     ZN4_W_Space_1:ExtWall:West,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1817,7 +1782,6 @@
     ZN6_S_Space_2:ExtWall:South,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1833,7 +1797,6 @@
     ZN7_E_Space_2:ExtWall:East,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1849,7 +1812,6 @@
     ZN8_N_Space_2:ExtWall:North,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1865,7 +1827,6 @@
     ZN9_W_Space_2:ExtWall:West,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1877,61 +1838,61 @@
   InternalMass,
     ZN1_S_Space_1,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN1_S_Space_1,           !- Zone Name
+    ZN1_S_Space_1,           !- Zone or ZoneList Name
     186.730;                 !- Surface Area {m2}
 
   InternalMass,
     ZN2_E_Space_1,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN2_E_Space_1,           !- Zone Name
+    ZN2_E_Space_1,           !- Zone or ZoneList Name
     186.730;                 !- Surface Area {m2}
 
   InternalMass,
     ZN3_N_Space_1,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN3_N_Space_1,           !- Zone Name
+    ZN3_N_Space_1,           !- Zone or ZoneList Name
     186.730;                 !- Surface Area {m2}
 
   InternalMass,
     ZN4_W_Space_1,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN4_W_Space_1,           !- Zone Name
+    ZN4_W_Space_1,           !- Zone or ZoneList Name
     186.730;                 !- Surface Area {m2}
 
   InternalMass,
     ZN5_Core_Space_1,        !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN5_Core_Space_1,        !- Zone Name
+    ZN5_Core_Space_1,        !- Zone or ZoneList Name
     503.079;                 !- Surface Area {m2}
 
   InternalMass,
     ZN6_S_Space_2,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN6_S_Space_2,           !- Zone Name
+    ZN6_S_Space_2,           !- Zone or ZoneList Name
     186.730;                 !- Surface Area {m2}
 
   InternalMass,
     ZN7_E_Space_2,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN7_E_Space_2,           !- Zone Name
+    ZN7_E_Space_2,           !- Zone or ZoneList Name
     186.730;                 !- Surface Area {m2}
 
   InternalMass,
     ZN8_N_Space_2,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN8_N_Space_2,           !- Zone Name
+    ZN8_N_Space_2,           !- Zone or ZoneList Name
     186.730;                 !- Surface Area {m2}
 
   InternalMass,
     ZN9_W_Space_2,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN9_W_Space_2,           !- Zone Name
+    ZN9_W_Space_2,           !- Zone or ZoneList Name
     186.730;                 !- Surface Area {m2}
 
   InternalMass,
     ZN10_Core_Space_2,       !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN10_Core_Space_2,       !- Zone Name
+    ZN10_Core_Space_2,       !- Zone or ZoneList Name
     503.079;                 !- Surface Area {m2}
 
   ScheduleTypeLimits,
@@ -4233,100 +4194,116 @@
 !Zone Control Fractions
 
   Daylighting:Controls,
+    ZN1_S_Space_1_DaylCtrl,  !- Name
     ZN1_S_Space_1,           !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    12.500,                  !- X-Coordinate of First Reference Point {m}
-    2.285,                   !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    0,                       !- X-Coordinate of Second Reference Point {m}
-    0,                       !- Y-Coordinate of Second Reference Point {m}
-    0,                       !- Z-Coordinate of Second Reference Point {m}
-    1.00,                    !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    400.000,                 !- Illuminance Setpoint at First Reference Point {lux}
-    400.000,                 !- Illuminance Setpoint at Second Reference Point {lux}
-    2,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    3,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZN1_S_Space_1_DaylRefPt1,!- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20.000,                  !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    3,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    ZN1_S_Space_1_DaylRefPt1,!- Daylighting Reference Point 1 Name
+    1.00,                    !- Fraction of Zone Controlled by Reference Point 1
+    400.000;                 !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    ZN1_S_Space_1_DaylRefPt1,!- Name
+    ZN1_S_Space_1,           !- Zone Name
+    12.500,                  !- X-Coordinate of Reference Point {m}
+    2.285,                   !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
 !X1, Y1, Z1
 !X2, Y2, Z2
 !Zone Control Fractions
 
   Daylighting:Controls,
+    ZN2_E_Space_1_DaylCtrl,  !- Name
     ZN2_E_Space_1,           !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    2.285,                   !- X-Coordinate of First Reference Point {m}
-    7.930,                   !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    0,                       !- X-Coordinate of Second Reference Point {m}
-    0,                       !- Y-Coordinate of Second Reference Point {m}
-    0,                       !- Z-Coordinate of Second Reference Point {m}
-    1.00,                    !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    400.000,                 !- Illuminance Setpoint at First Reference Point {lux}
-    400.000,                 !- Illuminance Setpoint at Second Reference Point {lux}
-    2,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    3,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZN2_E_Space_1_DaylRefPt1,!- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20.000,                  !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    3,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    ZN2_E_Space_1_DaylRefPt1,!- Daylighting Reference Point 1 Name
+    1.00,                    !- Fraction of Zone Controlled by Reference Point 1
+    400.000;                 !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    ZN2_E_Space_1_DaylRefPt1,!- Name
+    ZN2_E_Space_1,           !- Zone Name
+    2.285,                   !- X-Coordinate of Reference Point {m}
+    7.930,                   !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
 !X1, Y1, Z1
 !X2, Y2, Z2
 !Zone Control Fractions
 
   Daylighting:Controls,
+    ZN3_N_Space_1_DaylCtrl,  !- Name
     ZN3_N_Space_1,           !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    7.930,                   !- X-Coordinate of First Reference Point {m}
-    2.285,                   !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    0,                       !- X-Coordinate of Second Reference Point {m}
-    0,                       !- Y-Coordinate of Second Reference Point {m}
-    0,                       !- Z-Coordinate of Second Reference Point {m}
-    1.00,                    !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    400.000,                 !- Illuminance Setpoint at First Reference Point {lux}
-    400.000,                 !- Illuminance Setpoint at Second Reference Point {lux}
-    2,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    3,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZN3_N_Space_1_DaylRefPt1,!- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20.000,                  !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    3,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    ZN3_N_Space_1_DaylRefPt1,!- Daylighting Reference Point 1 Name
+    1.00,                    !- Fraction of Zone Controlled by Reference Point 1
+    400.000;                 !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    ZN3_N_Space_1_DaylRefPt1,!- Name
+    ZN3_N_Space_1,           !- Zone Name
+    7.930,                   !- X-Coordinate of Reference Point {m}
+    2.285,                   !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
 !X1, Y1, Z1
 !X2, Y2, Z2
 !Zone Control Fractions
 
   Daylighting:Controls,
+    ZN4_W_Space_1_DaylCtrl,  !- Name
     ZN4_W_Space_1,           !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    2.285,                   !- X-Coordinate of First Reference Point {m}
-    12.500,                  !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    0,                       !- X-Coordinate of Second Reference Point {m}
-    0,                       !- Y-Coordinate of Second Reference Point {m}
-    0,                       !- Z-Coordinate of Second Reference Point {m}
-    1.00,                    !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    400.000,                 !- Illuminance Setpoint at First Reference Point {lux}
-    400.000,                 !- Illuminance Setpoint at Second Reference Point {lux}
-    2,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    3,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZN4_W_Space_1_DaylRefPt1,!- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20.000,                  !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    3,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    ZN4_W_Space_1_DaylRefPt1,!- Daylighting Reference Point 1 Name
+    1.00,                    !- Fraction of Zone Controlled by Reference Point 1
+    400.000;                 !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    ZN4_W_Space_1_DaylRefPt1,!- Name
+    ZN4_W_Space_1,           !- Zone Name
+    2.285,                   !- X-Coordinate of Reference Point {m}
+    12.500,                  !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
 !! DAYLIGHTING:DETAILED,
 !!     ZN5_Core_Space_1 ,       !- Zone Name
@@ -4357,100 +4334,116 @@
 !Zone Control Fractions
 
   Daylighting:Controls,
+    ZN6_S_Space_2_DaylCtrl,  !- Name
     ZN6_S_Space_2,           !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    12.500,                  !- X-Coordinate of First Reference Point {m}
-    2.285,                   !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    0,                       !- X-Coordinate of Second Reference Point {m}
-    0,                       !- Y-Coordinate of Second Reference Point {m}
-    0,                       !- Z-Coordinate of Second Reference Point {m}
-    1.00,                    !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    400.000,                 !- Illuminance Setpoint at First Reference Point {lux}
-    400.000,                 !- Illuminance Setpoint at Second Reference Point {lux}
-    2,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    3,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZN6_S_Space_2_DaylRefPt1,!- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20.000,                  !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    3,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    ZN6_S_Space_2_DaylRefPt1,!- Daylighting Reference Point 1 Name
+    1.00,                    !- Fraction of Zone Controlled by Reference Point 1
+    400.000;                 !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    ZN6_S_Space_2_DaylRefPt1,!- Name
+    ZN6_S_Space_2,           !- Zone Name
+    12.500,                  !- X-Coordinate of Reference Point {m}
+    2.285,                   !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
 !X1, Y1, Z1
 !X2, Y2, Z2
 !Zone Control Fractions
 
   Daylighting:Controls,
+    ZN7_E_Space_2_DaylCtrl,  !- Name
     ZN7_E_Space_2,           !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    2.285,                   !- X-Coordinate of First Reference Point {m}
-    7.930,                   !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    0,                       !- X-Coordinate of Second Reference Point {m}
-    0,                       !- Y-Coordinate of Second Reference Point {m}
-    0,                       !- Z-Coordinate of Second Reference Point {m}
-    1.00,                    !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    400.000,                 !- Illuminance Setpoint at First Reference Point {lux}
-    400.000,                 !- Illuminance Setpoint at Second Reference Point {lux}
-    2,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    3,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZN7_E_Space_2_DaylRefPt1,!- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20.000,                  !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    3,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    ZN7_E_Space_2_DaylRefPt1,!- Daylighting Reference Point 1 Name
+    1.00,                    !- Fraction of Zone Controlled by Reference Point 1
+    400.000;                 !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    ZN7_E_Space_2_DaylRefPt1,!- Name
+    ZN7_E_Space_2,           !- Zone Name
+    2.285,                   !- X-Coordinate of Reference Point {m}
+    7.930,                   !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
 !X1, Y1, Z1
 !X2, Y2, Z2
 !Zone Control Fractions
 
   Daylighting:Controls,
+    ZN8_N_Space_2_DaylCtrl,  !- Name
     ZN8_N_Space_2,           !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    7.930,                   !- X-Coordinate of First Reference Point {m}
-    2.285,                   !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    0,                       !- X-Coordinate of Second Reference Point {m}
-    0,                       !- Y-Coordinate of Second Reference Point {m}
-    0,                       !- Z-Coordinate of Second Reference Point {m}
-    1.00,                    !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    400.000,                 !- Illuminance Setpoint at First Reference Point {lux}
-    400.000,                 !- Illuminance Setpoint at Second Reference Point {lux}
-    2,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    3,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZN8_N_Space_2_DaylRefPt1,!- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20.000,                  !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    3,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    ZN8_N_Space_2_DaylRefPt1,!- Daylighting Reference Point 1 Name
+    1.00,                    !- Fraction of Zone Controlled by Reference Point 1
+    400.000;                 !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    ZN8_N_Space_2_DaylRefPt1,!- Name
+    ZN8_N_Space_2,           !- Zone Name
+    7.930,                   !- X-Coordinate of Reference Point {m}
+    2.285,                   !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
 !X1, Y1, Z1
 !X2, Y2, Z2
 !Zone Control Fractions
 
   Daylighting:Controls,
+    ZN9_W_Space_2_DaylCtrl,  !- Name
     ZN9_W_Space_2,           !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    2.285,                   !- X-Coordinate of First Reference Point {m}
-    12.500,                  !- Y-Coordinate of First Reference Point {m}
-    0.762,                   !- Z-Coordinate of First Reference Point {m}
-    0,                       !- X-Coordinate of Second Reference Point {m}
-    0,                       !- Y-Coordinate of Second Reference Point {m}
-    0,                       !- Z-Coordinate of Second Reference Point {m}
-    1.00,                    !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    400.000,                 !- Illuminance Setpoint at First Reference Point {lux}
-    400.000,                 !- Illuminance Setpoint at Second Reference Point {lux}
-    2,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Stepped,                 !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    3,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ZN9_W_Space_2_DaylRefPt1,!- Glare Calculation Daylighting Reference Point Name
     180,                     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     20.000,                  !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    3,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    ZN9_W_Space_2_DaylRefPt1,!- Daylighting Reference Point 1 Name
+    1.00,                    !- Fraction of Zone Controlled by Reference Point 1
+    400.000;                 !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    ZN9_W_Space_2_DaylRefPt1,!- Name
+    ZN9_W_Space_2,           !- Zone Name
+    2.285,                   !- X-Coordinate of Reference Point {m}
+    12.500,                  !- Y-Coordinate of Reference Point {m}
+    0.762;                   !- Z-Coordinate of Reference Point {m}
 
 !! DAYLIGHTING:DETAILED,
 !!     ZN10_Core_Space_2 ,      !- Zone Name
@@ -4645,7 +4638,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN1_S_Space_1,   !- Name
@@ -4678,7 +4676,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN2_E_Space_1,   !- Name
@@ -4711,7 +4714,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN3_N_Space_1,   !- Name
@@ -4744,7 +4752,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN4_W_Space_1,   !- Name
@@ -4777,7 +4790,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN5_Core_Space_1,!- Name
@@ -4810,7 +4828,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN6_S_Space_2,   !- Name
@@ -4843,7 +4866,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN7_E_Space_2,   !- Name
@@ -4876,7 +4904,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN8_N_Space_2,   !- Name
@@ -4909,7 +4942,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN9_W_Space_2,   !- Name
@@ -4942,7 +4980,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN10_Core_Space_2,  !- Name
@@ -4967,17 +5010,17 @@
     no,                      !- 100% Outdoor Air in Heating
     0.008,                   !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0,                       !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0,                       !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0,                       !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0,                       !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -5165,384 +5208,311 @@
 
   Branch,
     ZN1_S_Space_1 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN1_S_Space_1 Reheat Coil,  !- Component 1 Name
     ZN1_S_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN1_S_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN1_S_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN2_E_Space_1 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN2_E_Space_1 Reheat Coil,  !- Component 1 Name
     ZN2_E_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN2_E_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN2_E_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN3_N_Space_1 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN3_N_Space_1 Reheat Coil,  !- Component 1 Name
     ZN3_N_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN3_N_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN3_N_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN4_W_Space_1 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN4_W_Space_1 Reheat Coil,  !- Component 1 Name
     ZN4_W_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN4_W_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN4_W_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN5_Core_Space_1 HW-Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN5_Core_Space_1 Reheat Coil,  !- Component 1 Name
     ZN5_Core_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN5_Core_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN5_Core_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN6_S_Space_2 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN6_S_Space_2 Reheat Coil,  !- Component 1 Name
     ZN6_S_Space_2 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN6_S_Space_2 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN6_S_Space_2 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN7_E_Space_2 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN7_E_Space_2 Reheat Coil,  !- Component 1 Name
     ZN7_E_Space_2 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN7_E_Space_2 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN7_E_Space_2 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN8_N_Space_2 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN8_N_Space_2 Reheat Coil,  !- Component 1 Name
     ZN8_N_Space_2 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN8_N_Space_2 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN8_N_Space_2 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN9_W_Space_2 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN9_W_Space_2 Reheat Coil,  !- Component 1 Name
     ZN9_W_Space_2 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN9_W_Space_2 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN9_W_Space_2 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     ZN10_Core_Space_2 HW-Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN10_Core_Space_2 Reheat Coil,  !- Component 1 Name
     ZN10_Core_Space_2 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN10_Core_Space_2 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN10_Core_Space_2 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     VAV SYS 1 Main Branch,   !- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV SYS 1 OA System,     !- Component 1 Name
     VAV SYS 1 Air Loop Inlet,!- Component 1 Inlet Node Name
     VAV SYS 1 Mixed Air Outlet,  !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     Coil:Cooling:Water,      !- Component 2 Object Type
     VAV SYS 1 Cooling Coil,  !- Component 2 Name
     VAV SYS 1 Mixed Air Outlet,  !- Component 2 Inlet Node Name
     VAV SYS 1 Cooling Coil Outlet,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV SYS 1 Heating Coil,  !- Component 3 Name
     VAV SYS 1 Cooling Coil Outlet,  !- Component 3 Inlet Node Name
     VAV SYS 1 Heating Coil Outlet,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV SYS 1 Supply Fan,    !- Component 4 Name
     VAV SYS 1 Heating Coil Outlet,  !- Component 4 Inlet Node Name
-    VAV SYS 1 Air Loop Outlet,  !- Component 4 Outlet Node Name
-    ACTIVE;                  !- Component 4 Branch Control Type
+    VAV SYS 1 Air Loop Outlet;  !- Component 4 Outlet Node Name
 
   Branch,
     VAV SYS 1 ChW-Branch,    !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     VAV SYS 1 Cooling Coil,  !- Component 1 Name
     VAV SYS 1 Cooling Coil ChW Inlet,  !- Component 1 Inlet Node Name
-    VAV SYS 1 Cooling Coil ChW Outlet,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV SYS 1 Cooling Coil ChW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     VAV SYS 1 HW-Branch,     !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV SYS 1 Heating Coil,  !- Component 1 Name
     VAV SYS 1 Heating Coil HW Inlet,  !- Component 1 Inlet Node Name
-    VAV SYS 1 Heating Coil HW Outlet,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV SYS 1 Heating Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Branch,
     CHW Demand 1 ChW Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CHW Demand 1 ChW Inlet Pipe,  !- Component 1 Name
     CHW Demand 1 ChW Demand Inlet Node,  !- Component 1 Inlet Node Name
-    CHW Demand 1 ChW Demand Entrance Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    CHW Demand 1 ChW Demand Entrance Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     CHW Demand 1 ChW Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CHW Demand 1 ChW Outlet Pipe,  !- Component 1 Name
     CHW Demand 1 ChW Demand Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    CHW Demand 1 ChW Demand Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    CHW Demand 1 ChW Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     CHW Demand 1 ChW Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CHW Demand 1 ChW Bypass Pipe,  !- Component 1 Name
     CHW Demand 1 ChW Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    CHW Demand 1 ChW Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    CHW Demand 1 ChW Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HW Demand 1 HW Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HW Demand 1 HW Inlet Pipe,  !- Component 1 Name
     HW Demand 1 HW Demand Inlet Node,  !- Component 1 Inlet Node Name
-    HW Demand 1 HW Demand Entrance Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    HW Demand 1 HW Demand Entrance Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HW Demand 1 HW Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HW Demand 1 HW Outlet Pipe,  !- Component 1 Name
     HW Demand 1 HW Demand Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    HW Demand 1 HW Demand Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    HW Demand 1 HW Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HW Demand 1 HW Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HW Demand 1 HW Bypass Pipe,  !- Component 1 Name
     HW Demand 1 HW Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    HW Demand 1 HW Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    HW Demand 1 HW Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Chiller Plant Chiller Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric,        !- Component 1 Object Type
     Chiller Plant Chiller,   !- Component 1 Name
     Chiller Plant Chiller Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Chiller Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant Chiller Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Chiller Plant ChW Supply Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant ChW Supply Side Bypass,  !- Component 1 Name
     Chiller Plant ChW Supply Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant ChW Supply Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Chiller Plant ChW Supply Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Chiller Plant ChW Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant ChW Supply Outlet,  !- Component 1 Name
     Chiller Plant ChW Supply Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant ChW Supply Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Chiller Plant ChW Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Chiller Plant ChW Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:ConstantSpeed,      !- Component 1 Object Type
     Chiller Plant ChW Circ Pump,  !- Component 1 Name
     Chiller Plant ChW Supply Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant ChW Pump Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant ChW Pump Outlet Node;  !- Component 1 Outlet Node Name
 
 ! max branch flow rate in m3/s  - not needed for water side
 
   Branch,
     Chiller Plant Condenser Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Cnd Demand Inlet Pipe,  !- Component 1 Name
     Chiller Plant Cnd Demand Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Cnd Demand In Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Chiller Plant Cnd Demand In Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
 ! max branch flow rate in m3/s  - not needed for water side
 
   Branch,
     Chiller Plant Chiller Condenser Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric,        !- Component 1 Object Type
     Chiller Plant Chiller,   !- Component 1 Name
     Chiller Plant Chiller Cond Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Chiller Cond Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant Chiller Cond Outlet Node;  !- Component 1 Outlet Node Name
 
 ! max branch flow rate in m3/s  - not needed for water side
 
   Branch,
     Chiller Plant Condenser Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Condenser Demand Side Bypass,  !- Component 1 Name
     Chiller Plant Condenser Demand Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Condenser Demand Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Chiller Plant Condenser Demand Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
 ! max branch flow rate in m3/s  - not needed for water side
 
   Branch,
     Chiller Plant Condenser Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Condenser Demand Outlet,  !- Component 1 Name
     Chiller Plant Condenser Demand Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Cnd Demand Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Chiller Plant Cnd Demand Outlet Node;  !- Component 1 Outlet Node Name
 
 ! max branch flow rate in m3/s  - not needed for water side
 
   Branch,
     Chiller Plant Condenser Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     CoolingTower:SingleSpeed,!- Component 1 Object Type
     Chiller Plant Condenser, !- Component 1 Name
     Chiller Plant Condenser Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Condenser Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant Condenser Outlet Node;  !- Component 1 Outlet Node Name
 
 ! max branch flow rate in m3/s  - not needed for water side
 
   Branch,
     Chiller Plant Condenser Supply Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Condenser Supply Side Bypass,  !- Component 1 Name
     Chiller Plant Condenser Supply Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Condenser Supply Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Chiller Plant Condenser Supply Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
 ! max branch flow rate in m3/s  - not needed for water side
 
   Branch,
     Chiller Plant Condenser Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Condenser Supply Outlet,  !- Component 1 Name
     Chiller Plant Condenser Supply Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Cnd Supply Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Chiller Plant Cnd Supply Outlet Node;  !- Component 1 Outlet Node Name
 
 ! max branch flow rate in m3/s  - not needed for water side
 
   Branch,
     Chiller Plant Condenser Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Chiller Plant Cnd Circ Pump,  !- Component 1 Name
     Chiller Plant Cnd Supply Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Cnd Pump Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant Cnd Pump Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Boiler Plant Boiler Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Boiler:HotWater,         !- Component 1 Object Type
     Boiler Plant Boiler,     !- Component 1 Name
     Boiler Plant Boiler Inlet Node,  !- Component 1 Inlet Node Name
-    Boiler Plant Boiler Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Boiler Plant Boiler Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Boiler Plant HW Supply Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Boiler Plant HW Supply Side Bypass,  !- Component 1 Name
     Boiler Plant HW Supply Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Boiler Plant HW Supply Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Boiler Plant HW Supply Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Boiler Plant HW Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Boiler Plant HW Supply Outlet,  !- Component 1 Name
     Boiler Plant HW Supply Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Boiler Plant HW Supply Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Boiler Plant HW Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Boiler Plant HW Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Boiler Plant HW Circ Pump,  !- Component 1 Name
     Boiler Plant HW Supply Inlet Node,  !- Component 1 Inlet Node Name
-    Boiler Plant HW Pump Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Boiler Plant HW Pump Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CHW Demand 1 ChW Inlet Pipe,  !- Name
@@ -5977,7 +5947,7 @@
     ZN1_S_Space_1 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN1_S_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN1_S_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN1_S_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN2_E_Space_1,           !- Zone Name
@@ -5985,7 +5955,7 @@
     ZN2_E_Space_1 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN2_E_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN2_E_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN2_E_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN3_N_Space_1,           !- Zone Name
@@ -5993,7 +5963,7 @@
     ZN3_N_Space_1 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN3_N_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN3_N_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN3_N_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN4_W_Space_1,           !- Zone Name
@@ -6001,7 +5971,7 @@
     ZN4_W_Space_1 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN4_W_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN4_W_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN4_W_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN5_Core_Space_1,        !- Zone Name
@@ -6009,7 +5979,7 @@
     ZN5_Core_Space_1 Inlets, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN5_Core_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN5_Core_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN5_Core_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN6_S_Space_2,           !- Zone Name
@@ -6017,7 +5987,7 @@
     ZN6_S_Space_2 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN6_S_Space_2 Zone Air Node,  !- Zone Air Node Name
-    ZN6_S_Space_2 Return Outlet;  !- Zone Return Air Node Name
+    ZN6_S_Space_2 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN7_E_Space_2,           !- Zone Name
@@ -6025,7 +5995,7 @@
     ZN7_E_Space_2 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN7_E_Space_2 Zone Air Node,  !- Zone Air Node Name
-    ZN7_E_Space_2 Return Outlet;  !- Zone Return Air Node Name
+    ZN7_E_Space_2 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN8_N_Space_2,           !- Zone Name
@@ -6033,7 +6003,7 @@
     ZN8_N_Space_2 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN8_N_Space_2 Zone Air Node,  !- Zone Air Node Name
-    ZN8_N_Space_2 Return Outlet;  !- Zone Return Air Node Name
+    ZN8_N_Space_2 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN9_W_Space_2,           !- Zone Name
@@ -6041,7 +6011,7 @@
     ZN9_W_Space_2 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN9_W_Space_2 Zone Air Node,  !- Zone Air Node Name
-    ZN9_W_Space_2 Return Outlet;  !- Zone Return Air Node Name
+    ZN9_W_Space_2 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     ZN10_Core_Space_2,       !- Zone Name
@@ -6049,77 +6019,107 @@
     ZN10_Core_Space_2 Inlets,!- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN10_Core_Space_2 Zone Air Node,  !- Zone Air Node Name
-    ZN10_Core_Space_2 Return Outlet;  !- Zone Return Air Node Name
+    ZN10_Core_Space_2 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN1_S_Space_1 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN1_S_Space_1 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN2_E_Space_1 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN2_E_Space_1 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN3_N_Space_1 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN3_N_Space_1 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN4_W_Space_1 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN4_W_Space_1 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN5_Core_Space_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN5_Core_Space_1 ATU,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN6_S_Space_2 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN6_S_Space_2 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN7_E_Space_2 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN7_E_Space_2 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN8_N_Space_2 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN8_N_Space_2 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN9_W_Space_2 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN9_W_Space_2 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     ZN10_Core_Space_2 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN10_Core_Space_2 ATU,   !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN1_S_Space_1 ATU,       !- Name
@@ -6197,7 +6197,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN1_S_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6217,7 +6217,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN2_E_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6237,7 +6237,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN3_N_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6257,7 +6257,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN4_W_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6277,7 +6277,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN5_Core_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6297,7 +6297,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN6_S_Space_2 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6317,7 +6317,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN7_E_Space_2 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6337,7 +6337,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN8_N_Space_2 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6357,7 +6357,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN9_W_Space_2 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6377,7 +6377,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN10_Core_Space_2 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -6548,7 +6548,6 @@
     0.800000,                !- Nominal Thermal Efficiency
     LeavingBoiler,           !- Efficiency Curve Temperature Evaluation Variable
     BoilerEfficiency,        !- Normalized Boiler Efficiency Curve Name
-    81.,                     !- Design Water Outlet Temperature {C}
     autosize,                !- Design Water Flow Rate {m3/s}
     0.0,                     !- Minimum Part Load Ratio
     1.2,                     !- Maximum Part Load Ratio
@@ -6609,9 +6608,9 @@
     autosize,                !- Design Air Flow Rate {m3/s}
     autosize,                !- Design Fan Power {W}
     autosize,                !- Design U-Factor Times Area Value {W/K}
-    autocalculate,           !- Free Convection Air Flow Rate {m3/s}
-    ,                        !- Free Convection Air Flow Rate Sizing Factor
-    autocalculate,           !- Free Convection U-Factor Times Area Value {W/K}
+    autocalculate,           !- Free Convection Regime Air Flow Rate {m3/s}
+    ,                        !- Free Convection Regime Air Flow Rate Sizing Factor
+    autocalculate,           !- Free Convection Regime U-Factor Times Area Value {W/K}
     ,                        !- Free Convection U-Factor Times Area Value Sizing Factor
     ,                        !- Performance Input Method
     ,                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
@@ -6623,41 +6622,41 @@
     Chiller Plant Cnd Circ Pump,  !- Name
     Chiller Plant Cnd Supply Inlet Node,  !- Inlet Node Name
     Chiller Plant Cnd Pump Outlet Node,  !- Outlet Node Name
-    autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    autosize,                !- Rated Power Consumption {W}
+    autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     INTERMITTENT;            !- Pump Control Type
 
   Pump:VariableSpeed,
     Boiler Plant HW Circ Pump,  !- Name
     Boiler Plant HW Supply Inlet Node,  !- Inlet Node Name
     Boiler Plant HW Pump Outlet Node,  !- Outlet Node Name
-    autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    autosize,                !- Rated Power Consumption {W}
+    autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     INTERMITTENT;            !- Pump Control Type
 
   Pump:ConstantSpeed,
     Chiller Plant ChW Circ Pump,  !- Name
     Chiller Plant ChW Supply Inlet Node,  !- Inlet Node Name
     Chiller Plant ChW Pump Outlet Node,  !- Outlet Node Name
-    autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    autosize,                !- Rated Power Consumption {W}
+    autosize,                !- Design Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     INTERMITTENT;            !- Pump Control Type
@@ -6960,28 +6959,6 @@
 ! Cost per Area
 
   ComponentCost:LineItem,
-    Interior Floor Slab,     !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    INT-FLOOR-SLAB,          !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    35;                      !- Cost per Area {$/m2}
-
-! Cost per Area
-
-  ComponentCost:LineItem,
-    Drop Ceiling,            !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    DropCeiling,             !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    10;                      !- Cost per Area {$/m2}
-
-! Cost per Area
-
-  ComponentCost:LineItem,
     Roof: ASHRAE 90.1-2004_Sec 5.5-2_Roof,  !- Name
     ,                        !- Type
     Construction,            !- Line Item Type
@@ -7205,7 +7182,7 @@
 ! Number of Months
 
   UtilityCost:Qualify,
-    MaxDemand2000kw,         !- Name
+    MaxDemand2000kw,         !- Utility Cost Qualify Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -7224,7 +7201,7 @@
 ! Number of Months
 
   UtilityCost:Qualify,
-    MinDemand500kw,          !- Name
+    MinDemand500kw,          !- Utility Cost Qualify Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -7243,7 +7220,7 @@
 ! Number of Months
 
   UtilityCost:Qualify,
-    MaxDemand500kw,          !- Name
+    MaxDemand500kw,          !- Utility Cost Qualify Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -7262,7 +7239,7 @@
 ! Number of Months
 
   UtilityCost:Qualify,
-    MinDemand20kw,           !- Name
+    MinDemand20kw,           !- Utility Cost Qualify Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -7281,7 +7258,7 @@
 ! Number of Months
 
   UtilityCost:Qualify,
-    MaxDemand20kw,           !- Name
+    MaxDemand20kw,           !- Utility Cost Qualify Name
     FPL_GS-1_nonDemand,      !- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -7298,7 +7275,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    Non-fuelEnergyCharge,    !- Name
+    Non-fuelEnergyCharge,    !- Utility Cost Charge Simple Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7313,7 +7290,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    fuelEnergyCharge,        !- Name
+    fuelEnergyCharge,        !- Utility Cost Charge Simple Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7328,7 +7305,7 @@
 ! Cost Per Unit Value (or Variable
 
   UtilityCost:Charge:Simple,
-    ConservationEnergyCharge,!- Name
+    ConservationEnergyCharge,!- Utility Cost Charge Simple Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7343,7 +7320,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    EnvironmentalEnergyCharge,  !- Name
+    EnvironmentalEnergyCharge,  !- Utility Cost Charge Simple Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7358,7 +7335,7 @@
 ! Cost Per Unit Value (or Variable
 
   UtilityCost:Charge:Simple,
-    TaxofEightPercent,       !- Name
+    TaxofEightPercent,       !- Utility Cost Charge Simple Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -7373,7 +7350,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    Non-fuelEnergyCharge,    !- Name
+    Non-fuelEnergyCharge,    !- Utility Cost Charge Simple Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7388,7 +7365,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    fuelEnergyCharge,        !- Name
+    fuelEnergyCharge,        !- Utility Cost Charge Simple Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7403,7 +7380,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    ConservationEnergyCharge,!- Name
+    ConservationEnergyCharge,!- Utility Cost Charge Simple Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7418,7 +7395,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    EnvironmentalEnergyCharge,  !- Name
+    EnvironmentalEnergyCharge,  !- Utility Cost Charge Simple Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7433,7 +7410,7 @@
 ! Cost Per Unit Value (or Variable
 
   UtilityCost:Charge:Simple,
-    TaxofEightPercent,       !- Name
+    TaxofEightPercent,       !- Utility Cost Charge Simple Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -7448,7 +7425,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    Non-fuelEnergyCharge,    !- Name
+    Non-fuelEnergyCharge,    !- Utility Cost Charge Simple Name
     FPL_GS-1_nonDemand,      !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7463,7 +7440,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    fuelEnergyCharge,        !- Name
+    fuelEnergyCharge,        !- Utility Cost Charge Simple Name
     FPL_GS-1_nonDemand,      !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7478,7 +7455,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    Conservation,            !- Name
+    Conservation,            !- Utility Cost Charge Simple Name
     FPL_GS-1_nonDemand,      !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7493,7 +7470,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    Capacity,                !- Name
+    Capacity,                !- Utility Cost Charge Simple Name
     FPL_GS-1_nonDemand,      !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7508,7 +7485,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    Capacity,                !- Name
+    Capacity,                !- Utility Cost Charge Simple Name
     FPL_GS-1_nonDemand,      !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7523,7 +7500,7 @@
 ! Cost Per Unit Value (or Variable
 
   UtilityCost:Charge:Simple,
-    TaxofEightPercent,       !- Name
+    TaxofEightPercent,       !- Utility Cost Charge Simple Name
     FPL_GS-1_nonDemand,      !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -7538,7 +7515,7 @@
 ! Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Simple,
-    MonthlyRateGasCharge,    !- Name
+    MonthlyRateGasCharge,    !- Utility Cost Charge Simple Name
     FL_EIAMonthlyRateGas,    !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -7553,7 +7530,7 @@
 ! Cost Per Unit Value (or Variable
 
   UtilityCost:Charge:Simple,
-    TaxofEightPercent,       !- Name
+    TaxofEightPercent,       !- Utility Cost Charge Simple Name
     FL_EIAMonthlyRateGas,    !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -7571,7 +7548,7 @@
 ! Block 1 Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Block,
-    AnnualDemandBaseCharge,  !- Name
+    AnnualDemandBaseCharge,  !- Utility Cost Charge Block Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -7592,7 +7569,7 @@
 ! Block 1 Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Block,
-    AnnualDemandCapacityCharge,  !- Name
+    AnnualDemandCapacityCharge,  !- Utility Cost Charge Block Name
     FPL_GSLD-1_GeneralServiceLargeDemand,  !- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -7615,7 +7592,7 @@
 ! Block 2 Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Block,
-    AnnualDemandBaseCharge,  !- Name
+    AnnualDemandBaseCharge,  !- Utility Cost Charge Block Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -7640,7 +7617,7 @@
 ! Block 2 Cost Per Unit Value (or Variable)
 
   UtilityCost:Charge:Block,
-    AnnualDemandCapacityCharge,  !- Name
+    AnnualDemandCapacityCharge,  !- Utility Cost Charge Block Name
     FPL_GSD-1_GeneralServiceDemand,  !- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season

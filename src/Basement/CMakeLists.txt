@@ -4,7 +4,7 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products"
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 
-SET(SRC
+set(SRC
   3DBasementHT.f90
   DataGlobals.f90
   DataStringGlobals.f90
@@ -45,10 +45,10 @@ else()  # Windows
   endif()
 endif()
 
-set(SKIP_BUILD_RPATH true)
-ADD_EXECUTABLE( Basement ${SRC} )
+set(SKIP_BUILD_RPATH TRUE)
+add_executable( Basement ${SRC} )
 
-SET_TARGET_PROPERTIES(Basement PROPERTIES
+set_target_properties(Basement PROPERTIES
   COMPILE_FLAGS "-O1 -ffree-line-length-200 ${SHARED_FLAGS}"
 )
 

@@ -6,6 +6,7 @@ import sys
 import io
 from subprocess import check_output, CalledProcessError
 import json
+
 try:
     from urllib import urlencode
 except ImportError:
@@ -20,14 +21,17 @@ RepoName = "NREL/EnergyPlus"
 EPlusRepoPath = 'https://github.com/' + RepoName
 debug = False
 
+
 def usage():
-    print("""Script should be called with 4 positional arguments:
- - the path to a repository 
+    print("""Script should be called with 8 positional arguments:
+ - the path to a repository
  - the path to a markdown output file
  - the path to a html output file
  - the path to a local git executable
  - a github token for performing authentication API requests
- - the commit SHA for the last major release""")
+ - the commit SHA for the last major release
+ - a program version identifier""")
+
 
 # command line arguments: repo base path, output markdown and html file paths, a git exe path, and a github token
 if len(sys.argv) == 7:
@@ -37,6 +41,7 @@ if len(sys.argv) == 7:
     git_exe = sys.argv[4]
     github_token = sys.argv[5]
     last_commit = sys.argv[6]
+    program_version = sys.argv[7]
 elif len(sys.argv) == 8:
     repo = sys.argv[1]
     md_file = sys.argv[2]
@@ -44,40 +49,49 @@ elif len(sys.argv) == 8:
     git_exe = sys.argv[4]
     github_token = sys.argv[5]
     last_commit = sys.argv[6]
+    program_version = sys.argv[7]
 else:
     usage()
     sys.exit(1)
 
 # get the pull request numbers
 try:
-    log_full = check_output([git_exe, 'log', last_commit+'..']).decode('utf-8')
+    log_full = check_output([git_exe, 'log', last_commit + '..']).decode('utf-8')
 except CalledProcessError as ex:
     log_full = ''
     pass  # add error handling
 log_full_split = log_full.split('\n')
-log_merge_prs = [x for x in log_full_split if 'Merge pull request' in x]
+log_merge_prs = [x for x in log_full_split if 'Merge pull request' in x and not x.strip().startswith('Revert')]
 pr_tokens = [x.split(' ')[7] for x in log_merge_prs]
 pr_numbers = sorted([x[1:] for x in pr_tokens])
 
 # create and initialize the master array, with known keys plus an "Unknown" key
-ValidPRTypes = ['Defect', 'NewFeature', 'Performance', 'DoNotPublish']
+ValidPRTypes = ['Defect', 'NewFeature', 'Performance', 'Refactoring', 'DoNotPublish']
 PRS = {'Unknown': []}
 for valid_pr_type in ValidPRTypes:
     PRS[valid_pr_type] = []
 
-query_args = urlencode({'access_token': github_token})
 # use the GitHub API to get pull request info
 for pr_num in pr_numbers:
+
+    # we need to skip very low numbers of pull requests, for example:
+    # - a user wants to contribute a change to E+, so they create a fork/branch
+    # - their operations result in a pull request into their own repo, so the counting starts at #1...
+    # we're at like 5000+, so if we just skip anything less than 1000, we'll be good.
+    if int(pr_num) < 1000:
+        continue
+
     # set the url for this pull request
-    github_url = "https://api.github.com/repos/NREL/EnergyPlus/issues/" + pr_num + '?' + query_args
+    github_url = "https://api.github.com/repos/NREL/EnergyPlus/issues/" + pr_num
 
     # make the request
     try:
-        req = Request(github_url)
+        req = Request(github_url, headers={'Authorization': 'token %s' % github_token})
         response = urlopen(req)
         the_page = response.read().decode('utf-8')
     except Exception as e:
-        print(str(e))
+        print("ERROR: " + str(e))
+        continue
 
     # read the json response
     j = json.loads(the_page)
@@ -85,20 +99,19 @@ for pr_num in pr_numbers:
     # mine the data
     title = j['title']
     labels = j['labels']
-    if len(labels) != 1:
-        print(" +++ AutoDocs: %s,%s,Pull request has wrong number of labels (%i)...expected 1" % (
-            pr_num, title, len(labels)))
-    else:
+    if len(labels) == 0:
+        print("WARNING: No labels on PR #" + pr_num, file=sys.stderr)
+    for label in labels:
         key = 'Unknown'
-        first_label_name = labels[0]['name']
-        if first_label_name in ValidPRTypes:
-            key = first_label_name
-        PRS[key].append([pr_num, title])
+        label_name = label['name']
+        if label_name in ValidPRTypes:
+            PRS[label_name].append([pr_num, title])
 
 # Now write the nice markdown output file
-with io.open(md_file, 'w') as f:
+with io.open(md_file, 'w', encoding='utf-8') as f:
     def out(s):
         print(s, file=f)
+
 
     def out_pr_class(pr_type, descriptor):
         out('')
@@ -106,17 +119,22 @@ with io.open(md_file, 'w') as f:
         for pr in PRS[pr_type]:
             out(' - [#' + pr[0] + '](' + EPlusRepoPath + '/pull/' + pr[0] + ') : ' + pr[1])
 
-    out('# ChangeLog')
-    out('Consists of pull requests merged in GitHub since the last release.')
+
+    out('# Changelog for EnergyPlus ' + program_version)
+    out('Consists of pull requests merged in this release - starting with SHA [%s](https://github.com/%s/commit/%s)' % (
+        last_commit, RepoName, last_commit
+    ))
     out_pr_class('NewFeature', 'New Features')
     out_pr_class('Performance', 'Performance Enhancements')
     out_pr_class('Defect', 'Defects Repaired')
+    out_pr_class('Refactoring', 'Under the Hood Restructuring')
     if debug:
         out_pr_class('Unknown', 'Other-DevelopersFixPlease')
 
-with io.open(html_file, 'w') as f2:
+with io.open(html_file, 'w', encoding='utf-8') as f2:
     def out(s):
         print(s, file=f2)
+
 
     def out_pr_class(pr_type, descriptor):
         out('<h2>' + descriptor + '</h2>')
@@ -132,6 +150,7 @@ with io.open(html_file, 'w') as f2:
             out(' </tr>')
         out('</table>')
 
+
     out('<html>')
     out('<head><title>EnergyPlus ChangeLog</title></head>')
     out('<body>')
@@ -144,11 +163,15 @@ with io.open(html_file, 'w') as f2:
     out(' padding: 6px;')
     out('}')
     out('</style>')
-    out('<h1>EnergyPlus ChangeLog</h1>')
-    out('This file is auto-generated from merged pull requests on GitHub.')
+    out('<h1>ChangeLog for EnergyPlus ' + program_version + '</h1>')
+    out('<h1>Consists of pull requests merged in this release')
+    out('- starting with SHA <a href = "https://github.com/%s/commit/%s">%s</a></h1>' % (
+        RepoName, last_commit, last_commit
+    ))
     out_pr_class('NewFeature', 'New Features')
     out_pr_class('Performance', 'Performance Enhancements')
     out_pr_class('Defect', 'Defects Repaired')
+    out_pr_class('Refactoring', 'Under the Hood Restructuring')
     out('</body>')
     out('</html>')
 

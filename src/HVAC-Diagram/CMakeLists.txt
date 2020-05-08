@@ -4,8 +4,10 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products"
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 
-SET(SRC HVAC-Diagram-Main.f90) 
+set(SRC HVAC-Diagram-Main.f90)
 SET(STATIC_EXE TRUE)
+
+set(STATIC_EXE TRUE) 
 
 if(APPLE)
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
@@ -38,10 +40,11 @@ else()
 endif()
 
 set(SKIP_BUILD_RPATH true)
-ADD_EXECUTABLE( HVAC-Diagram ${SRC} )
+add_executable( HVAC-Diagram ${SRC} )
 
 install( TARGETS HVAC-Diagram DESTINATION PostProcess )
 if(NOT ${STATIC_EXE})
   include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/ProjectMacros.cmake")
   install_target_prereqs( HVAC-Diagram PostProcess )
 endif()
+

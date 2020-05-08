@@ -3,13 +3,13 @@
 
 // Global I/O Support
 //
-// Project: Objexx Fortran Compatibility Library (ObjexxFCL)
+// Project: Objexx Fortran-C++ Library (ObjexxFCL)
 //
-// Version: 4.0.0
+// Version: 4.2.0
 //
 // Language: C++
 //
-// Copyright (c) 2000-2014 Objexx Engineering, Inc. All Rights Reserved.
+// Copyright (c) 2000-2017 Objexx Engineering, Inc. All Rights Reserved.
 // Use of this source code or any derivative of it is restricted by license.
 // Licensing is available from Objexx Engineering, Inc.:  http://objexx.com
 
@@ -29,7 +29,6 @@
 namespace ObjexxFCL {
 
 // Forward
-class Fstring;
 class IOFlags;
 
 namespace gio {
@@ -37,7 +36,6 @@ namespace gio {
 // Types
 typedef  int  Unit;
 typedef  std::string  Name;
-typedef  char const *  c_cstring;
 
 // Data
 extern std::string const LF; // Linefeed
@@ -54,13 +52,9 @@ bool
 open( Unit const unit, Name const & name, IOFlags & flags );
 
 // Open File on Specified Unit
-bool
-open( Unit const unit, Fstring const & name, IOFlags & flags );
-
-// Open File on Specified Unit
 inline
 bool
-open( Unit const unit, c_cstring const name, IOFlags & flags )
+open( Unit const unit, char const * const name, IOFlags & flags )
 {
 	return open( unit, std::string( name ), flags );
 }
@@ -70,13 +64,9 @@ bool
 open( Unit const unit, Name const & name, std::ios_base::openmode const mode );
 
 // Open File on Specified Unit
-bool
-open( Unit const unit, Fstring const & name, std::ios_base::openmode const mode );
-
-// Open File on Specified Unit
 inline
 bool
-open( Unit const unit, c_cstring const name, std::ios_base::openmode const mode )
+open( Unit const unit, char const * const name, std::ios_base::openmode const mode )
 {
 	return open( unit, std::string( name ), mode );
 }
@@ -86,13 +76,9 @@ bool
 open( Unit const unit, Name const & name );
 
 // Open File on Specified Unit
-bool
-open( Unit const unit, Fstring const & name );
-
-// Open File on Specified Unit
 inline
 bool
-open( Unit const unit, c_cstring const name )
+open( Unit const unit, char const * const name )
 {
 	return open( unit, std::string( name ) );
 }
@@ -114,13 +100,9 @@ Unit
 open( Name const & name, IOFlags & flags );
 
 // Open File and Return Unit
-Unit
-open( Fstring const & name, IOFlags & flags );
-
-// Open File and Return Unit
 inline
 Unit
-open( c_cstring const name, IOFlags & flags )
+open( char const * const name, IOFlags & flags )
 {
 	return open( std::string( name ), flags );
 }
@@ -129,14 +111,11 @@ open( c_cstring const name, IOFlags & flags )
 Unit
 open( Name const & name, std::ios_base::openmode const mode );
 
-// Open File and Return Unit
-Unit
-open( Fstring const & name, std::ios_base::openmode const mode );
 
 // Open File and Return Unit
 inline
 Unit
-open( c_cstring const name, std::ios_base::openmode const mode )
+open( char const * const name, std::ios_base::openmode const mode )
 {
 	return open( std::string( name ), mode );
 }
@@ -146,13 +125,9 @@ Unit
 open( Name const & name );
 
 // Open File and Return Unit
-Unit
-open( Fstring const & name );
-
-// Open File and Return Unit
 inline
 Unit
-open( c_cstring const name )
+open( char const * const name )
 {
 	return open( std::string( name ) );
 }
@@ -385,54 +360,6 @@ write( std::string & str, Fmt & fmt, IOFlags & flags )
 	return Write( str, fmt, flags );
 }
 
-// Write to Fstring
-inline
-Write
-write( Fstring & str, std::string const & fmt )
-{
-	return Write( str, fmt );
-}
-
-// Write to Fstring
-inline
-Write
-write( Fstring & str, Fmt const & fmt )
-{
-	return Write( str, fmt );
-}
-
-// Write to Fstring
-inline
-Write
-write( Fstring & str, Fmt & fmt )
-{
-	return Write( str, fmt );
-}
-
-// Write to Fstring
-inline
-Write
-write( Fstring & str, std::string const & fmt, IOFlags & flags )
-{
-	return Write( str, fmt, flags );
-}
-
-// Write to Fstring
-inline
-Write
-write( Fstring & str, Fmt const & fmt, IOFlags & flags )
-{
-	return Write( str, fmt, flags );
-}
-
-// Write to Fstring
-inline
-Write
-write( Fstring & str, Fmt & fmt, IOFlags & flags )
-{
-	return Write( str, fmt, flags );
-}
-
 // Output Stream of Unit
 std::ostream *
 out_stream( Unit const unit );
@@ -473,11 +400,7 @@ inquire( Name const & name, IOFlags & flags );
 
 // Inquire by Name
 void
-inquire( Fstring const & name, IOFlags & flags );
-
-// Inquire by Name
-void
-inquire( c_cstring const name, IOFlags & flags );
+inquire( char const * const name, IOFlags & flags );
 
 // File Exists?
 bool
@@ -485,7 +408,7 @@ file_exists( std::string const & file_name );
 
 // File Exists?
 bool
-file_exists( c_cstring const file_name );
+file_exists( char const * const file_name );
 
 // File Openable?
 bool
@@ -493,7 +416,7 @@ file_openable( std::string const & file_name );
 
 // File Openable?
 bool
-file_openable( c_cstring const file_name );
+file_openable( char const * const file_name );
 
 // Backspace /////
 

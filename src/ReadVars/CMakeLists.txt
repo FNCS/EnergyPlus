@@ -4,7 +4,7 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products"
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 
-SET(SRC ReadVarsESO.f90) 
+set(SRC ReadVarsESO.f90)
 
 SET(STATIC_EXE FALSE)
 
@@ -21,6 +21,7 @@ elseif(UNIX)
    set(STATIC_EXE TRUE)
   endif()
 else()
+  set(STATIC_EXE TRUE)
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
     # Set release flags to be empty
     set(CMAKE_Fortran_FLAGS_RELEASE "")
@@ -31,7 +32,7 @@ else()
 endif()
 
 set(SKIP_BUILD_RPATH true)
-ADD_EXECUTABLE( ReadVarsESO ${SRC} )
+add_executable( ReadVarsESO ${SRC} )
 
 install( TARGETS ReadVarsESO DESTINATION PostProcess )
 if(NOT ${STATIC_EXE})

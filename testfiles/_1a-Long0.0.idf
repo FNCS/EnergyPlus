@@ -10,7 +10,7 @@
 ! Plant:    None.
 ! Modified:
 
-  Version,8.3;
+  Version,9.3;
 
   Site:Location,
     UNKNOWN,                 !- Name
@@ -25,13 +25,6 @@
     No,                      !- Do Plant Sizing Calculation
     Yes,                     !- Run Simulation for Sizing Periods
     No;                      !- Run Simulation for Weather File Run Periods
-
-  Output:PreprocessorMessage,
-    Conversion V7 to V7.1,   !- Preprocessor Name
-    Warning,                 !- Error Severity
-    SizingPeriod:DesignDay object="LONDON/GATWICK Modified Ann Clg .4% Condns DB=>MWB",  !- Message Line 1
-    Solar Model Indicator="Schedule",  !- Message Line 2
-    does not use Sky Clearness but prior input was not blank. Copied to new field.;  !- Message Line 3
 
   SizingPeriod:DesignDay,
     LONDON/GATWICK Modified Ann Clg .4% Condns DB=>MWB,  !- Name
@@ -63,7 +56,7 @@
 
  ! LONDON/GATWICK_GBR Annual Heating Design Conditions Wind Speed=1.5m/s Wind Dir=80
  ! Coldest Month=FEB
- ! LONDON/GATWICK_GBR Annual Heating 99.6%, MaxDB=-4.6°C
+ ! LONDON/GATWICK_GBR Annual Heating 99.6%, MaxDB=-4.6Â°C
 
   SizingPeriod:DesignDay,
     LONDON/GATWICK Ann Htg 99.6% Condns DB,  !- Name
@@ -672,20 +665,6 @@
     Type 2-GypsumPlaster;    !- Layer 3
 
   Construction,
-    CONST 3-Ceiling,         !- Name
-    Type 3-PlasticCovering-Exterior,  !- Outside Layer
-    Type 3-CementFloor,      !- Layer 2
-    Type 3-InsulatingLayer,  !- Layer 3
-    Type 3-Concrete-Interior;!- Layer 4
-
-  Construction,
-    CONST 3-Floor,           !- Name
-    Type 3-Concrete-Exterior,!- Outside Layer
-    Type 3-InsulatingLayer,  !- Layer 2
-    Type 3-CementFloor,      !- Layer 3
-    Type 3-PlasticCovering-Interior;  !- Layer 4
-
-  Construction,
     CONST 4-Ceiling,         !- Name
     Type 4-PlasticCovering-Exterior,  !- Outside Layer
     Type 4-CementFloor,      !- Layer 2
@@ -702,12 +681,6 @@
     Type 4-InsulatingLayer,  !- Layer 4
     Type 4-CementFloor,      !- Layer 5
     Type 4-PlasticCovering-Interior;  !- Layer 6
-
-  Construction,
-    CONST 5,                 !- Name
-    Type 5-ExternalLayer,    !- Outside Layer
-    Type 5-InsulatingLayer,  !- Layer 2
-    Type 5-Concrete;         !- Layer 3
 
 !  Input for First Try with Single Pane Glass and Exterior Shade
 
@@ -951,8 +924,9 @@
     0.0;                     !- Air Temperature Gradient Coefficient {K/m}
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    1;                       !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    1;                       !- Shading Calculation Update Frequency
 
 !  Ground temps according to Table 2 of specification is the mean monthly external air temp
 !  For June the temp ranges from 22C to 34 C, mean is 28C
@@ -965,7 +939,7 @@
     Test A-1a,               !- Name
     0.0,                     !- North Axis {deg}
     Country,                 !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     ,                        !- Maximum Number of Warmup Days
@@ -1028,7 +1002,6 @@
     ZONE SURFACE WEST,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1109,12 +1082,13 @@
 
   OtherEquipment,
     ZONE ONE OthEq 1,        !- Name
+    None,                    !- Fuel Type
     ZONE ONE,                !- Zone or ZoneList Name
     Sch 1,                   !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     297.0,                   !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.000,                   !- Fraction Latent
     0.500,                   !- Fraction Radiant
     0.000;                   !- Fraction Lost
@@ -1404,8 +1378,6 @@
   Output:Variable,*,Surface Outside Face Sunlit Area,timestep;
 
   Output:Variable,*,Surface Outside Face Sunlit Fraction,timestep;
-
-  report variable dictionary;
 
   Output:Variable,*,Site Solar Azimuth Angle,timestep;
 

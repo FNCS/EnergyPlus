@@ -29,7 +29,7 @@
 ! System Equipment Autosize:      Yes
 ! Purchased Cooling:              None
 ! Purchased Heating:              None
-! Coils:                          Coil:Cooling:DX:SingleSpeed; Coil:Heating:Gas
+! Coils:                          Coil:Cooling:DX:SingleSpeed; Coil:Heating:Fuel
 ! Pumps:                          None
 ! Boilers:                        None
 ! Chillers:                       None
@@ -67,7 +67,7 @@
 ! ExtWallConstruction=Steel-Framed
 ! End SimMetaData
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,6;
 
@@ -79,18 +79,19 @@
     No;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    Yes,                     !- Use Weather File Snow Indicators
-    1.0000;                  !- Number of Times Runperiod to be Repeated
+    Yes;                     !- Use Weather File Snow Indicators
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -108,8 +109,9 @@
     20;                      !- Maximum HVAC Iterations
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    7,                       !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    7,                       !- Shading Calculation Update Frequency
     15000;                   !- Maximum Figures in Shadow Overlap Calculations
 
   GlobalGeometryRules,
@@ -122,7 +124,7 @@
     Benchmark Strip Mall New V 1.1_3.1,  !- Name
     0.0000,                  !- North Axis {deg}
     City,                    !- Terrain
-    0.0400,                  !- Loads Convergence Tolerance Value
+    0.0400,                  !- Loads Convergence Tolerance Value {W}
     0.2000,                  !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -213,7 +215,7 @@
     9.69,                    !- Annual Average Outdoor Air Temperature {C}
     28.10;                   !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
 
-! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6°C
+! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Htg 99.6% Condns DB,  !- Name
@@ -243,7 +245,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
-! CHICAGO_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2°C MWB=23.8°C
+! CHICAGO_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2Â°C MWB=23.8Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Clg .4% Condns DB=>MWB,  !- Name
@@ -998,201 +1000,6 @@
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
 
   Construction,
-    INT-FLOOR-TOPSIDE,       !- Name
-    Std MAT-CC05 4  MW CONCRETE,  !- Outside Layer
-    Std CP02 CARPET PAD;     !- Layer 2
-
-  Construction,
-    INT-FLOOR-UNDERSIDE,     !- Name
-    Std CP02 CARPET PAD,     !- Outside Layer
-    Std MAT-CC05 4  MW CONCRETE;  !- Layer 2
-
-  ComponentCost:LineItem,
-    Interior Floor,          !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    INT-FLOOR-UNDERSIDE,     !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    15,                      !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    INT-FLOOR-SLAB,          !- Name
-    Std MAT-CC05 4  MW CONCRETE;  !- Outside Layer
-
-  ComponentCost:LineItem,
-    Interior Floor Slab,     !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    INT-FLOOR-SLAB,          !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    35,                      !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    DropCeiling,             !- Name
-    Std AC02;                !- Outside Layer
-
-  ComponentCost:LineItem,
-    Drop Ceiling,            !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    DropCeiling,             !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    10,                      !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    INT-CEILING_SIMPLE,      !- Name
-    PW05_Plywood3/4_in;      !- Outside Layer
-
-  Construction,
-    Raised-Floor-TopSide,    !- Name
-    Std 1.5  MW CONCRETE,    !- Outside Layer
-    Std CP02 CARPET PAD;     !- Layer 2
-
-  Construction,
-    Raised-Floor-UnderSide,  !- Name
-    Std CP02 CARPET PAD,     !- Outside Layer
-    Std 1.5  MW CONCRETE;    !- Layer 2
-
-  Construction,
-    TDD_Pipe,                !- Name
-    Std Very High Reflectivity Surface;  !- Outside Layer
-
-  Construction,
-    TDD_Dome,                !- Name
-    Std Clear Acrylic Plastic;  !- Outside Layer
-
-  Construction,
-    TDD_Diffuser,            !- Name
-    Std Diffusing Acrylic Plastic;  !- Outside Layer
-
-  Construction,
-    Sloped_Metal_Roof,       !- Name
-    Std Steel_Brown_Regular, !- Outside Layer
-    Std PW05;                !- Layer 2
-
-  ComponentCost:LineItem,
-    Sloped Metal Roof,       !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Sloped_Metal_Roof,       !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    Gable_Wall,              !- Name
-    Std PW05;                !- Outside Layer
-
-  ComponentCost:LineItem,
-    Gable Wall,              !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Gable_Wall,              !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    AIR-WALL,                !- Name
-    MAT-AIR-WALL;            !- Outside Layer
-
-  ComponentCost:LineItem,
-    Air Wall,                !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    AIR-WALL,                !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    Std Swinging Door_con,   !- Name
-    Std Opaque Door panel_con;  !- Outside Layer
-
-  ComponentCost:LineItem,
-    Swinging Door Conditioned,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Std Swinging Door_con,   !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    Std Swinging Door_semi,  !- Name
-    Std Opaque Door panel_semi;  !- Outside Layer
-
-  ComponentCost:LineItem,
-    Swinging Door Semi-conditioned,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Std Swinging Door_semi,  !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    Std Overhead Door,       !- Name
-    Std Overhead Door Panel; !- Outside Layer
-
-  ComponentCost:LineItem,
-    Overhead Door,           !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Std Overhead Door,       !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
     window_south,            !- Name
     Theoretical Glass [66];  !- Outside Layer
 
@@ -1201,82 +1008,6 @@
     ,                        !- Type
     Construction,            !- Line Item Type
     window_south,            !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    215.9700,                !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    window_east,             !- Name
-    Theoretical Glass [67];  !- Outside Layer
-
-  ComponentCost:LineItem,
-    east:window_east,        !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    window_east,             !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    209.7290,                !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    window_north,            !- Name
-    Theoretical Glass [67];  !- Outside Layer
-
-  ComponentCost:LineItem,
-    north:window_north,      !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    window_north,            !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    209.7290,                !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    window_west,             !- Name
-    Theoretical Glass [67];  !- Outside Layer
-
-  ComponentCost:LineItem,
-    west:window_west,        !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    window_west,             !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    209.7290,                !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    window_SkylightConst,    !- Name
-    Theoretical Glass [81];  !- Outside Layer
-
-  ComponentCost:LineItem,
-    SkylightConst:window_SkylightConst,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    window_SkylightConst,    !- Item Name
     ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     215.9700,                !- Cost per Area {$/m2}
@@ -1369,48 +1100,6 @@
     ;                        !- Quantity {dimensionless}
 
   Construction,
-    exposed-floor,           !- Name
-    Floor Insulation [2],    !- Outside Layer
-    MAT-CC05 8 HW CONCRETE,  !- Layer 2
-    CP02 CARPET PAD;         !- Layer 3
-
-  ComponentCost:LineItem,
-    exposed-floor:exposed-floor,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    exposed-floor,           !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    34.6727,                 !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    attic-floor,             !- Name
-    1/2IN Gypsum Top,        !- Outside Layer
-    AtticFloor Insulation,   !- Layer 2
-    1/2IN Gypsum Bottom;     !- Layer 3
-
-  ComponentCost:LineItem,
-    attic-floor:attic-floor, !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    attic-floor,             !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    15.0182,                 !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
     door,                    !- Name
     METAL Door Medium 18Ga_1,!- Outside Layer
     AIR,                     !- Layer 2
@@ -1421,27 +1110,6 @@
     ,                        !- Type
     Construction,            !- Line Item Type
     door,                    !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1.0000,                  !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    non-swinging-door,       !- Name
-    METAL Door Medium 18Ga_1,!- Outside Layer
-    AIR [1],                 !- Layer 2
-    METAL Door Medium 18Ga_2;!- Layer 3
-
-  ComponentCost:LineItem,
-    non-swinging-door:non-swinging-door,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    non-swinging-door,       !- Item Name
     ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     1.0000,                  !- Cost per Area {$/m2}
@@ -1538,7 +1206,6 @@
     LGstore1_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1554,7 +1221,6 @@
     LGstore1_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1602,7 +1268,6 @@
     LGstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1618,7 +1283,6 @@
     LGstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1634,7 +1298,6 @@
     LGstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1650,7 +1313,6 @@
     LGstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1666,7 +1328,6 @@
     LGstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1682,7 +1343,6 @@
     LGstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1694,7 +1354,7 @@
   InternalMass,
     LGstore1_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    LGstore1,                !- Zone Name
+    LGstore1,                !- Zone or ZoneList Name
     696.7728;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -1845,7 +1505,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA LGstore1,        !- Name
@@ -1872,7 +1537,7 @@
     LGstore1 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     LGstore1 Air Node,       !- Zone Air Node Name
-    LGstore1 Return Air Node Name;  !- Zone Return Air Node Name
+    LGstore1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     LGstore1 Inlet Nodes,    !- Name
@@ -1880,16 +1545,31 @@
 
   ZoneHVAC:EquipmentList,
     LGstore1 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    LGstore1 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    LGstore1 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     LGstore1 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    LGstore1 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    LGstore1 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    LGstore1 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    LGstore1 Direct Air ADU, !- Name
+    LGstore1 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    LGstore1 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrLGstore1, !- Name
@@ -1955,7 +1635,6 @@
     SMstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1971,7 +1650,6 @@
     SMstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1987,7 +1665,6 @@
     SMstore1_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2051,7 +1728,6 @@
     SMstore1_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2079,7 +1755,7 @@
   InternalMass,
     SMstore1_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    SMstore1,                !- Zone Name
+    SMstore1,                !- Zone or ZoneList Name
     348.3864;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -2230,7 +1906,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SMstore1,        !- Name
@@ -2257,7 +1938,7 @@
     SMstore1 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SMstore1 Air Node,       !- Zone Air Node Name
-    SMstore1 Return Air Node Name;  !- Zone Return Air Node Name
+    SMstore1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     SMstore1 Inlet Nodes,    !- Name
@@ -2265,16 +1946,31 @@
 
   ZoneHVAC:EquipmentList,
     SMstore1 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    SMstore1 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    SMstore1 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     SMstore1 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    SMstore1 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    SMstore1 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    SMstore1 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    SMstore1 Direct Air ADU, !- Name
+    SMstore1 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    SMstore1 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrSMstore1, !- Name
@@ -2340,7 +2036,6 @@
     SMstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2356,7 +2051,6 @@
     SMstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2372,7 +2066,6 @@
     SMstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2436,7 +2129,6 @@
     SMstore2_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2464,7 +2156,7 @@
   InternalMass,
     SMstore2_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    SMstore2,                !- Zone Name
+    SMstore2,                !- Zone or ZoneList Name
     348.3864;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -2615,7 +2307,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SMstore2,        !- Name
@@ -2642,7 +2339,7 @@
     SMstore2 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SMstore2 Air Node,       !- Zone Air Node Name
-    SMstore2 Return Air Node Name;  !- Zone Return Air Node Name
+    SMstore2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     SMstore2 Inlet Nodes,    !- Name
@@ -2650,16 +2347,31 @@
 
   ZoneHVAC:EquipmentList,
     SMstore2 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    SMstore2 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    SMstore2 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     SMstore2 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    SMstore2 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    SMstore2 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    SMstore2 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    SMstore2 Direct Air ADU, !- Name
+    SMstore2 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    SMstore2 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrSMstore2, !- Name
@@ -2725,7 +2437,6 @@
     SMstore3_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2741,7 +2452,6 @@
     SMstore3_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2757,7 +2467,6 @@
     SMstore3_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2821,7 +2530,6 @@
     SMstore3_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2849,7 +2557,7 @@
   InternalMass,
     SMstore3_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    SMstore3,                !- Zone Name
+    SMstore3,                !- Zone or ZoneList Name
     348.3864;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -3000,7 +2708,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SMstore3,        !- Name
@@ -3027,7 +2740,7 @@
     SMstore3 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SMstore3 Air Node,       !- Zone Air Node Name
-    SMstore3 Return Air Node Name;  !- Zone Return Air Node Name
+    SMstore3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     SMstore3 Inlet Nodes,    !- Name
@@ -3035,16 +2748,31 @@
 
   ZoneHVAC:EquipmentList,
     SMstore3 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    SMstore3 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    SMstore3 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     SMstore3 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    SMstore3 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    SMstore3 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    SMstore3 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    SMstore3 Direct Air ADU, !- Name
+    SMstore3 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    SMstore3 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrSMstore3, !- Name
@@ -3110,7 +2838,6 @@
     SMstore4_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3126,7 +2853,6 @@
     SMstore4_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3142,7 +2868,6 @@
     SMstore4_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3206,7 +2931,6 @@
     SMstore4_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3234,7 +2958,7 @@
   InternalMass,
     SMstore4_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    SMstore4,                !- Zone Name
+    SMstore4,                !- Zone or ZoneList Name
     348.3864;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -3385,7 +3109,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SMstore4,        !- Name
@@ -3412,7 +3141,7 @@
     SMstore4 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SMstore4 Air Node,       !- Zone Air Node Name
-    SMstore4 Return Air Node Name;  !- Zone Return Air Node Name
+    SMstore4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     SMstore4 Inlet Nodes,    !- Name
@@ -3420,16 +3149,31 @@
 
   ZoneHVAC:EquipmentList,
     SMstore4 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    SMstore4 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    SMstore4 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     SMstore4 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    SMstore4 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    SMstore4 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    SMstore4 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    SMstore4 Direct Air ADU, !- Name
+    SMstore4 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    SMstore4 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrSMstore4, !- Name
@@ -3527,7 +3271,6 @@
     LGstore2_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3543,7 +3286,6 @@
     LGstore2_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3591,7 +3333,6 @@
     LGstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3607,7 +3348,6 @@
     LGstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3623,7 +3363,6 @@
     LGstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3639,7 +3378,6 @@
     LGstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3655,7 +3393,6 @@
     LGstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3671,7 +3408,6 @@
     LGstore2_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3683,7 +3419,7 @@
   InternalMass,
     LGstore2_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    LGstore2,                !- Zone Name
+    LGstore2,                !- Zone or ZoneList Name
     696.7728;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -3834,7 +3570,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA LGstore2,        !- Name
@@ -3861,7 +3602,7 @@
     LGstore2 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     LGstore2 Air Node,       !- Zone Air Node Name
-    LGstore2 Return Air Node Name;  !- Zone Return Air Node Name
+    LGstore2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     LGstore2 Inlet Nodes,    !- Name
@@ -3869,16 +3610,31 @@
 
   ZoneHVAC:EquipmentList,
     LGstore2 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    LGstore2 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    LGstore2 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     LGstore2 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    LGstore2 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    LGstore2 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    LGstore2 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    LGstore2 Direct Air ADU, !- Name
+    LGstore2 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    LGstore2 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrLGstore2, !- Name
@@ -3944,7 +3700,6 @@
     SMstore5_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3960,7 +3715,6 @@
     SMstore5_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3976,7 +3730,6 @@
     SMstore5_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4040,7 +3793,6 @@
     SMstore5_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4068,7 +3820,7 @@
   InternalMass,
     SMstore5_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    SMstore5,                !- Zone Name
+    SMstore5,                !- Zone or ZoneList Name
     348.3864;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -4219,7 +3971,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SMstore5,        !- Name
@@ -4246,7 +4003,7 @@
     SMstore5 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SMstore5 Air Node,       !- Zone Air Node Name
-    SMstore5 Return Air Node Name;  !- Zone Return Air Node Name
+    SMstore5 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     SMstore5 Inlet Nodes,    !- Name
@@ -4254,16 +4011,31 @@
 
   ZoneHVAC:EquipmentList,
     SMstore5 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    SMstore5 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    SMstore5 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     SMstore5 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    SMstore5 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    SMstore5 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    SMstore5 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    SMstore5 Direct Air ADU, !- Name
+    SMstore5 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    SMstore5 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrSMstore5, !- Name
@@ -4329,7 +4101,6 @@
     SMstore6_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4345,7 +4116,6 @@
     SMstore6_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4361,7 +4131,6 @@
     SMstore6_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4425,7 +4194,6 @@
     SMstore6_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4453,7 +4221,7 @@
   InternalMass,
     SMstore6_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    SMstore6,                !- Zone Name
+    SMstore6,                !- Zone or ZoneList Name
     348.3864;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -4604,7 +4372,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SMstore6,        !- Name
@@ -4631,7 +4404,7 @@
     SMstore6 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SMstore6 Air Node,       !- Zone Air Node Name
-    SMstore6 Return Air Node Name;  !- Zone Return Air Node Name
+    SMstore6 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     SMstore6 Inlet Nodes,    !- Name
@@ -4639,16 +4412,31 @@
 
   ZoneHVAC:EquipmentList,
     SMstore6 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    SMstore6 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    SMstore6 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     SMstore6 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    SMstore6 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    SMstore6 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    SMstore6 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    SMstore6 Direct Air ADU, !- Name
+    SMstore6 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    SMstore6 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrSMstore6, !- Name
@@ -4714,7 +4502,6 @@
     SMstore7_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4730,7 +4517,6 @@
     SMstore7_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4746,7 +4532,6 @@
     SMstore7_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4810,7 +4595,6 @@
     SMstore7_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4838,7 +4622,7 @@
   InternalMass,
     SMstore7_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    SMstore7,                !- Zone Name
+    SMstore7,                !- Zone or ZoneList Name
     348.3864;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -4989,7 +4773,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SMstore7,        !- Name
@@ -5016,7 +4805,7 @@
     SMstore7 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SMstore7 Air Node,       !- Zone Air Node Name
-    SMstore7 Return Air Node Name;  !- Zone Return Air Node Name
+    SMstore7 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     SMstore7 Inlet Nodes,    !- Name
@@ -5024,16 +4813,31 @@
 
   ZoneHVAC:EquipmentList,
     SMstore7 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    SMstore7 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    SMstore7 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     SMstore7 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    SMstore7 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    SMstore7 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    SMstore7 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    SMstore7 Direct Air ADU, !- Name
+    SMstore7 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    SMstore7 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrSMstore7, !- Name
@@ -5099,7 +4903,6 @@
     SMstore8_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -5115,7 +4918,6 @@
     SMstore8_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -5131,7 +4933,6 @@
     SMstore8_Wall_1,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -5195,7 +4996,6 @@
     SMstore8_Wall_3,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -5223,7 +5023,7 @@
   InternalMass,
     SMstore8_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    SMstore8,                !- Zone Name
+    SMstore8,                !- Zone or ZoneList Name
     348.3864;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -5374,7 +5174,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA SMstore8,        !- Name
@@ -5401,7 +5206,7 @@
     SMstore8 Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SMstore8 Air Node,       !- Zone Air Node Name
-    SMstore8 Return Air Node Name;  !- Zone Return Air Node Name
+    SMstore8 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     SMstore8 Inlet Nodes,    !- Name
@@ -5409,16 +5214,31 @@
 
   ZoneHVAC:EquipmentList,
     SMstore8 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    SMstore8 Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    SMstore8 Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     SMstore8 Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    SMstore8 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    SMstore8 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    SMstore8 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    SMstore8 Direct Air ADU, !- Name
+    SMstore8 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    SMstore8 Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrSMstore8, !- Name
@@ -5460,17 +5280,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -5494,6 +5314,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -5502,18 +5323,15 @@
 
   Branch,
     PSZ-AC_1:1 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_1:1_OA,           !- Component 1 Name
     PSZ-AC_1:1 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_1:1_OA-PSZ-AC_1:1_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_1:1_Unitary_Package,  !- Component 2 Name
     PSZ-AC_1:1_OA-PSZ-AC_1:1_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_1:1 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_1:1 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_1:1_OA_Controllers,  !- Name
@@ -5581,14 +5399,14 @@
     PSZ-AC_1:1 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     LGstore1,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_1:1_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_1:1_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_1:1_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -5610,10 +5428,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_1:1_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_1:1_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_1:1_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -5703,7 +5522,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_1:1 Supply Air Splitter,  !- Name
     PSZ-AC_1:1 Zone Equipment Inlet Node,  !- Inlet Node Name
-    LGstore1 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    LGstore1 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_1:1 Return Air Path,  !- Name
@@ -5746,17 +5565,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -5780,6 +5599,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -5788,18 +5608,15 @@
 
   Branch,
     PSZ-AC_2:2 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_2:2_OA,           !- Component 1 Name
     PSZ-AC_2:2 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_2:2_OA-PSZ-AC_2:2_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_2:2_Unitary_Package,  !- Component 2 Name
     PSZ-AC_2:2_OA-PSZ-AC_2:2_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_2:2 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_2:2 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_2:2_OA_Controllers,  !- Name
@@ -5867,14 +5684,14 @@
     PSZ-AC_2:2 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     SMstore1,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_2:2_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_2:2_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_2:2_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -5896,10 +5713,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_2:2_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_2:2_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_2:2_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -5989,7 +5807,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_2:2 Supply Air Splitter,  !- Name
     PSZ-AC_2:2 Zone Equipment Inlet Node,  !- Inlet Node Name
-    SMstore1 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    SMstore1 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_2:2 Return Air Path,  !- Name
@@ -6032,17 +5850,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -6066,6 +5884,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -6074,18 +5893,15 @@
 
   Branch,
     PSZ-AC_3:3 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_3:3_OA,           !- Component 1 Name
     PSZ-AC_3:3 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_3:3_OA-PSZ-AC_3:3_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_3:3_Unitary_Package,  !- Component 2 Name
     PSZ-AC_3:3_OA-PSZ-AC_3:3_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_3:3 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_3:3 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_3:3_OA_Controllers,  !- Name
@@ -6153,14 +5969,14 @@
     PSZ-AC_3:3 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     SMstore2,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_3:3_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_3:3_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_3:3_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -6182,10 +5998,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_3:3_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_3:3_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_3:3_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -6275,7 +6092,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_3:3 Supply Air Splitter,  !- Name
     PSZ-AC_3:3 Zone Equipment Inlet Node,  !- Inlet Node Name
-    SMstore2 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    SMstore2 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_3:3 Return Air Path,  !- Name
@@ -6318,17 +6135,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -6352,6 +6169,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -6360,18 +6178,15 @@
 
   Branch,
     PSZ-AC_4:4 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_4:4_OA,           !- Component 1 Name
     PSZ-AC_4:4 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_4:4_OA-PSZ-AC_4:4_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_4:4_Unitary_Package,  !- Component 2 Name
     PSZ-AC_4:4_OA-PSZ-AC_4:4_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_4:4 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_4:4 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_4:4_OA_Controllers,  !- Name
@@ -6439,14 +6254,14 @@
     PSZ-AC_4:4 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     SMstore3,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_4:4_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_4:4_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_4:4_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -6468,10 +6283,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_4:4_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_4:4_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_4:4_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -6561,7 +6377,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_4:4 Supply Air Splitter,  !- Name
     PSZ-AC_4:4 Zone Equipment Inlet Node,  !- Inlet Node Name
-    SMstore3 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    SMstore3 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_4:4 Return Air Path,  !- Name
@@ -6604,17 +6420,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -6638,6 +6454,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -6646,18 +6463,15 @@
 
   Branch,
     PSZ-AC_5:5 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_5:5_OA,           !- Component 1 Name
     PSZ-AC_5:5 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_5:5_OA-PSZ-AC_5:5_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_5:5_Unitary_Package,  !- Component 2 Name
     PSZ-AC_5:5_OA-PSZ-AC_5:5_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_5:5 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_5:5 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_5:5_OA_Controllers,  !- Name
@@ -6725,14 +6539,14 @@
     PSZ-AC_5:5 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     SMstore4,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_5:5_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_5:5_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_5:5_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -6754,10 +6568,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_5:5_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_5:5_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_5:5_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -6847,7 +6662,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_5:5 Supply Air Splitter,  !- Name
     PSZ-AC_5:5 Zone Equipment Inlet Node,  !- Inlet Node Name
-    SMstore4 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    SMstore4 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_5:5 Return Air Path,  !- Name
@@ -6890,17 +6705,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -6924,6 +6739,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -6932,18 +6748,15 @@
 
   Branch,
     PSZ-AC_6:6 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_6:6_OA,           !- Component 1 Name
     PSZ-AC_6:6 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_6:6_OA-PSZ-AC_6:6_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_6:6_Unitary_Package,  !- Component 2 Name
     PSZ-AC_6:6_OA-PSZ-AC_6:6_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_6:6 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_6:6 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_6:6_OA_Controllers,  !- Name
@@ -7011,14 +6824,14 @@
     PSZ-AC_6:6 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     LGstore2,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_6:6_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_6:6_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_6:6_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -7040,10 +6853,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_6:6_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_6:6_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_6:6_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -7133,7 +6947,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_6:6 Supply Air Splitter,  !- Name
     PSZ-AC_6:6 Zone Equipment Inlet Node,  !- Inlet Node Name
-    LGstore2 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    LGstore2 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_6:6 Return Air Path,  !- Name
@@ -7176,17 +6990,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -7210,6 +7024,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -7218,18 +7033,15 @@
 
   Branch,
     PSZ-AC_7:7 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_7:7_OA,           !- Component 1 Name
     PSZ-AC_7:7 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_7:7_OA-PSZ-AC_7:7_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_7:7_Unitary_Package,  !- Component 2 Name
     PSZ-AC_7:7_OA-PSZ-AC_7:7_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_7:7 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_7:7 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_7:7_OA_Controllers,  !- Name
@@ -7297,14 +7109,14 @@
     PSZ-AC_7:7 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     SMstore5,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_7:7_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_7:7_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_7:7_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -7326,10 +7138,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_7:7_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_7:7_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_7:7_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -7419,7 +7232,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_7:7 Supply Air Splitter,  !- Name
     PSZ-AC_7:7 Zone Equipment Inlet Node,  !- Inlet Node Name
-    SMstore5 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    SMstore5 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_7:7 Return Air Path,  !- Name
@@ -7462,17 +7275,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -7496,6 +7309,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -7504,18 +7318,15 @@
 
   Branch,
     PSZ-AC_8:8 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_8:8_OA,           !- Component 1 Name
     PSZ-AC_8:8 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_8:8_OA-PSZ-AC_8:8_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_8:8_Unitary_Package,  !- Component 2 Name
     PSZ-AC_8:8_OA-PSZ-AC_8:8_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_8:8 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_8:8 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_8:8_OA_Controllers,  !- Name
@@ -7583,14 +7394,14 @@
     PSZ-AC_8:8 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     SMstore6,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_8:8_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_8:8_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_8:8_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -7612,10 +7423,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_8:8_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_8:8_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_8:8_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -7705,7 +7517,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_8:8 Supply Air Splitter,  !- Name
     PSZ-AC_8:8 Zone Equipment Inlet Node,  !- Inlet Node Name
-    SMstore6 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    SMstore6 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_8:8 Return Air Path,  !- Name
@@ -7748,17 +7560,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -7782,6 +7594,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -7790,18 +7603,15 @@
 
   Branch,
     PSZ-AC_9:9 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_9:9_OA,           !- Component 1 Name
     PSZ-AC_9:9 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_9:9_OA-PSZ-AC_9:9_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_9:9_Unitary_Package,  !- Component 2 Name
     PSZ-AC_9:9_OA-PSZ-AC_9:9_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_9:9 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_9:9 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_9:9_OA_Controllers,  !- Name
@@ -7869,14 +7679,14 @@
     PSZ-AC_9:9 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     SMstore7,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_9:9_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_9:9_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_9:9_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -7898,10 +7708,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_9:9_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_9:9_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_9:9_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -7991,7 +7802,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_9:9 Supply Air Splitter,  !- Name
     PSZ-AC_9:9 Zone Equipment Inlet Node,  !- Inlet Node Name
-    SMstore7 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    SMstore7 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_9:9 Return Air Path,  !- Name
@@ -8034,17 +7845,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -8068,6 +7879,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -8076,18 +7888,15 @@
 
   Branch,
     PSZ-AC_10:10 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_10:10_OA,         !- Component 1 Name
     PSZ-AC_10:10 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_10:10_OA-PSZ-AC_10:10_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     PSZ-AC_10:10_Unitary_Package,  !- Component 2 Name
     PSZ-AC_10:10_OA-PSZ-AC_10:10_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    PSZ-AC_10:10 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    PSZ-AC_10:10 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_10:10_OA_Controllers,  !- Name
@@ -8155,14 +7964,14 @@
     PSZ-AC_10:10 Supply Equipment Outlet Node,  !- Unitary System Air Outlet Node Name
     ,                        !- Supply Air Fan Operating Mode Schedule Name
     AUTOSIZE,                !- Maximum Supply Air Temperature {C}
-    AUTOSIZE,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    AUTOSIZE,                !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    AUTOSIZE,                !- Cooling Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- Heating Supply Air Flow Rate {m3/s}
+    AUTOSIZE,                !- No Load Supply Air Flow Rate {m3/s}
     SMstore8,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     PSZ-AC_10:10_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     PSZ-AC_10:10_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PSZ-AC_10:10_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -8184,10 +7993,11 @@
     ,                        !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
     Unitary Fans;            !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_10:10_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_10:10_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     PSZ-AC_10:10_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
@@ -8277,7 +8087,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_10:10 Supply Air Splitter,  !- Name
     PSZ-AC_10:10 Zone Equipment Inlet Node,  !- Inlet Node Name
-    SMstore8 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    SMstore8 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_10:10 Return Air Path,  !- Name
@@ -8358,7 +8168,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Block,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Block Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8375,7 +8185,7 @@
     0.058320;                !- Block 4 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Block,
-    AnnualDemandBaseCharge,  !- Name
+    AnnualDemandBaseCharge,  !- Utility Cost Charge Block Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8390,7 +8200,7 @@
     0.046965;                !- Block 3 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FuelCostAdjustEnergyCharge,  !- Name
+    FuelCostAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8398,7 +8208,7 @@
     0.002028;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    QualPollutionControlAdjustEnergyCharge,  !- Name
+    QualPollutionControlAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8406,7 +8216,7 @@
     0.000536;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SoxNoxRiderAdjustEnergyCharge,  !- Name
+    SoxNoxRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8414,7 +8224,7 @@
     0.001127;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DSMRiderAdjustEnergyCharge,  !- Name
+    DSMRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8422,7 +8232,7 @@
     -0.000370;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    PurchPowerTrackerAdjustEnergyCharge,  !- Name
+    PurchPowerTrackerAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8430,7 +8240,7 @@
     -0.000031;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    MidwestISOAdjustEnergyCharge,  !- Name
+    MidwestISOAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8438,7 +8248,7 @@
     -0.000216;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    CleanCoalRiderEnergyCharge,  !- Name
+    CleanCoalRiderEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8446,7 +8256,7 @@
     0.000833;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MinDemand75kw,           !- Name
+    MinDemand75kw,           !- Utility Cost Qualify Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -8456,7 +8266,7 @@
     12;                      !- Number of Months
 
   UtilityCost:Charge:Simple,
-    TaxofeightPercent,       !- Name
+    TaxofeightPercent,       !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -8482,7 +8292,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Block,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Block Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8499,7 +8309,7 @@
     0.041179;                !- Block 4 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FuelCostAdjustEnergyCharge,  !- Name
+    FuelCostAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8507,7 +8317,7 @@
     0.002028;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    QualPollutionControlAdjustEnergyCharge,  !- Name
+    QualPollutionControlAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8515,7 +8325,7 @@
     0.000536;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SoxNoxRiderAdjustEnergyCharge,  !- Name
+    SoxNoxRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8523,7 +8333,7 @@
     0.001127;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DSMRiderAdjustEnergyCharge,  !- Name
+    DSMRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8531,7 +8341,7 @@
     0.000021;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    PurchPowerTrackerAdjustEnergyCharge,  !- Name
+    PurchPowerTrackerAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8539,7 +8349,7 @@
     0.000034;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    MidwestISOAdjustEnergyCharge,  !- Name
+    MidwestISOAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8547,7 +8357,7 @@
     -0.000203;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    CleanCoalRiderEnergyCharge,  !- Name
+    CleanCoalRiderEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8555,7 +8365,7 @@
     0.000807;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MaxDemand75kw,           !- Name
+    MaxDemand75kw,           !- Utility Cost Qualify Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -8565,7 +8375,7 @@
     1;                       !- Number of Months
 
   UtilityCost:Charge:Simple,
-    TaxofeightPercent,       !- Name
+    TaxofeightPercent,       !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -8589,7 +8399,7 @@
     Comm Gas;                !- Group Name
 
   UtilityCost:Charge:Simple,
-    MonthlyRateGasCharge,    !- Name
+    MonthlyRateGasCharge,    !- Utility Cost Charge Simple Name
     IN_EIAMonthlyRateGas,    !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -8614,7 +8424,7 @@
     7.63;                    !- December Value
 
   UtilityCost:Charge:Simple,
-    TaxofEightPercent,       !- Name
+    TaxofEightPercent,       !- Utility Cost Charge Simple Name
     IN_EIAMonthlyRateGas,    !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -8668,7 +8478,7 @@
     !
 
   FuelFactors,
-    FuelOil#1,               !- Existing Fuel Resource Name
+    FuelOilNo1,              !- Existing Fuel Resource Name
     m3,                      !- Units of Measure
     38.656E+09,              !- Energy per Unit Factor
     1.158,                   !- Source Energy Factor {J/J}

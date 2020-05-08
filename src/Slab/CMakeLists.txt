@@ -4,7 +4,7 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products"
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 
-SET(SRC
+set(SRC
   3DSlabHT.f90
   DataGlobals.f90
   DataStringGlobals.f90
@@ -44,10 +44,10 @@ else()
   endif()
 endif()
 
-set(SKIP_BUILD_RPATH true)
-ADD_EXECUTABLE( Slab ${SRC} )
+set(SKIP_BUILD_RPATH TRUE)
+add_executable( Slab ${SRC} )
 
-SET_TARGET_PROPERTIES(Slab PROPERTIES
+set_target_properties(Slab PROPERTIES
   COMPILE_FLAGS "-ffree-line-length-200 ${SHARED_FLAGS}"
 )
 

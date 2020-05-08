@@ -51,15 +51,19 @@
 ! with R-410A refrigerant is shown in here. Further information regarding the object "AirLoopHVAC:UnitaryHeatPump:AirToAir" can be
 ! found in InputOutput Reference. Information for supply fan, and supplementel heating coil needs to be specified by the user for
 ! their specific case. Following the example, only the curve fits of DX cooling and heating coils are provided.
+! The objects and syntax in this dataset comply with EnergyPlus, Version 8.4.0 and above, unless otherwise noted.
+
+!  Version,
+!    9.0;                    !- Version Identifier
 
   AirLoopHVAC:UnitaryHeatPump:AirToAir,
     RooftopPackagedHeatpumpExample,  !- Name
     HVACAvailSched,          !- Availability Schedule Name
     Air Loop Inlet Node,     !- Air Inlet Node Name
     Air Loop Outlet Node,    !- Air Outlet Node Name
-    0.944,                   !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    0.944,                   !- Supply Air Flow Rate During Heating Operation {m3/s}
-    0,                       !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    0.944,                   !- Cooling Supply Air Flow Rate {m3/s}
+    0.944,                   !- Heating Supply Air Flow Rate {m3/s}
+    0,                       !- No Load Supply Air Flow Rate {m3/s}
     ZoneName,                !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Air Fan Object Type
     SupplyFan,               !- Supply Air Fan Name
@@ -67,7 +71,7 @@
     JCI J05XP Heating,       !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     JCI J05XP Cooling,       !- Cooling Coil Name
-    Coil:Heating:Gas,        !- Supplemental Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Supplemental Heating Coil Object Type
     Supp Heating Coil,       !- Supplemental Heating Coil Name
     50,                      !- Maximum Supply Air Temperature from Supplemental Heater {C}
     21,                      !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
@@ -84,9 +88,9 @@
   Coil:Cooling:DX:SingleSpeed,
     JCI J05XP Cooling,       !- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    17789.3,                 !- Rated Total Cooling Capacity {W}
-    0.73,                    !- Rated Sensible Heat Ratio
-    3.8,                     !- Rated COP {W/W}
+    17789.3,                 !- Gross Rated Total Cooling Capacity {W}
+    0.73,                    !- Gross Rated Sensible Heat Ratio
+    3.8,                     !- Gross Rated Cooling COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
@@ -151,7 +155,7 @@
     1.25,                    !- Maximum Value of x
     0.9275,                  !- Minimum Curve Output
     1.0198,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -166,7 +170,7 @@
     1.25,                    !- Maximum Value of x
     0.9806,                  !- Minimum Curve Output
     1.0782,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -184,14 +188,14 @@
   Coil:Heating:DX:SingleSpeed,
     JCI J05XP Heating,       !- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    16857.4,                 !- Rated Total Heating Capacity {W}
-    3.2,                     !- Rated COP {W/W}
+    16857.4,                 !- Gross Rated Heating Capacity {W}
+    3.2,                     !- Gross Rated Heating COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    JCI J05XP Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    JCI J05XP Heating CapFFF,!- Total Heating Capacity Function of Flow Fraction Curve Name
+    JCI J05XP Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    JCI J05XP Heating CapFFF,!- Heating Capacity Function of Flow Fraction Curve Name
     JCI J05XP Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     JCI J05XP Heating EIRFFF,!- Energy Input Ratio Function of Flow Fraction Curve Name
     JCI J05XP Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -260,7 +264,7 @@
     1.25,                    !- Maximum Value of x
     0.9518,                  !- Minimum Curve Output
     1.0388,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -275,7 +279,7 @@
     1.25,                    !- Maximum Value of x
     0.9992,                  !- Minimum Curve Output
     1.0107,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -303,9 +307,9 @@
   Coil:Cooling:DX:SingleSpeed,
     JCI J10XP Cooling,       !- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    17789.3,                 !- Rated Total Cooling Capacity {W}
-    0.73,                    !- Rated Sensible Heat Ratio
-    3.8,                     !- Rated COP {W/W}
+    17789.3,                 !- Gross Rated Total Cooling Capacity {W}
+    0.73,                    !- Gross Rated Sensible Heat Ratio
+    3.8,                     !- Gross Rated Cooling COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
@@ -370,7 +374,7 @@
     1.25,                    !- Maximum Value of x
     0.888,                   !- Minimum Curve Output
     1.0371,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -385,7 +389,7 @@
     1.25,                    !- Maximum Value of x
     0.9643,                  !- Minimum Curve Output
     1.1138,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -403,14 +407,14 @@
   Coil:Heating:DX:SingleSpeed,
     JCI J10XP Heating,       !- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    16857.4,                 !- Rated Total Heating Capacity {W}
-    3.2,                     !- Rated COP {W/W}
+    16857.4,                 !- Gross Rated Heating Capacity {W}
+    3.2,                     !- Gross Rated Heating COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    JCI J10XP Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    JCI J10XP Heating CapFFF,!- Total Heating Capacity Function of Flow Fraction Curve Name
+    JCI J10XP Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    JCI J10XP Heating CapFFF,!- Heating Capacity Function of Flow Fraction Curve Name
     JCI J10XP Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     JCI J10XP Heating EIRFFF,!- Energy Input Ratio Function of Flow Fraction Curve Name
     JCI J10XP Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -479,7 +483,7 @@
     1.25,                    !- Maximum Value of x
     0.9049,                  !- Minimum Curve Output
     1,                       !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -494,7 +498,7 @@
     1.25,                    !- Maximum Value of x
     0.9649,                  !- Minimum Curve Output
     1.1634,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -521,9 +525,9 @@
   Coil:Cooling:DX:SingleSpeed,
     Carrier 50TFQ006 Cooling,!- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    17789.3,                 !- Rated Total Cooling Capacity {W}
-    0.69,                    !- Rated Sensible Heat Ratio
-    3.34,                    !- Rated COP {W/W}
+    17789.3,                 !- Gross Rated Total Cooling Capacity {W}
+    0.69,                    !- Gross Rated Sensible Heat Ratio
+    3.34,                    !- Gross Rated Cooling COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
@@ -588,7 +592,7 @@
     1.25,                    !- Maximum Value of x
     0.9507,                  !- Minimum Curve Output
     1.0302,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -603,7 +607,7 @@
     1.25,                    !- Maximum Value of x
     0.983,                   !- Minimum Curve Output
     1.0328,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -621,14 +625,14 @@
   Coil:Heating:DX:SingleSpeed,
     Carrier 50TFQ006 Heating,!- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    14888.069,               !- Rated Total Heating Capacity {W}
-    2.92,                    !- Rated COP {W/W}
+    14888.069,               !- Gross Rated Heating Capacity {W}
+    2.92,                    !- Gross Rated Heating COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Carrier 50TFQ006 Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Carrier 50TFQ006 Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Carrier 50TFQ006 Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Carrier 50TFQ006 Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Carrier 50TFQ006 Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Carrier 50TFQ006 Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Carrier 50TFQ006 Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -697,7 +701,7 @@
     1.25,                    !- Maximum Value of x
     0.9902,                  !- Minimum Curve Output
     1.0079,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -712,7 +716,7 @@
     1.25,                    !- Maximum Value of x
     0.9576,                  !- Minimum Curve Output
     1.0769,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -739,9 +743,9 @@
   Coil:Cooling:DX:SingleSpeed,
     Carrier 50HJQ012 Cooling,!- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    34992.558,               !- Rated Total Cooling Capacity {W}
-    0.75,                    !- Rated Sensible Heat Ratio
-    3.41,                    !- Rated COP {W/W}
+    34992.558,               !- Gross Rated Total Cooling Capacity {W}
+    0.75,                    !- Gross Rated Sensible Heat Ratio
+    3.41,                    !- Gross Rated Cooling COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
@@ -806,7 +810,7 @@
     1.25,                    !- Maximum Value of x
     0.9598,                  !- Minimum Curve Output
     1.0201,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -821,7 +825,7 @@
     1.25,                    !- Maximum Value of x
     0.986,                   !- Minimum Curve Output
     1.0297,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -839,14 +843,14 @@
   Coil:Heating:DX:SingleSpeed,
     Carrier 50HJQ012 Heating,!- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    31476.156,               !- Rated Total Heating Capacity {W}
-    3.54,                    !- Rated COP {W/W}
+    31476.156,               !- Gross Rated Heating Capacity {W}
+    3.54,                    !- Gross Rated Heating COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Carrier 50HJQ012 Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Carrier 50HJQ012 Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Carrier 50HJQ012 Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Carrier 50HJQ012 Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Carrier 50HJQ012 Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Carrier 50HJQ012 Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Carrier 50HJQ012 Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -915,7 +919,7 @@
     1.25,                    !- Maximum Value of x
     0.9777,                  !- Minimum Curve Output
     1.0251,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -930,7 +934,7 @@
     1.25,                    !- Maximum Value of x
     0.9849,                  !- Minimum Curve Output
     1.0293,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -957,9 +961,9 @@
   Coil:Cooling:DX:SingleSpeed,
     Carrier 50EZ060 Cooling, !- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    17716.3372,              !- Rated Total Cooling Capacity {W}
-    0.75,                    !- Rated Sensible Heat Ratio
-    4.05,                    !- Rated COP {W/W}
+    17716.3372,              !- Gross Rated Total Cooling Capacity {W}
+    0.75,                    !- Gross Rated Sensible Heat Ratio
+    4.05,                    !- Gross Rated Cooling COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
@@ -1024,7 +1028,7 @@
     1.125,                   !- Maximum Value of x
     0.9841,                  !- Minimum Curve Output
     1.0117,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1039,7 +1043,7 @@
     1.125,                   !- Maximum Value of x
     0.9929,                  !- Minimum Curve Output
     1.0087,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -1057,14 +1061,14 @@
   Coil:Heating:DX:SingleSpeed,
     Carrier 50EZ060 Heating, !- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    17303.1085,              !- Rated Total Heating Capacity {W}
-    4.5,                     !- Rated COP {W/W}
+    17303.1085,              !- Gross Rated Heating Capacity {W}
+    4.5,                     !- Gross Rated Heating COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Carrier 50EZ060 Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Carrier 50EZ060 Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Carrier 50EZ060 Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Carrier 50EZ060 Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Carrier 50EZ060 Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Carrier 50EZ060 Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Carrier 50EZ060 Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -1133,7 +1137,7 @@
     1.125,                   !- Maximum Value of x
     0.9907,                  !- Minimum Curve Output
     1.0028,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1148,7 +1152,7 @@
     1.125,                   !- Maximum Value of x
     0.9892,                  !- Minimum Curve Output
     1.0297,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -1192,9 +1196,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox LHA120H Stage 1,  !- Name
-    18434.103,               !- Rated Total Cooling Capacity {W}
-    0.73,                    !- Rated Sensible Heat Ratio
-    3.55,                    !- Rated COP {W/W}
+    18434.103,               !- Gross Rated Total Cooling Capacity {W}
+    0.73,                    !- Gross Rated Sensible Heat Ratio
+    3.55,                    !- Gross Rated Cooling COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
     0.49,                    !- Fraction of Air Flow Bypassed Around Coil
     Lennox LHA120H Stage 1 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -1207,9 +1211,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox LHA120H Stage 1&2,!- Name
-    36340.68,                !- Rated Total Cooling Capacity {W}
-    0.72,                    !- Rated Sensible Heat Ratio
-    3.8,                     !- Rated COP {W/W}
+    36340.68,                !- Gross Rated Total Cooling Capacity {W}
+    0.72,                    !- Gross Rated Sensible Heat Ratio
+    3.8,                     !- Gross Rated Cooling COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
     0.0,                     !- Fraction of Air Flow Bypassed Around Coil
     Lennox LHA120H Stage 1&2 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -1272,7 +1276,7 @@
     1.2,                     !- Maximum Value of x
     0.9507,                  !- Minimum Curve Output
     1.062,                   !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,            !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1287,7 +1291,7 @@
     1.2,                     !- Maximum Value of x
     0.9507,                  !- Minimum Curve Output
     1.0458,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,            !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Cooling Capacity Function of Temperature Curve
@@ -1344,7 +1348,7 @@
     1.2,                     !- Maximum Value of x
     0.95,                    !- Minimum Curve Output
     1.0621,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1359,7 +1363,7 @@
     1.2,                     !- Maximum Value of x
     0.9513,                  !- Minimum Curve Output
     1.045,                   !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -1377,14 +1381,14 @@
   Coil:Heating:DX:SingleSpeed,
     Lennox LHA120H Heating,  !- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    32559.84,                !- Rated Total Heating Capacity {W}
-    3.69,                    !- Rated COP {W/W}
+    32559.84,                !- Gross Rated Heating Capacity {W}
+    3.69,                    !- Gross Rated Heating COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Lennox LHA120H Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Lennox LHA120H Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Lennox LHA120H Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Lennox LHA120H Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Lennox LHA120H Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Lennox LHA120H Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Lennox LHA120H Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -1443,7 +1447,7 @@
     1.2,                     !- Maximum Value of x
     0.9865,                  !- Minimum Curve Output
     1.0315,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1458,7 +1462,7 @@
     1.2,                     !- Maximum Value of x
     0.9233,                  !- Minimum Curve Output
     1.1033,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -1502,9 +1506,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox LHA240H Stage 1,  !- Name
-    32560.077,               !- Rated Total Cooling Capacity {W}
-    0.69,                    !- Rated Sensible Heat Ratio
-    3.16,                    !- Rated COP {W/W}
+    32560.077,               !- Gross Rated Total Cooling Capacity {W}
+    0.69,                    !- Gross Rated Sensible Heat Ratio
+    3.16,                    !- Gross Rated Cooling COP {W/W}
     3.54,                    !- Rated Air Flow Rate {m3/s}
     0.515,                   !- Fraction of Air Flow Bypassed Around Coil
     Lennox LHA240H Stage 1 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -1517,9 +1521,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox LHA240H Stage 1&2,!- Name
-    67171.644,               !- Rated Total Cooling Capacity {W}
-    0.76,                    !- Rated Sensible Heat Ratio
-    3.5,                     !- Rated COP {W/W}
+    67171.644,               !- Gross Rated Total Cooling Capacity {W}
+    0.76,                    !- Gross Rated Sensible Heat Ratio
+    3.5,                     !- Gross Rated Cooling COP {W/W}
     3.54,                    !- Rated Air Flow Rate {m3/s}
     0.0,                     !- Fraction of Air Flow Bypassed Around Coil
     Lennox LHA240H Stage 1&2 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -1582,7 +1586,7 @@
     1.2,                     !- Maximum Value of x
     0.9694,                  !- Minimum Curve Output
     1.0216,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1597,7 +1601,7 @@
     1.2,                     !- Maximum Value of x
     0.9846,                  !- Minimum Curve Output
     1.0246,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Cooling Capacity Function of Temperature Curve
@@ -1654,7 +1658,7 @@
     1.2,                     !- Maximum Value of x
     0.9695,                  !- Minimum Curve Output
     1.0218,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1669,7 +1673,7 @@
     1.2,                     !- Maximum Value of x
     0.9847,                  !- Minimum Curve Output
     1.0235,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -1687,14 +1691,14 @@
   Coil:Heating:DX:SingleSpeed,
     Lennox LHA240H Heating,  !- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    61977.83,                !- Rated Total Heating Capacity {W}
-    3.6,                     !- Rated COP {W/W}
+    61977.83,                !- Gross Rated Heating Capacity {W}
+    3.6,                     !- Gross Rated Heating COP {W/W}
     3.54,                    !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Lennox LHA240H Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Lennox LHA240H Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Lennox LHA240H Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Lennox LHA240H Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Lennox LHA240H Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Lennox LHA240H Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Lennox LHA240H Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -1753,7 +1757,7 @@
     1.2,                     !- Maximum Value of x
     0.9792,                  !- Minimum Curve Output
     1.0213,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1768,7 +1772,7 @@
     1.2,                     !- Maximum Value of x
     0.9451,                  !- Minimum Curve Output
     1.0786,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -1796,9 +1800,9 @@
   Coil:Cooling:DX:SingleSpeed,
     Lennox THA060S2 Cooling, !- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    18903,                   !- Rated Total Cooling Capacity {W}
-    0.74,                    !- Rated Sensible Heat Ratio
-    4.1,                     !- Rated COP {W/W}
+    18903,                   !- Gross Rated Total Cooling Capacity {W}
+    0.74,                    !- Gross Rated Sensible Heat Ratio
+    4.1,                     !- Gross Rated Cooling COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
@@ -1863,7 +1867,7 @@
     1.2,                     !- Maximum Value of x
     0.9659,                  !- Minimum Curve Output
     1.0233,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1878,7 +1882,7 @@
     1.2,                     !- Maximum Value of x
     0.9836,                  !- Minimum Curve Output
     1.0263,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -1896,14 +1900,14 @@
   Coil:Heating:DX:SingleSpeed,
     Lennox THA060S2 Cooling, !- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    16443.2,                 !- Rated Total Heating Capacity {W}
-    4.2,                     !- Rated COP {W/W}
+    16443.2,                 !- Gross Rated Heating Capacity {W}
+    4.2,                     !- Gross Rated Heating COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Lennox THA060S2 Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Lennox THA060S2 Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Lennox THA060S2 Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Lennox THA060S2 Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Lennox THA060S2 Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Lennox THA060S2 Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Lennox THA060S2 Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -1962,7 +1966,7 @@
     1.2,                     !- Maximum Value of x
     0.9857,                  !- Minimum Curve Output
     1.016,                   !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -1977,7 +1981,7 @@
     1.2,                     !- Maximum Value of x
     0.9416,                  !- Minimum Curve Output
     1.0843,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -2021,9 +2025,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox THA120S Stage 1,  !- Name
-    18434.103,               !- Rated Total Cooling Capacity {W}
-    0.73,                    !- Rated Sensible Heat Ratio
-    3.5,                     !- Rated COP {W/W}
+    18434.103,               !- Gross Rated Total Cooling Capacity {W}
+    0.73,                    !- Gross Rated Sensible Heat Ratio
+    3.5,                     !- Gross Rated Cooling COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
     0.49,                    !- Fraction of Air Flow Bypassed Around Coil
     Lennox THA120S Stage 1 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -2036,9 +2040,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox THA120S Stage 1&2,!- Name
-    36340.68,                !- Rated Total Cooling Capacity {W}
-    .74,                     !- Rated Sensible Heat Ratio
-    3.7,                     !- Rated COP {W/W}
+    36340.68,                !- Gross Rated Total Cooling Capacity {W}
+    .74,                     !- Gross Rated Sensible Heat Ratio
+    3.7,                     !- Gross Rated Cooling COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
     0.0,                     !- Fraction of Air Flow Bypassed Around Coil
     Lennox THA120S Stage 1&2 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -2101,7 +2105,7 @@
     1.2,                     !- Maximum Value of x
     0.9698,                  !- Minimum Curve Output
     1.0207,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2116,7 +2120,7 @@
     1.2,                     !- Maximum Value of x
     0.9834,                  !- Minimum Curve Output
     1.0273,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Cooling Capacity Function of Temperature Curve
@@ -2173,7 +2177,7 @@
     1.2,                     !- Maximum Value of x
     0.9694,                  !- Minimum Curve Output
     1.021,                   !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2188,7 +2192,7 @@
     1.2,                     !- Maximum Value of x
     0.9835,                  !- Minimum Curve Output
     1.0274,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -2206,14 +2210,14 @@
   Coil:Heating:DX:SingleSpeed,
     Lennox THA120S Heating,  !- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    32559.84,                !- Rated Total Heating Capacity {W}
-    3.53,                    !- Rated COP {W/W}
+    32559.84,                !- Gross Rated Heating Capacity {W}
+    3.53,                    !- Gross Rated Heating COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Lennox THA120S Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Lennox THA120S Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Lennox THA120S Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Lennox THA120S Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Lennox THA120S Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Lennox THA120S Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Lennox THA120S Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -2272,7 +2276,7 @@
     1.2,                     !- Maximum Value of x
     0.9865,                  !- Minimum Curve Output
     1.0316,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2287,7 +2291,7 @@
     1.2,                     !- Maximum Value of x
     0.9251,                  !- Minimum Curve Output
     1.0997,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -2315,9 +2319,9 @@
   Coil:Cooling:DX:SingleSpeed,
     Lennox KHA060S4 Cooling, !- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    18023.8,                 !- Rated Total Cooling Capacity {W}
-    0.76,                    !- Rated Sensible Heat Ratio
-    385,                     !- Rated COP {W/W}
+    18023.8,                 !- Gross Rated Total Cooling Capacity {W}
+    0.76,                    !- Gross Rated Sensible Heat Ratio
+    385,                     !- Gross Rated Cooling COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
@@ -2382,7 +2386,7 @@
     1.2,                     !- Maximum Value of x
     0.9447,                  !- Minimum Curve Output
     1.065,                   !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2397,7 +2401,7 @@
     1.2,                     !- Maximum Value of x
     0.951,                   !- Minimum Curve Output
     1.0495,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -2415,14 +2419,14 @@
   Coil:Heating:DX:SingleSpeed,
     Lennox KHA060S4 Cooling, !- Name
     CoolingCoilAvailSched,   !- Availability Schedule Name
-    16684.2,                 !- Rated Total Heating Capacity {W}
-    4.1,                     !- Rated COP {W/W}
+    16684.2,                 !- Gross Rated Heating Capacity {W}
+    4.1,                     !- Gross Rated Heating COP {W/W}
     0.944,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Lennox KHA060S4 Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Lennox KHA060S4 Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Lennox KHA060S4 Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Lennox KHA060S4 Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Lennox KHA060S4 Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Lennox KHA060S4 Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Lennox KHA060S4 Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -2481,7 +2485,7 @@
     1.2,                     !- Maximum Value of x
     0.9653,                  !- Minimum Curve Output
     1.0162,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2496,7 +2500,7 @@
     1.2,                     !- Maximum Value of x
     0.943,                   !- Minimum Curve Output
     1.1045,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -2540,9 +2544,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox KHA120S4 Stage 1, !- Name
-    17818.7,                 !- Rated Total Cooling Capacity {W}
-    0.73,                    !- Rated Sensible Heat Ratio
-    3.53,                    !- Rated COP {W/W}
+    17818.7,                 !- Gross Rated Total Cooling Capacity {W}
+    0.73,                    !- Gross Rated Sensible Heat Ratio
+    3.53,                    !- Gross Rated Cooling COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
     0.51,                    !- Fraction of Air Flow Bypassed Around Coil
     Lennox KHA120S4 Stage 1 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -2555,9 +2559,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox KHA120S4 Stage 1&2,  !- Name
-    36340.68,                !- Rated Total Cooling Capacity {W}
-    .75,                     !- Rated Sensible Heat Ratio
-    3.9,                     !- Rated COP {W/W}
+    36340.68,                !- Gross Rated Total Cooling Capacity {W}
+    .75,                     !- Gross Rated Sensible Heat Ratio
+    3.9,                     !- Gross Rated Cooling COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
     0.0,                     !- Fraction of Air Flow Bypassed Around Coil
     Lennox KHA120S4 Stage 1&2 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -2620,7 +2624,7 @@
     1.2,                     !- Maximum Value of x
     0.949,                   !- Minimum Curve Output
     1.0559,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2635,7 +2639,7 @@
     1.2,                     !- Maximum Value of x
     0.9564,                  !- Minimum Curve Output
     1.0454,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Cooling Capacity Function of Temperature Curve
@@ -2692,7 +2696,7 @@
     1.2,                     !- Maximum Value of x
     0.9484,                  !- Minimum Curve Output
     1.0556,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2707,7 +2711,7 @@
     1.2,                     !- Maximum Value of x
     0.9574,                  !- Minimum Curve Output
     1.0465,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -2725,14 +2729,14 @@
   Coil:Heating:DX:SingleSpeed,
     Lennox KHA120S4 Heating, !- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    32563.43,                !- Rated Total Heating Capacity {W}
-    3.68,                    !- Rated COP {W/W}
+    32563.43,                !- Gross Rated Heating Capacity {W}
+    3.68,                    !- Gross Rated Heating COP {W/W}
     1.888,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Lennox KHA120S4 Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Lennox KHA120S4 Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Lennox KHA120S4 Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Lennox KHA120S4 Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Lennox KHA120S4 Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Lennox KHA120S4 Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Lennox KHA120S4 Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -2791,7 +2795,7 @@
     1.2,                     !- Maximum Value of x
     0.9704,                  !- Minimum Curve Output
     1.0289,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2806,7 +2810,7 @@
     1.2,                     !- Maximum Value of x
     0.9279,                  !- Minimum Curve Output
     1.1028,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -2850,9 +2854,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox KHA240S4 Stage 1, !- Name
-    34699.5,                 !- Rated Total Cooling Capacity {W}
-    0.76,                    !- Rated Sensible Heat Ratio
-    3.54,                    !- Rated COP {W/W}
+    34699.5,                 !- Gross Rated Total Cooling Capacity {W}
+    0.76,                    !- Gross Rated Sensible Heat Ratio
+    3.54,                    !- Gross Rated Cooling COP {W/W}
     3.776,                   !- Rated Air Flow Rate {m3/s}
     0.482,                   !- Fraction of Air Flow Bypassed Around Coil
     Lennox KHA240S4 Stage 1 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -2865,9 +2869,9 @@
 
   CoilPerformance:DX:Cooling,
     Lennox KHA240S4 Stage 1&2,  !- Name
-    66966.5,                 !- Rated Total Cooling Capacity {W}
-    0.78,                    !- Rated Sensible Heat Ratio
-    3.7,                     !- Rated COP {W/W}
+    66966.5,                 !- Gross Rated Total Cooling Capacity {W}
+    0.78,                    !- Gross Rated Sensible Heat Ratio
+    3.7,                     !- Gross Rated Cooling COP {W/W}
     3.776,                   !- Rated Air Flow Rate {m3/s}
     0.0,                     !- Fraction of Air Flow Bypassed Around Coil
     Lennox KHA240S4 Stage 1&2 CapFTemp,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -2930,7 +2934,7 @@
     1.2,                     !- Maximum Value of x
     0.9443,                  !- Minimum Curve Output
     1.0549,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -2945,7 +2949,7 @@
     1.2,                     !- Maximum Value of x
     0.9586,                  !- Minimum Curve Output
     1.0471,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Cooling Capacity Function of Temperature Curve
@@ -3002,7 +3006,7 @@
     1.2,                     !- Maximum Value of x
     0.9462,                  !- Minimum Curve Output
     1.0547,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -3017,7 +3021,7 @@
     1.2,                     !- Maximum Value of x
     0.9601,                  !- Minimum Curve Output
     1.0447,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve
@@ -3035,14 +3039,14 @@
   Coil:Heating:DX:SingleSpeed,
     Lennox KHA240S4 Heating, !- Name
     HeatingCoilAvailSched,   !- Availability Schedule Name
-    61025.4,                 !- Rated Total Heating Capacity {W}
-    3.78,                    !- Rated COP {W/W}
+    61025.4,                 !- Gross Rated Heating Capacity {W}
+    3.78,                    !- Gross Rated Heating COP {W/W}
     3.776,                   !- Rated Air Flow Rate {m3/s}
-    ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     DXCoilAirInletNode,      !- Air Inlet Node Name
     DXCoilAirOutletNode,     !- Air Outlet Node Name
-    Lennox KHA240S4 Heating CapFTemp,  !- Total Heating Capacity Function of Temperature Curve Name
-    Lennox KHA240S4 Heating CapFFF,  !- Total Heating Capacity Function of Flow Fraction Curve Name
+    Lennox KHA240S4 Heating CapFTemp,  !- Heating Capacity Function of Temperature Curve Name
+    Lennox KHA240S4 Heating CapFFF,  !- Heating Capacity Function of Flow Fraction Curve Name
     Lennox KHA240S4 Heating EIRFTemp,  !- Energy Input Ratio Function of Temperature Curve Name
     Lennox KHA240S4 Heating EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     Lennox KHA240S4 Heating PLFFPLR,  !- Part Load Fraction Correlation Curve Name
@@ -3101,7 +3105,7 @@
     1.2,                     !- Maximum Value of x
     0.9741,                  !- Minimum Curve Output
     1.0255,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! EIR Function of Flow Fraction Curve
@@ -3116,7 +3120,7 @@
     1.2,                     !- Maximum Value of x
     0.9371,                  !- Minimum Curve Output
     1.0909,                  !- Maximum Curve Output
-    Flow Fraction,           !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Dimensionless;           !- Output Unit Type
 
 ! Part Load Fraction Function of Part Load Ratio Curve

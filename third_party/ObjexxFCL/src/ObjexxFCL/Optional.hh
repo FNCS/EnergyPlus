@@ -3,13 +3,13 @@
 
 // Optional Argument Wrapper
 //
-// Project: Objexx Fortran Compatibility Library (ObjexxFCL)
+// Project: Objexx Fortran-C++ Library (ObjexxFCL)
 //
-// Version: 4.0.0
+// Version: 4.2.0
 //
 // Language: C++
 //
-// Copyright (c) 2000-2014 Objexx Engineering, Inc. All Rights Reserved.
+// Copyright (c) 2000-2017 Objexx Engineering, Inc. All Rights Reserved.
 // Use of this source code or any derivative of it is restricted by license.
 // Licensing is available from Objexx Engineering, Inc.:  http://objexx.com
 
@@ -25,7 +25,11 @@ namespace ObjexxFCL {
 
 // Optional Argument Wrapper
 template< typename T, typename Enable >
-class Optional
+class Optional;
+
+// Optional Argument Wrapper: Concrete Type Specialization
+template< typename T >
+class Optional< T, typename std::enable_if< ! std::is_abstract< T >::value >::type >
 {
 
 private: // Friend
@@ -35,33 +39,32 @@ private: // Friend
 public: // Types
 
 	typedef  T  Value;
+	typedef  typename std::enable_if< ! std::is_abstract< T >::value >::type  EnableType;
+	typedef  typename std::conditional< std::is_scalar< T >::value, T const, T const & >::type  Tc;
+	typedef  typename std::conditional< std::is_scalar< T >::value, typename std::remove_const< T >::type, T const & >::type  Tr;
 
 public: // Creation
 
 	// Default Constructor
-	inline
 	Optional() :
 	 ptr_( nullptr ),
 	 own_( false )
 	{}
 
 	// Copy Constructor
-	inline
 	Optional( Optional const & o ) :
 	 ptr_( o.own_ ? new T( o() ) : o.ptr_ ),
 	 own_( o.own_ )
 	{}
 
-	// Optional Constructor Template
+	// Copy Constructor Template
 	template< typename U, class = typename std::enable_if< std::is_const< T >::value && std::is_same< U, typename std::remove_const< T >::type >::value >::type >
-	inline
-	Optional( Optional< U, Enable > const & o ) :
+	Optional( Optional< U, EnableType > const & o ) :
 	 ptr_( o.own_ ? new T( o() ) : o.ptr_ ),
 	 own_( o.own_ )
 	{}
 
 	// Value Constructor
-	inline
 	Optional( T const & val ) :
 	 ptr_( const_cast< T * >( &val ) ),
 	 own_( false )
@@ -69,28 +72,24 @@ public: // Creation
 
 	// Value Constructor Template
 	template< typename U, class = typename std::enable_if< std::is_constructible< T, U >::value >::type >
-	inline
 	Optional( U const & val ) :
 	 ptr_( new T( val ) ), // Requires Value( U ) constructor
 	 own_( true )
 	{}
 
 	// rvalue Constructor
-	inline
 	Optional( T && val ) :
 	 ptr_( new T( val ) ), // Requires Value copy constructor
 	 own_( true )
 	{}
 
 	// Omit Constructor
-	inline
 	Optional( Omit ) :
 	 ptr_( nullptr ),
 	 own_( false )
 	{}
 
 	// Destructor
-	inline
 	~Optional()
 	{
 		if ( own_ ) delete ptr_;
@@ -99,7 +98,6 @@ public: // Creation
 public: // Assignment
 
 	// Copy Assignment
-	inline
 	Optional &
 	operator =( Optional const & o )
 	{
@@ -112,7 +110,6 @@ public: // Assignment
 	}
 
 	// Value Assignment
-	inline
 	Optional &
 	operator =( T const & val )
 	{
@@ -123,17 +120,15 @@ public: // Assignment
 
 	// Value Assignment Template
 	template< typename U, class = typename std::enable_if< std::is_assignable< T&, U >::value >::type >
-	inline
 	Optional &
 	operator =( U const & val )
 	{
 		assert( ptr_ != nullptr );
-		*ptr_ = val;
+		*ptr_ = T( val );
 		return *this;
 	}
 
 	// rvalue Assignment
-	inline
 	Optional &
 	operator =( T && val )
 	{
@@ -143,7 +138,6 @@ public: // Assignment
 	}
 
 	// Omit Assignment
-	inline
 	Optional &
 	operator =( Omit )
 	{
@@ -156,15 +150,13 @@ public: // Assignment
 public: // Conversion
 
 	// Value Conversion
-	inline
-	operator T const &() const
+	operator Tr() const
 	{
 		assert( ptr_ != nullptr );
 		return *ptr_;
 	}
 
 	// Value Conversion
-	inline
 	operator T &()
 	{
 		assert( ptr_ != nullptr );
@@ -174,8 +166,7 @@ public: // Conversion
 public: // Operators
 
 	// Value
-	inline
-	T const &
+	Tr
 	operator ()() const
 	{
 		assert( ptr_ != nullptr );
@@ -183,7 +174,6 @@ public: // Operators
 	}
 
 	// Value
-	inline
 	T &
 	operator ()()
 	{
@@ -194,7 +184,6 @@ public: // Operators
 public: // Properties
 
 	// Present?
-	inline
 	bool
 	present() const
 	{
@@ -202,7 +191,6 @@ public: // Properties
 	}
 
 	// Own?
-	inline
 	bool
 	own() const
 	{
@@ -212,7 +200,6 @@ public: // Properties
 public: // Modifiers
 
 	// Clear
-	inline
 	void
 	clear()
 	{
@@ -224,7 +211,6 @@ public: // Modifiers
 public: // Comparison
 
 	// Optional == Optional
-	inline
 	friend
 	bool
 	operator ==( Optional const & a, Optional const & b )
@@ -233,7 +219,6 @@ public: // Comparison
 	}
 
 	// Optional != Optional
-	inline
 	friend
 	bool
 	operator !=( Optional const & a, Optional const & b )
@@ -242,37 +227,33 @@ public: // Comparison
 	}
 
 	// Optional == Value
-	inline
 	friend
 	bool
-	operator ==( Optional const & a, T const & b )
+	operator ==( Optional const & a, Tc b )
 	{
 		return ( ( a.ptr_ != nullptr ) && ( *a.ptr_ == b ) );
 	}
 
 	// Optional != Value
-	inline
 	friend
 	bool
-	operator !=( Optional const & a, T const & b )
+	operator !=( Optional const & a, Tc b )
 	{
 		return !( a == b );
 	}
 
 	// Value == Optional
-	inline
 	friend
 	bool
-	operator ==( T const & a, Optional const & b )
+	operator ==( Tc a, Optional const & b )
 	{
 		return ( ( b.ptr_ != nullptr ) && ( a == *b.ptr_ ) );
 	}
 
 	// Value != Optional
-	inline
 	friend
 	bool
-	operator !=( T const & a, Optional const & b )
+	operator !=( Tc a, Optional const & b )
 	{
 		return !( a == b );
 	}
@@ -297,49 +278,44 @@ public: // Types
 
 	typedef  T  Value;
 	typedef  typename std::enable_if< std::is_abstract< T >::value >::type  EnableType;
+	typedef  typename std::conditional< std::is_scalar< T >::value, T const, T const & >::type  Tc;
+	typedef  typename std::conditional< std::is_scalar< T >::value, typename std::remove_const< T >::type, T const & >::type  Tr;
 
 public: // Creation
 
 	// Default Constructor
-	inline
 	Optional() :
 	 ptr_( nullptr )
 	{}
 
 	// Copy Constructor
-	inline
 	Optional( Optional const & o ) :
 	 ptr_( o.ptr_ )
 	{}
 
-	// Optional Constructor Template
+	// Copy Constructor Template
 	template< typename U, class = typename std::enable_if< std::is_const< T >::value && std::is_same< U, typename std::remove_const< T >::type >::value >::type >
-	inline
 	Optional( Optional< U, EnableType > const & o ) :
 	 ptr_( o.ptr_ )
 	{}
 
 	// Value Constructor
-	inline
 	Optional( T const & val ) :
 	 ptr_( const_cast< T * >( &val ) )
 	{}
 
 	// Omit Constructor
-	inline
 	Optional( Omit ) :
 	 ptr_( nullptr )
 	{}
 
 	// Destructor
-	inline
 	~Optional()
 	{}
 
 public: // Assignment
 
 	// Copy Assignment
-	inline
 	Optional &
 	operator =( Optional const & o )
 	{
@@ -348,7 +324,6 @@ public: // Assignment
 	}
 
 	// Value Assignment
-	inline
 	Optional &
 	operator =( T const & val )
 	{
@@ -359,7 +334,6 @@ public: // Assignment
 
 	// Value Assignment Template
 	template< typename U, class = typename std::enable_if< std::is_assignable< T&, U >::value >::type >
-	inline
 	Optional &
 	operator =( U const & val )
 	{
@@ -369,7 +343,6 @@ public: // Assignment
 	}
 
 	// rvalue Assignment
-	inline
 	Optional &
 	operator =( T && val )
 	{
@@ -379,7 +352,6 @@ public: // Assignment
 	}
 
 	// Omit Assignment
-	inline
 	Optional &
 	operator =( Omit )
 	{
@@ -390,15 +362,13 @@ public: // Assignment
 public: // Conversion
 
 	// Value Conversion
-	inline
-	operator T const &() const
+	operator Tr() const
 	{
 		assert( ptr_ != nullptr );
 		return *ptr_;
 	}
 
 	// Value Conversion
-	inline
 	operator T &()
 	{
 		assert( ptr_ != nullptr );
@@ -408,8 +378,7 @@ public: // Conversion
 public: // Operators
 
 	// Value
-	inline
-	T const &
+	Tr
 	operator ()() const
 	{
 		assert( ptr_ != nullptr );
@@ -417,7 +386,6 @@ public: // Operators
 	}
 
 	// Value
-	inline
 	T &
 	operator ()()
 	{
@@ -428,7 +396,6 @@ public: // Operators
 public: // Properties
 
 	// Present?
-	inline
 	bool
 	present() const
 	{
@@ -438,7 +405,6 @@ public: // Properties
 public: // Modifiers
 
 	// Clear
-	inline
 	void
 	clear()
 	{
@@ -448,7 +414,6 @@ public: // Modifiers
 public: // Comparison
 
 	// Optional == Optional
-	inline
 	friend
 	bool
 	operator ==( Optional const & a, Optional const & b )
@@ -457,7 +422,6 @@ public: // Comparison
 	}
 
 	// Optional != Optional
-	inline
 	friend
 	bool
 	operator !=( Optional const & a, Optional const & b )
@@ -466,37 +430,33 @@ public: // Comparison
 	}
 
 	// Optional == Value
-	inline
 	friend
 	bool
-	operator ==( Optional const & a, T const & b )
+	operator ==( Optional const & a, Tc b )
 	{
 		return ( ( a.ptr_ != nullptr ) && ( *a.ptr_ == b ) );
 	}
 
 	// Optional != Value
-	inline
 	friend
 	bool
-	operator !=( Optional const & a, T const & b )
+	operator !=( Optional const & a, Tc b )
 	{
 		return !( a == b );
 	}
 
 	// Value == Optional
-	inline
 	friend
 	bool
-	operator ==( T const & a, Optional const & b )
+	operator ==( Tc a, Optional const & b )
 	{
 		return ( ( b.ptr_ != nullptr ) && ( a == *b.ptr_ ) );
 	}
 
 	// Value != Optional
-	inline
 	friend
 	bool
-	operator !=( T const & a, Optional const & b )
+	operator !=( Tc a, Optional const & b )
 	{
 		return !( a == b );
 	}
@@ -523,6 +483,15 @@ bool
 PRESENT( Optional< T > const & o )
 {
 	return o.present();
+}
+
+// Optional Maker
+template< typename T >
+inline
+Optional< T >
+make_Optional( T const & val )
+{
+	return Optional< T >( val );
 }
 
 } // ObjexxFCL

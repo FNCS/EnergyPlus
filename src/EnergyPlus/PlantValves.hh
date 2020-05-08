@@ -1,186 +1,122 @@
+// EnergyPlus, Copyright (c) 1996-2020, The Board of Trustees of the University of Illinois,
+// The Regents of the University of California, through Lawrence Berkeley National Laboratory
+// (subject to receipt of any required approvals from the U.S. Dept. of Energy), Oak Ridge
+// National Laboratory, managed by UT-Battelle, Alliance for Sustainable Energy, LLC, and other
+// contributors. All rights reserved.
+//
+// NOTICE: This Software was developed under funding from the U.S. Department of Energy and the
+// U.S. Government consequently retains certain rights. As such, the U.S. Government has been
+// granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable,
+// worldwide license in the Software to reproduce, distribute copies to the public, prepare
+// derivative works, and perform publicly and display publicly, and to permit others to do so.
+//
+// Redistribution and use in source and binary forms, with or without modification, are permitted
+// provided that the following conditions are met:
+//
+// (1) Redistributions of source code must retain the above copyright notice, this list of
+//     conditions and the following disclaimer.
+//
+// (2) Redistributions in binary form must reproduce the above copyright notice, this list of
+//     conditions and the following disclaimer in the documentation and/or other materials
+//     provided with the distribution.
+//
+// (3) Neither the name of the University of California, Lawrence Berkeley National Laboratory,
+//     the University of Illinois, U.S. Dept. of Energy nor the names of its contributors may be
+//     used to endorse or promote products derived from this software without specific prior
+//     written permission.
+//
+// (4) Use of EnergyPlus(TM) Name. If Licensee (i) distributes the software in stand-alone form
+//     without changes from the version obtained under this License, or (ii) Licensee makes a
+//     reference solely to the software portion of its product, Licensee must refer to the
+//     software as "EnergyPlus version X" software, where "X" is the version number Licensee
+//     obtained under this License and may not use a different name for the software. Except as
+//     specifically required in this Section (4), Licensee shall not use in a company name, a
+//     product name, in advertising, publicity, or other promotional activities any name, trade
+//     name, trademark, logo, or other designation of "EnergyPlus", "E+", "e+" or confusingly
+//     similar designation, without the U.S. Department of Energy's prior written consent.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+// AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 #ifndef PlantValves_hh_INCLUDED
 #define PlantValves_hh_INCLUDED
 
 // ObjexxFCL Headers
-#include <ObjexxFCL/FArray1D.hh>
+#include <ObjexxFCL/Array1D.hh>
 
 // EnergyPlus Headers
-#include <EnergyPlus.hh>
-#include <DataGlobals.hh>
+#include <EnergyPlus/DataGlobals.hh>
+#include <EnergyPlus/EnergyPlus.hh>
+#include <EnergyPlus/Data/EnergyPlusData.hh>
+#include <EnergyPlus/PlantComponent.hh>
 
 namespace EnergyPlus {
 
 namespace PlantValves {
 
-	// Using/Aliasing
+    // MODULE VARIABLE DECLARATIONS:
+    extern int NumTemperingValves;
 
-	// Data
-	// MODULE PARAMETER DEFINITIONS:
-	// na
+    struct TemperValveData : PlantComponent
+    {
+        // Members
+        // user input data
+        std::string Name = "";         // User identifier
+        int PltInletNodeNum = 0;      // Node number on the inlet side of the plant
+        int PltOutletNodeNum = 0;     // Node number on the outlet side of the plant
+        int PltStream2NodeNum = 0;    // Node number on the outlet side of the second stream
+        int PltSetPointNodeNum = 0;   // Node number for the setpoint node.
+        int PltPumpOutletNodeNum = 0; // node number for the pump outlet (for flow rate)
+        // Calculated and from elsewhere
+        bool environmentInit = true;                // flag for initializationL true means do the initializations
+        Real64 FlowDivFract = 0.0;      // Fraction of flow sent down diversion path
+        Real64 Stream2SourceTemp = 0.0; // Temperature [C] of stream 2 being mixed
+        Real64 InletTemp = 0.0;         // Temperature [C] of inlet to valve
+        Real64 SetPointTemp = 0.0;      // setpoint Temperatures [C] at control node.
+        Real64 MixedMassFlowRate = 0.0; // Flow rate downstream of mixer [kg/s]
+        // loop topology variables
+        int LoopNum = 0;
+        int LoopSideNum = 0;
+        int BranchNum = 0;
+        int CompNum = 0;
+        bool compDelayedInitFlag = true;
 
-	// DERIVED TYPE DEFINITIONS:
+        TemperValveData() = default;
 
-	// MODULE VARIABLE DECLARATIONS:
-	extern int NumTemperingValves;
-	extern FArray1D_bool CheckEquipName;
+        virtual ~TemperValveData() = default;
 
-	// SUBROUTINE SPECIFICATIONS FOR MODULE <module_name>:
+        static PlantComponent *factory(std::string objectName);
 
-	// Types
+        void simulate(EnergyPlusData &EP_UNUSED(state), const PlantLocation &calledFromLocation, bool FirstHVACIteration, Real64 &CurLoad,
+                      bool RunFlag) override;
 
-	struct TemperValveData
-	{
-		// Members
-		// user input data
-		std::string Name; // User identifier
-		int PltInletNodeNum; // Node number on the inlet side of the plant
-		int PltOutletNodeNum; // Node number on the outlet side of the plant
-		int PltStream2NodeNum; // Node number on the outlet side of the second stream
-		int PltSetPointNodeNum; // Node number for the setpoint node.
-		int PltPumpOutletNodeNum; // node number for the pump outlet (for flow rate)
-		// Calculated and from elsewhere
-		bool Init; // flag for initializationL true means do the initializations
-		Real64 FlowDivFract; // Fraction of flow sent down diversion path
-		Real64 Stream2SourceTemp; // Temperature [C] of stream 2 being mixed
-		Real64 InletTemp; // Temperature [C] of inlet to valve
-		Real64 SetPointTemp; // setpoint Temperatures [C] at control node.
-		Real64 MixedMassFlowRate; // Flow rate downstream of mixer [kg/s]
-		Real64 DivertedFlowRate; // flow rate through tempering valve's diversion path [kg/s]
-		//loop topology variables
-		int LoopNum;
-		int LoopSideNum;
-		int BranchNum;
-		int CompNum;
+        void getDesignCapacities(const PlantLocation &calledFromLocation,
+                                 Real64 &MaxLoad,
+                                 Real64 &MinLoad,
+                                 Real64 &OptLoad) override;
 
-		// Default Constructor
-		TemperValveData() :
-			PltInletNodeNum( 0 ),
-			PltOutletNodeNum( 0 ),
-			PltStream2NodeNum( 0 ),
-			PltSetPointNodeNum( 0 ),
-			PltPumpOutletNodeNum( 0 ),
-			Init( true ),
-			FlowDivFract( 0.0 ),
-			Stream2SourceTemp( 0.0 ),
-			InletTemp( 0.0 ),
-			SetPointTemp( 0.0 ),
-			MixedMassFlowRate( 0.0 ),
-			DivertedFlowRate( 0.0 ),
-			LoopNum( 0 ),
-			LoopSideNum( 0 ),
-			BranchNum( 0 ),
-			CompNum( 0 )
-		{}
+        void initialize();
 
-		// Member Constructor
-		TemperValveData(
-			std::string const & Name, // User identifier
-			int const PltInletNodeNum, // Node number on the inlet side of the plant
-			int const PltOutletNodeNum, // Node number on the outlet side of the plant
-			int const PltStream2NodeNum, // Node number on the outlet side of the second stream
-			int const PltSetPointNodeNum, // Node number for the setpoint node.
-			int const PltPumpOutletNodeNum, // node number for the pump outlet (for flow rate)
-			bool const Init, // flag for initializationL true means do the initializations
-			Real64 const FlowDivFract, // Fraction of flow sent down diversion path
-			Real64 const Stream2SourceTemp, // Temperature [C] of stream 2 being mixed
-			Real64 const InletTemp, // Temperature [C] of inlet to valve
-			Real64 const SetPointTemp, // setpoint Temperatures [C] at control node.
-			Real64 const MixedMassFlowRate, // Flow rate downstream of mixer [kg/s]
-			Real64 const DivertedFlowRate, // flow rate through tempering valve's diversion path [kg/s]
-			int const LoopNum,
-			int const LoopSideNum,
-			int const BranchNum,
-			int const CompNum
-		) :
-			Name( Name ),
-			PltInletNodeNum( PltInletNodeNum ),
-			PltOutletNodeNum( PltOutletNodeNum ),
-			PltStream2NodeNum( PltStream2NodeNum ),
-			PltSetPointNodeNum( PltSetPointNodeNum ),
-			PltPumpOutletNodeNum( PltPumpOutletNodeNum ),
-			Init( Init ),
-			FlowDivFract( FlowDivFract ),
-			Stream2SourceTemp( Stream2SourceTemp ),
-			InletTemp( InletTemp ),
-			SetPointTemp( SetPointTemp ),
-			MixedMassFlowRate( MixedMassFlowRate ),
-			DivertedFlowRate( DivertedFlowRate ),
-			LoopNum( LoopNum ),
-			LoopSideNum( LoopSideNum ),
-			BranchNum( BranchNum ),
-			CompNum( CompNum )
-		{}
+        void calculate();
 
-	};
+    };
 
-	// Object Data
-	extern FArray1D< TemperValveData > TemperValve; // dimension to No. of TemperingValve objects
+    void clear_state();
 
-	// Functions
+    void GetPlantValvesInput();
 
-	void
-	SimPlantValves(
-		int const CompTypeNum,
-		std::string const & CompName,
-		int & CompNum,
-		bool const RunFlag, // unused1208
-		bool & InitLoopEquip,
-		Real64 & MyLoad, // unused1208
-		Real64 & MaxCap,
-		Real64 & MinCap,
-		Real64 & OptCap,
-		bool const FirstHVACIteration // TRUE if First iteration of simulation
-	);
+    // Object Data
+    extern Array1D<TemperValveData> TemperValve; // dimension to No. of TemperingValve objects
 
-	void
-	GetPlantValvesInput();
+} // namespace PlantValves
 
-	void
-	InitPlantValves(
-		int const CompTypeNum,
-		int const CompNum
-	);
-
-	void
-	CalcPlantValves(
-		int const CompTypeNum,
-		int const CompNum
-	);
-
-	void
-	UpdatePlantValves(
-		int const CompTypeNum,
-		int const CompNum
-	);
-
-	void
-	ReportPlantValves();
-
-	//     NOTICE
-
-	//     Copyright © 1996-2014 The Board of Trustees of the University of Illinois
-	//     and The Regents of the University of California through Ernest Orlando Lawrence
-	//     Berkeley National Laboratory.  All rights reserved.
-
-	//     Portions of the EnergyPlus software package have been developed and copyrighted
-	//     by other individuals, companies and institutions.  These portions have been
-	//     incorporated into the EnergyPlus software package under license.   For a complete
-	//     list of contributors, see "Notice" located in main.cc.
-
-	//     NOTICE: The U.S. Government is granted for itself and others acting on its
-	//     behalf a paid-up, nonexclusive, irrevocable, worldwide license in this data to
-	//     reproduce, prepare derivative works, and perform publicly and display publicly.
-	//     Beginning five (5) years after permission to assert copyright is granted,
-	//     subject to two possible five year renewals, the U.S. Government is granted for
-	//     itself and others acting on its behalf a paid-up, non-exclusive, irrevocable
-	//     worldwide license in this data to reproduce, prepare derivative works,
-	//     distribute copies to the public, perform publicly and display publicly, and to
-	//     permit others to do so.
-
-	//     TRADEMARKS: EnergyPlus is a trademark of the US Department of Energy.
-
-} // PlantValves
-
-} // EnergyPlus
+} // namespace EnergyPlus
 
 #endif

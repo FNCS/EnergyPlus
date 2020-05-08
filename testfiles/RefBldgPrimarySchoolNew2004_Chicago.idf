@@ -44,7 +44,7 @@
 ! Purchased Cooling:              None
 ! Purchased Heating:              None
 ! Coils:                          Coil:Cooling:DX:SingleSpeed; Coil:Cooilng:DX:TwoSpeed
-!                                 Coil:Heating:Water (PVAV units); Coil:Heating:Gas (PSZ units)
+!                                 Coil:Heating:Water (PVAV units); Coil:Heating:Fuel (PSZ units)
 ! Pumps:                          Yes
 ! Boilers:                        Boiler:HotWater (gas-fired)
 ! Chillers:                       None
@@ -136,7 +136,7 @@
     -6.00,                   !- Time Zone {hr}
     190;                     !- Elevation {m}
 
- ! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6°C
+ ! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Htg 99.6% Condns DB,  !- Name
@@ -166,7 +166,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
- ! CHICAGO_IL_USA Annual Cooling (WB=>MDB) .4%, MDB=31.2°C WB=25.5°C
+ ! CHICAGO_IL_USA Annual Cooling (WB=>MDB) .4%, MDB=31.2Â°C WB=25.5Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Clg .4% Condns WB=>MDB,  !- Name
@@ -205,7 +205,7 @@
 ! ***GENERAL SIMULATION PARAMETERS***
 ! Number of Zones: 25
 
-  Version,8.3;
+  Version,9.3;
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
@@ -214,31 +214,32 @@
     YES,                     !- Run Simulation for Sizing Periods
     NO,                      !- Run Simulation for Weather File Run Periods
     YES,                     !- Do HVAC Sizing Simulation for Sizing Periods
-    1;                       !- Maximum Number of HVAC Sizing Simulation Passes    
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
 
   Building,
     Ref Bldg Primary School New2004_v1.3_5.0,  !- Name
     0.0000,                  !- North Axis {deg}
     City,                    !- Terrain
-    0.0400,                  !- Loads Convergence Tolerance Value
+    0.0400,                  !- Loads Convergence Tolerance Value {W}
     0.2000,                  !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    Yes,                     !- Use Weather File Snow Indicators
-    1.0000;                  !- Number of Times Runperiod to be Repeated
+    Yes;                     !- Use Weather File Snow Indicators
 
 ! ***HOLIDAYS & DAYLIGHT SAVINGS***
 
@@ -374,8 +375,9 @@
     25;                      !- Maximum HVAC Iterations
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    7,                       !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    7,                       !- Shading Calculation Update Frequency
     15000;                   !- Maximum Figures in Shadow Overlap Calculations
 
   Timestep,6;
@@ -448,14 +450,6 @@
     ;                        !- Visible Transmittance
 
 ! ***COMMON CONSTRUCTIONS AND MATERIALS***
-
-  Construction,
-    DropCeiling,             !- Name
-    Std AC02;                !- Outside Layer
-
-  Construction,
-    AIR-WALL,                !- Name
-    MAT-AIR-WALL;            !- Outside Layer
 
   Construction,
     InteriorFurnishings,     !- Name
@@ -3760,7 +3754,6 @@
     Bath_ZN_1_FLR_1_Wall_5,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3776,7 +3769,6 @@
     Cafeteria_ZN_1_FLR_1_Wall_2,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3792,7 +3784,6 @@
     Cafeteria_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3810,7 +3801,6 @@
     Computer_Class_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3826,7 +3816,6 @@
     Corner_Class_1_Pod_1_ZN_1_FLR_1_Wall_1,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3842,7 +3831,6 @@
     Corner_Class_1_Pod_1_ZN_1_FLR_1_Wall_4,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3858,7 +3846,6 @@
     Corner_Class_1_Pod_2_ZN_1_FLR_1_Wall_1,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3874,7 +3861,6 @@
     Corner_Class_1_Pod_2_ZN_1_FLR_1_Wall_4,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3890,7 +3876,6 @@
     Corner_Class_1_Pod_3_ZN_1_FLR_1_Wall_1,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3906,7 +3891,6 @@
     Corner_Class_1_Pod_3_ZN_1_FLR_1_Wall_4,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3922,7 +3906,6 @@
     Corner_Class_2_Pod_1_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3938,7 +3921,6 @@
     Corner_Class_2_Pod_1_ZN_1_FLR_1_Wall_4,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3954,7 +3936,6 @@
     Corner_Class_2_Pod_2_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3970,7 +3951,6 @@
     Corner_Class_2_Pod_2_ZN_1_FLR_1_Wall_4,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3986,7 +3966,6 @@
     Corner_Class_2_Pod_3_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4002,7 +3981,6 @@
     Corner_Class_2_Pod_3_ZN_1_FLR_1_Wall_4,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4018,7 +3996,6 @@
     Corridor_Pod_1_ZN_1_FLR_1_Wall_6,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4034,7 +4011,6 @@
     Corridor_Pod_2_ZN_1_FLR_1_Wall_6,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4050,7 +4026,6 @@
     Corridor_Pod_3_ZN_1_FLR_1_Wall_7,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4066,7 +4041,6 @@
     Gym_ZN_1_FLR_1_Wall_2,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4082,7 +4056,6 @@
     Kitchen_ZN_1_FLR_1_Wall_2,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4098,7 +4071,6 @@
     Library_Media_Center_ZN_1_FLR_1_Wall_2,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4114,7 +4086,6 @@
     Library_Media_Center_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4130,7 +4101,6 @@
     Lobby_ZN_1_FLR_1_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4146,7 +4116,6 @@
     Main_Corridor_ZN_1_FLR_1_Wall_7,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4162,7 +4131,6 @@
     Mult_Class_1_Pod_1_ZN_1_FLR_1_Wall_1,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4178,7 +4146,6 @@
     Mult_Class_1_Pod_2_ZN_1_FLR_1_Wall_1,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4194,7 +4161,6 @@
     Mult_Class_1_Pod_3_ZN_1_FLR_1_Wall_1,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4210,7 +4176,6 @@
     Mult_Class_2_Pod_1_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4226,7 +4191,6 @@
     Mult_Class_2_Pod_2_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4242,7 +4206,6 @@
     Mult_Class_2_Pod_3_ZN_1_FLR_1_Wall_3,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4258,7 +4221,6 @@
     Offices_ZN_1_FLR_1_Wall_1,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4274,7 +4236,6 @@
     Offices_ZN_1_FLR_1_Wall_2,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4298,7 +4259,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4314,7 +4274,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4330,7 +4289,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4346,7 +4304,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4362,7 +4319,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4378,7 +4334,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4394,7 +4349,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4410,7 +4364,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4426,7 +4379,6 @@
     Gym_ZN_1_FLR_1_Ceiling,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     Al w/Break Frame,        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -5667,7 +5619,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     160284,                  !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.1000,                  !- Fraction Latent
     0.2000,                  !- Fraction Radiant
     0.7000,                  !- Fraction Lost
@@ -6026,151 +5978,151 @@
   InternalMass,
     Bath_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Bath_ZN_1_FLR_1,         !- Zone Name
+    Bath_ZN_1_FLR_1,         !- Zone or ZoneList Name
     380.0000;                !- Surface Area {m2}
 
   InternalMass,
     Cafeteria_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Cafeteria_ZN_1_FLR_1,    !- Zone Name
+    Cafeteria_ZN_1_FLR_1,    !- Zone or ZoneList Name
     630.0000;                !- Surface Area {m2}
 
   InternalMass,
     Computer_Class_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Computer_Class_ZN_1_FLR_1,  !- Zone Name
+    Computer_Class_ZN_1_FLR_1,  !- Zone or ZoneList Name
     324.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corner_Class_1_Pod_1_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corner_Class_1_Pod_1_ZN_1_FLR_1,  !- Zone Name
+    Corner_Class_1_Pod_1_ZN_1_FLR_1,  !- Zone or ZoneList Name
     198.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corner_Class_1_Pod_2_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corner_Class_1_Pod_2_ZN_1_FLR_1,  !- Zone Name
+    Corner_Class_1_Pod_2_ZN_1_FLR_1,  !- Zone or ZoneList Name
     198.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corner_Class_1_Pod_3_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corner_Class_1_Pod_3_ZN_1_FLR_1,  !- Zone Name
+    Corner_Class_1_Pod_3_ZN_1_FLR_1,  !- Zone or ZoneList Name
     198.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corner_Class_2_Pod_1_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corner_Class_2_Pod_1_ZN_1_FLR_1,  !- Zone Name
+    Corner_Class_2_Pod_1_ZN_1_FLR_1,  !- Zone or ZoneList Name
     198.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corner_Class_2_Pod_2_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corner_Class_2_Pod_2_ZN_1_FLR_1,  !- Zone Name
+    Corner_Class_2_Pod_2_ZN_1_FLR_1,  !- Zone or ZoneList Name
     198.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corner_Class_2_Pod_3_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corner_Class_2_Pod_3_ZN_1_FLR_1,  !- Zone Name
+    Corner_Class_2_Pod_3_ZN_1_FLR_1,  !- Zone or ZoneList Name
     198.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corridor_Pod_1_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corridor_Pod_1_ZN_1_FLR_1,  !- Zone Name
+    Corridor_Pod_1_ZN_1_FLR_1,  !- Zone or ZoneList Name
     384.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corridor_Pod_2_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corridor_Pod_2_ZN_1_FLR_1,  !- Zone Name
+    Corridor_Pod_2_ZN_1_FLR_1,  !- Zone or ZoneList Name
     384.0000;                !- Surface Area {m2}
 
   InternalMass,
     Corridor_Pod_3_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Corridor_Pod_3_ZN_1_FLR_1,  !- Zone Name
+    Corridor_Pod_3_ZN_1_FLR_1,  !- Zone or ZoneList Name
     384.0000;                !- Surface Area {m2}
 
   InternalMass,
     Gym_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Gym_ZN_1_FLR_1,          !- Zone Name
+    Gym_ZN_1_FLR_1,          !- Zone or ZoneList Name
     714.0000;                !- Surface Area {m2}
 
   InternalMass,
     Kitchen_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Kitchen_ZN_1_FLR_1,      !- Zone Name
+    Kitchen_ZN_1_FLR_1,      !- Zone or ZoneList Name
     336.0000;                !- Surface Area {m2}
 
   InternalMass,
     Library_Media_Center_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Library_Media_Center_ZN_1_FLR_1,  !- Zone Name
+    Library_Media_Center_ZN_1_FLR_1,  !- Zone or ZoneList Name
     798.0000;                !- Surface Area {m2}
 
   InternalMass,
     Lobby_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Lobby_ZN_1_FLR_1,        !- Zone Name
+    Lobby_ZN_1_FLR_1,        !- Zone or ZoneList Name
     342.0000;                !- Surface Area {m2}
 
   InternalMass,
     Main_Corridor_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Main_Corridor_ZN_1_FLR_1,!- Zone Name
+    Main_Corridor_ZN_1_FLR_1,!- Zone or ZoneList Name
     1092.0000;               !- Surface Area {m2}
 
   InternalMass,
     Mech_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Mech_ZN_1_FLR_1,         !- Zone Name
+    Mech_ZN_1_FLR_1,         !- Zone or ZoneList Name
     504.0000;                !- Surface Area {m2}
 
   InternalMass,
     Mult_Class_1_Pod_1_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Mult_Class_1_Pod_1_ZN_1_FLR_1,  !- Zone Name
+    Mult_Class_1_Pod_1_ZN_1_FLR_1,  !- Zone or ZoneList Name
     954.0000;                !- Surface Area {m2}
 
   InternalMass,
     Mult_Class_1_Pod_2_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Mult_Class_1_Pod_2_ZN_1_FLR_1,  !- Zone Name
+    Mult_Class_1_Pod_2_ZN_1_FLR_1,  !- Zone or ZoneList Name
     954.0000;                !- Surface Area {m2}
 
   InternalMass,
     Mult_Class_1_Pod_3_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Mult_Class_1_Pod_3_ZN_1_FLR_1,  !- Zone Name
+    Mult_Class_1_Pod_3_ZN_1_FLR_1,  !- Zone or ZoneList Name
     954.0000;                !- Surface Area {m2}
 
   InternalMass,
     Mult_Class_2_Pod_1_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Mult_Class_2_Pod_1_ZN_1_FLR_1,  !- Zone Name
+    Mult_Class_2_Pod_1_ZN_1_FLR_1,  !- Zone or ZoneList Name
     954.0000;                !- Surface Area {m2}
 
   InternalMass,
     Mult_Class_2_Pod_2_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Mult_Class_2_Pod_2_ZN_1_FLR_1,  !- Zone Name
+    Mult_Class_2_Pod_2_ZN_1_FLR_1,  !- Zone or ZoneList Name
     954.0000;                !- Surface Area {m2}
 
   InternalMass,
     Mult_Class_2_Pod_3_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Mult_Class_2_Pod_3_ZN_1_FLR_1,  !- Zone Name
+    Mult_Class_2_Pod_3_ZN_1_FLR_1,  !- Zone or ZoneList Name
     630.0000;                !- Surface Area {m2}
 
   InternalMass,
     Offices_ZN_1_FLR_1 Internal Mass,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Offices_ZN_1_FLR_1,      !- Zone Name
+    Offices_ZN_1_FLR_1,      !- Zone or ZoneList Name
     882.0000;                !- Surface Area {m2}
 
 ! ***INTERNAL GAINS SCHEDULES***
@@ -6616,28 +6568,31 @@
     Kitchen_ZN_1_FLR_1 Exhaust Fan Outlet Node Name,  !- Air Outlet Node Name
     Zone Exhaust Fans;       !- End-Use Subcategory
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_1:6_HeatC,        !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_1:6_CoolC-PSZ-AC_1:6_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC_1:6_HeatC-PSZ-AC_1:6_FanNode,  !- Air Outlet Node Name
     PSZ-AC_1:6_HeatC-PSZ-AC_1:6_FanNode;  !- Temperature Setpoint Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_2:5_HeatC,        !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.78,                    !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.78,                    !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_2:5_CoolC-PSZ-AC_2:5_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC_2:5_HeatC-PSZ-AC_2:5_FanNode,  !- Air Outlet Node Name
     PSZ-AC_2:5_HeatC-PSZ-AC_2:5_FanNode;  !- Temperature Setpoint Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     PSZ-AC_2:7_HeatC,        !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.78,                    !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.78,                    !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     PSZ-AC_2:7_CoolC-PSZ-AC_2:7_HeatCNode,  !- Air Inlet Node Name
     PSZ-AC_2:7_HeatC-PSZ-AC_2:7_FanNode,  !- Air Outlet Node Name
@@ -7234,7 +7189,7 @@
     Bath_ZN_1_FLR_1 VAV Box Inlet Node Name,  !- Air Inlet Node Name
     AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
     Constant,                !- Zone Minimum Air Flow Input Method
-    0.3,                     !- Constant Minimum Air Flow Fraction
+    autosize,                !- Constant Minimum Air Flow Fraction
     ,                        !- Fixed Minimum Air Flow Rate {m3/s}
     ,                        !- Minimum Air Flow Fraction Schedule Name
     Coil:Heating:Water,      !- Reheat Coil Object Type
@@ -7669,190 +7624,271 @@
 
   ZoneHVAC:EquipmentList,
     Bath_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     Fan:ZoneExhaust,         !- Zone Equipment 1 Object Type
     Bath_ZN_1_FLR_1 Exhaust Fan,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 2 Object Type
     Bath_ZN_1_FLR_1 VAV Box, !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
-    2;                       !- Zone Equipment 2 Heating or No-Load Sequence
+    2,                       !- Zone Equipment 2 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 2 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Cafeteria_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     Fan:ZoneExhaust,         !- Zone Equipment 1 Object Type
     Cafeteria_ZN_1_FLR_1 Exhaust Fan,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 2 Object Type
-    Cafeteria_ZN_1_FLR_1 Direct Air,  !- Zone Equipment 2 Name
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 2 Object Type
+    Cafeteria_ZN_1_FLR_1 Direct Air ADU,  !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
-    2;                       !- Zone Equipment 2 Heating or No-Load Sequence
+    2,                       !- Zone Equipment 2 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 2 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Computer_Class_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Computer_Class_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corner_Class_1_Pod_1_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corner_Class_1_Pod_1_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corner_Class_1_Pod_2_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corner_Class_1_Pod_2_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corner_Class_1_Pod_3_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corner_Class_1_Pod_3_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corner_Class_2_Pod_1_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corner_Class_2_Pod_1_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corner_Class_2_Pod_2_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corner_Class_2_Pod_2_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corner_Class_2_Pod_3_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corner_Class_2_Pod_3_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corridor_Pod_1_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corridor_Pod_1_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corridor_Pod_2_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corridor_Pod_2_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Corridor_Pod_3_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Corridor_Pod_3_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Gym_ZN_1_FLR_1 Equipment,!- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Gym_ZN_1_FLR_1 Direct Air,  !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Gym_ZN_1_FLR_1 Direct Air ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Kitchen_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     Fan:ZoneExhaust,         !- Zone Equipment 1 Object Type
     Kitchen_ZN_1_FLR_1 Exhaust Fan,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 2 Object Type
-    Kitchen_ZN_1_FLR_1 Direct Air,  !- Zone Equipment 2 Name
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 2 Object Type
+    Kitchen_ZN_1_FLR_1 Direct Air ADU,  !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
-    2;                       !- Zone Equipment 2 Heating or No-Load Sequence
+    2,                       !- Zone Equipment 2 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 2 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Library_Media_Center_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Library_Media_Center_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Lobby_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Lobby_ZN_1_FLR_1 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Main_Corridor_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Main_Corridor_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Mech_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Mech_ZN_1_FLR_1 VAV Box, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Mult_Class_1_Pod_1_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Mult_Class_1_Pod_1_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Mult_Class_1_Pod_2_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Mult_Class_1_Pod_2_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Mult_Class_1_Pod_3_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Mult_Class_1_Pod_3_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Mult_Class_2_Pod_1_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Mult_Class_2_Pod_1_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Mult_Class_2_Pod_2_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Mult_Class_2_Pod_2_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Mult_Class_2_Pod_3_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Mult_Class_2_Pod_3_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Offices_ZN_1_FLR_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Offices_ZN_1_FLR_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
 ! ***SIZING & CONTROLS***
 
@@ -7872,13 +7908,18 @@
     DesignDay,               !- Cooling Design Air Flow Method
     ,                        !- Cooling Design Air Flow Rate {m3/s}
     ,                        !- Cooling Minimum Air Flow per Zone Floor Area {m3/s-m2}
-    ,                        !- Cooling Minimum Air Flow {m3/s}
+    0.2832,                  !- Cooling Minimum Air Flow {m3/s}
     ,                        !- Cooling Minimum Air Flow Fraction
     DesignDay,               !- Heating Design Air Flow Method
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Bath_ZN_1_FLR_1, !- Name
@@ -7909,7 +7950,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Cafeteria_ZN_1_FLR_1,  !- Name
@@ -7940,7 +7986,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Computer_Class_ZN_1_FLR_1,  !- Name
@@ -7971,7 +8022,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corner_Class_1_Pod_1_ZN_1_FLR_1,  !- Name
@@ -8002,7 +8058,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corner_Class_1_Pod_2_ZN_1_FLR_1,  !- Name
@@ -8033,7 +8094,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corner_Class_1_Pod_3_ZN_1_FLR_1,  !- Name
@@ -8064,7 +8130,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corner_Class_2_Pod_1_ZN_1_FLR_1,  !- Name
@@ -8095,7 +8166,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corner_Class_2_Pod_2_ZN_1_FLR_1,  !- Name
@@ -8126,7 +8202,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corner_Class_2_Pod_3_ZN_1_FLR_1,  !- Name
@@ -8157,7 +8238,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corridor_Pod_1_ZN_1_FLR_1,  !- Name
@@ -8188,7 +8274,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corridor_Pod_2_ZN_1_FLR_1,  !- Name
@@ -8219,7 +8310,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Corridor_Pod_3_ZN_1_FLR_1,  !- Name
@@ -8250,7 +8346,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Gym_ZN_1_FLR_1,  !- Name
@@ -8281,7 +8382,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Kitchen_ZN_1_FLR_1,  !- Name
@@ -8312,7 +8418,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Library_Media_Center_ZN_1_FLR_1,  !- Name
@@ -8343,7 +8454,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Lobby_ZN_1_FLR_1,!- Name
@@ -8374,7 +8490,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Main_Corridor_ZN_1_FLR_1,  !- Name
@@ -8405,7 +8526,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Mech_ZN_1_FLR_1, !- Name
@@ -8436,7 +8562,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Mult_Class_1_Pod_1_ZN_1_FLR_1,  !- Name
@@ -8467,7 +8598,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Mult_Class_1_Pod_2_ZN_1_FLR_1,  !- Name
@@ -8498,7 +8634,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Mult_Class_1_Pod_3_ZN_1_FLR_1,  !- Name
@@ -8529,7 +8670,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Mult_Class_2_Pod_1_ZN_1_FLR_1,  !- Name
@@ -8560,7 +8706,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Mult_Class_2_Pod_2_ZN_1_FLR_1,  !- Name
@@ -8591,7 +8742,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Mult_Class_2_Pod_3_ZN_1_FLR_1,  !- Name
@@ -8622,7 +8778,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Offices_ZN_1_FLR_1,  !- Name
@@ -9001,17 +9162,17 @@
     YES,                     !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.0080,                  !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    ,                        !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    ,                        !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9040,17 +9201,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.0080,                  !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    ,                        !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    ,                        !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9079,17 +9240,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.0080,                  !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    ,                        !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    ,                        !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9118,17 +9279,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.0080,                  !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    ,                        !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    ,                        !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9157,17 +9318,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.0080,                  !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    ,                        !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    ,                        !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9196,17 +9357,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.0080,                  !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    ,                        !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    ,                        !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9235,17 +9396,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.0080,                  !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    ,                        !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    ,                        !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    ,                        !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    ,                        !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9766,7 +9927,7 @@
     Bath_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Bath_ZN_1_FLR_1 Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Bath_ZN_1_FLR_1 Air Node,!- Zone Air Node Name
-    Bath_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Bath_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Cafeteria_ZN_1_FLR_1,    !- Zone Name
@@ -9774,7 +9935,7 @@
     Cafeteria_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Cafeteria_ZN_1_FLR_1 Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Cafeteria_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Cafeteria_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Cafeteria_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Computer_Class_ZN_1_FLR_1,  !- Zone Name
@@ -9782,7 +9943,7 @@
     Computer_Class_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Computer_Class_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Computer_Class_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Computer_Class_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corner_Class_1_Pod_1_ZN_1_FLR_1,  !- Zone Name
@@ -9790,7 +9951,7 @@
     Corner_Class_1_Pod_1_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corner_Class_1_Pod_1_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corner_Class_1_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corner_Class_1_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corner_Class_1_Pod_2_ZN_1_FLR_1,  !- Zone Name
@@ -9798,7 +9959,7 @@
     Corner_Class_1_Pod_2_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corner_Class_1_Pod_2_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corner_Class_1_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corner_Class_1_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corner_Class_1_Pod_3_ZN_1_FLR_1,  !- Zone Name
@@ -9806,7 +9967,7 @@
     Corner_Class_1_Pod_3_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corner_Class_1_Pod_3_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corner_Class_1_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corner_Class_1_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corner_Class_2_Pod_1_ZN_1_FLR_1,  !- Zone Name
@@ -9814,7 +9975,7 @@
     Corner_Class_2_Pod_1_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corner_Class_2_Pod_1_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corner_Class_2_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corner_Class_2_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corner_Class_2_Pod_2_ZN_1_FLR_1,  !- Zone Name
@@ -9822,7 +9983,7 @@
     Corner_Class_2_Pod_2_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corner_Class_2_Pod_2_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corner_Class_2_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corner_Class_2_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corner_Class_2_Pod_3_ZN_1_FLR_1,  !- Zone Name
@@ -9830,7 +9991,7 @@
     Corner_Class_2_Pod_3_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corner_Class_2_Pod_3_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corner_Class_2_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corner_Class_2_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corridor_Pod_1_ZN_1_FLR_1,  !- Zone Name
@@ -9838,7 +9999,7 @@
     Corridor_Pod_1_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corridor_Pod_1_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corridor_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corridor_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corridor_Pod_2_ZN_1_FLR_1,  !- Zone Name
@@ -9846,7 +10007,7 @@
     Corridor_Pod_2_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corridor_Pod_2_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corridor_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corridor_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Corridor_Pod_3_ZN_1_FLR_1,  !- Zone Name
@@ -9854,7 +10015,7 @@
     Corridor_Pod_3_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Corridor_Pod_3_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Corridor_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Corridor_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Gym_ZN_1_FLR_1,          !- Zone Name
@@ -9862,7 +10023,7 @@
     Gym_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Gym_ZN_1_FLR_1 Air Node, !- Zone Air Node Name
-    Gym_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Gym_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Kitchen_ZN_1_FLR_1,      !- Zone Name
@@ -9870,7 +10031,7 @@
     Kitchen_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Kitchen_ZN_1_FLR_1 Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Kitchen_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Kitchen_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Kitchen_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Library_Media_Center_ZN_1_FLR_1,  !- Zone Name
@@ -9878,7 +10039,7 @@
     Library_Media_Center_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Library_Media_Center_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Library_Media_Center_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Library_Media_Center_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Lobby_ZN_1_FLR_1,        !- Zone Name
@@ -9886,7 +10047,7 @@
     Lobby_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Lobby_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Lobby_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Lobby_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Main_Corridor_ZN_1_FLR_1,!- Zone Name
@@ -9894,7 +10055,7 @@
     Main_Corridor_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Main_Corridor_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Main_Corridor_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Main_Corridor_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Mech_ZN_1_FLR_1,         !- Zone Name
@@ -9902,7 +10063,7 @@
     Mech_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Mech_ZN_1_FLR_1 Air Node,!- Zone Air Node Name
-    Mech_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Mech_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Mult_Class_1_Pod_1_ZN_1_FLR_1,  !- Zone Name
@@ -9910,7 +10071,7 @@
     Mult_Class_1_Pod_1_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Mult_Class_1_Pod_1_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Mult_Class_1_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Mult_Class_1_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Mult_Class_1_Pod_2_ZN_1_FLR_1,  !- Zone Name
@@ -9918,7 +10079,7 @@
     Mult_Class_1_Pod_2_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Mult_Class_1_Pod_2_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Mult_Class_1_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Mult_Class_1_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Mult_Class_1_Pod_3_ZN_1_FLR_1,  !- Zone Name
@@ -9926,7 +10087,7 @@
     Mult_Class_1_Pod_3_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Mult_Class_1_Pod_3_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Mult_Class_1_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Mult_Class_1_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Mult_Class_2_Pod_1_ZN_1_FLR_1,  !- Zone Name
@@ -9934,7 +10095,7 @@
     Mult_Class_2_Pod_1_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Mult_Class_2_Pod_1_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Mult_Class_2_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Mult_Class_2_Pod_1_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Mult_Class_2_Pod_2_ZN_1_FLR_1,  !- Zone Name
@@ -9942,7 +10103,7 @@
     Mult_Class_2_Pod_2_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Mult_Class_2_Pod_2_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Mult_Class_2_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Mult_Class_2_Pod_2_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Mult_Class_2_Pod_3_ZN_1_FLR_1,  !- Zone Name
@@ -9950,7 +10111,7 @@
     Mult_Class_2_Pod_3_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Mult_Class_2_Pod_3_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Mult_Class_2_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Mult_Class_2_Pod_3_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     Offices_ZN_1_FLR_1,      !- Zone Name
@@ -9958,7 +10119,7 @@
     Offices_ZN_1_FLR_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Offices_ZN_1_FLR_1 Air Node,  !- Zone Air Node Name
-    Offices_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Offices_ZN_1_FLR_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:AirDistributionUnit,
     Bath_ZN_1_FLR_1 VAV Box, !- Name
@@ -10232,23 +10393,59 @@
     VAV_POD_3_OANode List,   !- Name
     VAV_POD_3_OAInlet Node;  !- Node 1 Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Cafeteria_ZN_1_FLR_1 Direct Air,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    Cafeteria_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    Cafeteria_ZN_1_FLR_1 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    Cafeteria_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    Cafeteria_ZN_1_FLR_1 Direct Air ADU,  !- Name
+    Cafeteria_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Cafeteria_ZN_1_FLR_1 Direct Air,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Gym_ZN_1_FLR_1 Direct Air,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    Gym_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    Gym_ZN_1_FLR_1 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    Gym_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    Gym_ZN_1_FLR_1 Direct Air ADU,  !- Name
+    Gym_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Gym_ZN_1_FLR_1 Direct Air,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Kitchen_ZN_1_FLR_1 Direct Air,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    Kitchen_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    Kitchen_ZN_1_FLR_1 Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    Kitchen_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Kitchen_ZN_1_FLR_1 Direct Air ADU,  !- Name
+    Kitchen_ZN_1_FLR_1 Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Kitchen_ZN_1_FLR_1 Direct Air,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   AvailabilityManagerAssignmentList,
     PSZ-AC_1:6 Availability Manager List,  !- Name
@@ -10291,6 +10488,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -10299,6 +10497,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -10307,6 +10506,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -10315,6 +10515,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -10323,6 +10524,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -10331,6 +10533,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   AvailabilityManager:NightCycle,
@@ -10339,6 +10542,7 @@
     HVACOperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     1800;                    !- Cycling Run Time {s}
 
   BranchList,
@@ -10371,178 +10575,143 @@
 
   Branch,
     PSZ-AC_1:6 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_1:6_OA,           !- Component 1 Name
     PSZ-AC_1:6 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_1:6_OA-PSZ-AC_1:6_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC_1:6_CoolC,        !- Component 2 Name
     PSZ-AC_1:6_OA-PSZ-AC_1:6_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC_1:6_CoolC-PSZ-AC_1:6_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC_1:6_HeatC,        !- Component 3 Name
     PSZ-AC_1:6_CoolC-PSZ-AC_1:6_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC_1:6_HeatC-PSZ-AC_1:6_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC_1:6_Fan,          !- Component 4 Name
     PSZ-AC_1:6_HeatC-PSZ-AC_1:6_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC_1:6 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC_1:6 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     PSZ-AC_2:5 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_2:5_OA,           !- Component 1 Name
     PSZ-AC_2:5 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_2:5_OA-PSZ-AC_2:5_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC_2:5_CoolC,        !- Component 2 Name
     PSZ-AC_2:5_OA-PSZ-AC_2:5_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC_2:5_CoolC-PSZ-AC_2:5_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC_2:5_HeatC,        !- Component 3 Name
     PSZ-AC_2:5_CoolC-PSZ-AC_2:5_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC_2:5_HeatC-PSZ-AC_2:5_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC_2:5_Fan,          !- Component 4 Name
     PSZ-AC_2:5_HeatC-PSZ-AC_2:5_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC_2:5 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC_2:5 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     PSZ-AC_2:7 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     PSZ-AC_2:7_OA,           !- Component 1 Name
     PSZ-AC_2:7 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     PSZ-AC_2:7_OA-PSZ-AC_2:7_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     PSZ-AC_2:7_CoolC,        !- Component 2 Name
     PSZ-AC_2:7_OA-PSZ-AC_2:7_CoolCNode,  !- Component 2 Inlet Node Name
     PSZ-AC_2:7_CoolC-PSZ-AC_2:7_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
-    Coil:Heating:Gas,        !- Component 3 Object Type
+    Coil:Heating:Fuel,       !- Component 3 Object Type
     PSZ-AC_2:7_HeatC,        !- Component 3 Name
     PSZ-AC_2:7_CoolC-PSZ-AC_2:7_HeatCNode,  !- Component 3 Inlet Node Name
     PSZ-AC_2:7_HeatC-PSZ-AC_2:7_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:ConstantVolume,      !- Component 4 Object Type
     PSZ-AC_2:7_Fan,          !- Component 4 Name
     PSZ-AC_2:7_HeatC-PSZ-AC_2:7_FanNode,  !- Component 4 Inlet Node Name
-    PSZ-AC_2:7 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    PSZ-AC_2:7 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     VAV_OTHER Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV_OTHER_OA,            !- Component 1 Name
     VAV_OTHER Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     VAV_OTHER_OA-VAV_OTHER_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     VAV_OTHER_CoolC,         !- Component 2 Name
     VAV_OTHER_OA-VAV_OTHER_CoolCNode,  !- Component 2 Inlet Node Name
     VAV_OTHER_CoolC-VAV_OTHER_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV_OTHER_HeatC,         !- Component 3 Name
     VAV_OTHER_CoolC-VAV_OTHER_HeatCNode,  !- Component 3 Inlet Node Name
     VAV_OTHER_HeatC-VAV_OTHER_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV_OTHER_Fan,           !- Component 4 Name
     VAV_OTHER_HeatC-VAV_OTHER_FanNode,  !- Component 4 Inlet Node Name
-    VAV_OTHER Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    VAV_OTHER Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     VAV_POD_1 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV_POD_1_OA,            !- Component 1 Name
     VAV_POD_1 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     VAV_POD_1_OA-VAV_POD_1_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     VAV_POD_1_CoolC,         !- Component 2 Name
     VAV_POD_1_OA-VAV_POD_1_CoolCNode,  !- Component 2 Inlet Node Name
     VAV_POD_1_CoolC-VAV_POD_1_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV_POD_1_HeatC,         !- Component 3 Name
     VAV_POD_1_CoolC-VAV_POD_1_HeatCNode,  !- Component 3 Inlet Node Name
     VAV_POD_1_HeatC-VAV_POD_1_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV_POD_1_Fan,           !- Component 4 Name
     VAV_POD_1_HeatC-VAV_POD_1_FanNode,  !- Component 4 Inlet Node Name
-    VAV_POD_1 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    VAV_POD_1 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     VAV_POD_2 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV_POD_2_OA,            !- Component 1 Name
     VAV_POD_2 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     VAV_POD_2_OA-VAV_POD_2_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     VAV_POD_2_CoolC,         !- Component 2 Name
     VAV_POD_2_OA-VAV_POD_2_CoolCNode,  !- Component 2 Inlet Node Name
     VAV_POD_2_CoolC-VAV_POD_2_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV_POD_2_HeatC,         !- Component 3 Name
     VAV_POD_2_CoolC-VAV_POD_2_HeatCNode,  !- Component 3 Inlet Node Name
     VAV_POD_2_HeatC-VAV_POD_2_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV_POD_2_Fan,           !- Component 4 Name
     VAV_POD_2_HeatC-VAV_POD_2_FanNode,  !- Component 4 Inlet Node Name
-    VAV_POD_2 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    VAV_POD_2 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   Branch,
     VAV_POD_3 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV_POD_3_OA,            !- Component 1 Name
     VAV_POD_3 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     VAV_POD_3_OA-VAV_POD_3_CoolCNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 2 Object Type
     VAV_POD_3_CoolC,         !- Component 2 Name
     VAV_POD_3_OA-VAV_POD_3_CoolCNode,  !- Component 2 Inlet Node Name
     VAV_POD_3_CoolC-VAV_POD_3_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV_POD_3_HeatC,         !- Component 3 Name
     VAV_POD_3_CoolC-VAV_POD_3_HeatCNode,  !- Component 3 Inlet Node Name
     VAV_POD_3_HeatC-VAV_POD_3_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV_POD_3_Fan,           !- Component 4 Name
     VAV_POD_3_HeatC-VAV_POD_3_FanNode,  !- Component 4 Inlet Node Name
-    VAV_POD_3 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    VAV_POD_3 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     PSZ-AC_1:6_OA_Controllers,  !- Name
@@ -10983,17 +11152,17 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_1:6 Supply Air Splitter,  !- Name
     PSZ-AC_1:6 Zone Equipment Inlet Node,  !- Inlet Node Name
-    Kitchen_ZN_1_FLR_1 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    Kitchen_ZN_1_FLR_1 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_2:5 Supply Air Splitter,  !- Name
     PSZ-AC_2:5 Zone Equipment Inlet Node,  !- Inlet Node Name
-    Gym_ZN_1_FLR_1 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    Gym_ZN_1_FLR_1 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_2:7 Supply Air Splitter,  !- Name
     PSZ-AC_2:7 Zone Equipment Inlet Node,  !- Inlet Node Name
-    Cafeteria_ZN_1_FLR_1 Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    Cafeteria_ZN_1_FLR_1 Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ZoneSplitter,
     VAV_OTHER Supply Air Splitter,  !- Name
@@ -11259,7 +11428,6 @@
     0.75,                    !- Nominal Thermal Efficiency
     LeavingBoiler,           !- Efficiency Curve Temperature Evaluation Variable
     ,                        !- Normalized Boiler Efficiency Curve Name
-    82.2000,                 !- Design Water Outlet Temperature {C}
     AUTOSIZE,                !- Design Water Flow Rate {m3/s}
     0.0,                     !- Minimum Part Load Ratio
     1.2,                     !- Maximum Part Load Ratio
@@ -11281,16 +11449,16 @@
     HeatSys1 Pump,           !- Name
     HeatSys1 Supply Inlet Node,  !- Inlet Node Name
     HeatSys1 Pump-HeatSys1 BoilerNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0.0,                     !- Minimum Flow Rate {m3/s}
+    0.0,                     !- Design Minimum Flow Rate {m3/s}
     Intermittent,            !- Pump Control Type
     ;                        !- Pump Flow Rate Schedule Name
 
@@ -11394,333 +11562,267 @@
 
   Branch,
     HeatSys1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Bypass Pipe,  !- Component 1 Name
     HeatSys1 Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    HeatSys1 Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    HeatSys1 Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Inlet Pipe,  !- Component 1 Name
     HeatSys1 Demand Inlet Node,  !- Component 1 Inlet Node Name
-    HeatSys1 Demand Inlet Pipe-HeatSys1 Demand Mixer,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    HeatSys1 Demand Inlet Pipe-HeatSys1 Demand Mixer;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corner_Class_1_Pod_1_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corner_Class_1_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corner_Class_1_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corner_Class_1_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 10,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Mult_Class_2_Pod_2_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Mult_Class_2_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Mult_Class_2_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Mult_Class_2_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 11,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corner_Class_1_Pod_3_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corner_Class_1_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corner_Class_1_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corner_Class_1_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 12,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Mult_Class_1_Pod_3_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Mult_Class_1_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Mult_Class_1_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Mult_Class_1_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 13,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corridor_Pod_3_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corridor_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corridor_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corridor_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 14,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corner_Class_2_Pod_3_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corner_Class_2_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corner_Class_2_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corner_Class_2_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 15,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Mult_Class_2_Pod_3_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Mult_Class_2_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Mult_Class_2_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Mult_Class_2_Pod_3_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 16,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Computer_Class_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Computer_Class_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Computer_Class_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Computer_Class_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 17,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Main_Corridor_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Main_Corridor_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Main_Corridor_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Main_Corridor_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 18,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Lobby_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Lobby_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Lobby_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Lobby_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 19,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Mech_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Mech_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Mech_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Mech_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Mult_Class_1_Pod_1_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Mult_Class_1_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Mult_Class_1_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Mult_Class_1_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 20,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Bath_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Bath_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Bath_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Bath_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 21,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Offices_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Offices_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Offices_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Offices_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 22,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Library_Media_Center_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Library_Media_Center_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Library_Media_Center_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Library_Media_Center_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 23,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV_POD_1_HeatC,         !- Component 1 Name
     VAV_POD_1_HeatCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_POD_1_HeatCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_POD_1_HeatCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 24,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV_POD_2_HeatC,         !- Component 1 Name
     VAV_POD_2_HeatCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_POD_2_HeatCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_POD_2_HeatCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 25,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV_POD_3_HeatC,         !- Component 1 Name
     VAV_POD_3_HeatCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_POD_3_HeatCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_POD_3_HeatCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 26,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV_OTHER_HeatC,         !- Component 1 Name
     VAV_OTHER_HeatCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_OTHER_HeatCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_OTHER_HeatCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 3,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corridor_Pod_1_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corridor_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corridor_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corridor_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 4,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corner_Class_2_Pod_1_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corner_Class_2_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corner_Class_2_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corner_Class_2_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 5,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Mult_Class_2_Pod_1_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Mult_Class_2_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Mult_Class_2_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Mult_Class_2_Pod_1_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 6,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corner_Class_1_Pod_2_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corner_Class_1_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corner_Class_1_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corner_Class_1_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 7,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Mult_Class_1_Pod_2_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Mult_Class_1_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Mult_Class_1_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Mult_Class_1_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 8,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corridor_Pod_2_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corridor_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corridor_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corridor_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 9,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Corner_Class_2_Pod_2_ZN_1_FLR_1 VAV Box Reheat Coil,  !- Component 1 Name
     Corner_Class_2_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Corner_Class_2_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Corner_Class_2_Pod_2_ZN_1_FLR_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Outlet Pipe,  !- Component 1 Name
     HeatSys1 Demand Mixer-HeatSys1 Demand Outlet Pipe,  !- Component 1 Inlet Node Name
-    HeatSys1 Demand Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    HeatSys1 Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Boiler:HotWater,         !- Component 1 Object Type
     HeatSys1 Boiler,         !- Component 1 Name
     HeatSys1 Pump-HeatSys1 BoilerNode,  !- Component 1 Inlet Node Name
-    HeatSys1 Supply Equipment Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    HeatSys1 Supply Equipment Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
     HeatSys1 Supply Equip Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    HeatSys1 Supply Equip Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    HeatSys1 Supply Equip Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     HeatSys1 Pump,           !- Component 1 Name
     HeatSys1 Supply Inlet Node,  !- Component 1 Inlet Node Name
-    HeatSys1 Pump-HeatSys1 BoilerNodeviaConnector,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    HeatSys1 Pump-HeatSys1 BoilerNodeviaConnector;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Supply Outlet Pipe,  !- Component 1 Name
     HeatSys1 Supply Mixer-HeatSys1 Supply Outlet Pipe,  !- Component 1 Inlet Node Name
-    HeatSys1 Supply Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    HeatSys1 Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   ConnectorList,
     HeatSys1 Demand Connectors,  !- Name
@@ -12037,7 +12139,7 @@
     On/Off,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 11:00,0,          !- Field 4
     Until: 11:20,1,          !- Field 6
     Until: 23:00,0,          !- Field 8
@@ -12049,7 +12151,7 @@
     On/Off,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 11:00,0,          !- Field 4
     Until: 11:30,1,          !- Field 6
     Until: 23:00,0,          !- Field 8
@@ -12140,16 +12242,16 @@
     SWHSys1 Pump,            !- Name
     SWHSys1 Supply Inlet Node,  !- Inlet Node Name
     SWHSys1 Pump-SWHSys1 Water HeaterNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    1,                       !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Maximum Flow Rate {m3/s}
+    1,                       !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     1,                       !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0.0,                     !- Minimum Flow Rate {m3/s}
+    0.0,                     !- Design Minimum Flow Rate {m3/s}
     Intermittent,            !- Pump Control Type
     ;                        !- Pump Flow Rate Schedule Name
 
@@ -12250,93 +12352,75 @@
 
   Branch,
     SWHSys1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Bypass Pipe,  !- Component 1 Name
     SWHSys1 Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    SWHSys1 Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    SWHSys1 Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Inlet Pipe,  !- Component 1 Name
     SWHSys1 Demand Inlet Node,  !- Component 1 Inlet Node Name
-    SWHSys1 Demand Inlet Pipe-SWHSys1 Demand Mixer,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SWHSys1 Demand Inlet Pipe-SWHSys1 Demand Mixer;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterUse:Connections,    !- Component 1 Object Type
     Bath_ZN_1_FLR_1 SHW_default,  !- Component 1 Name
     Bath_ZN_1_FLR_1 SHW_default Water Inlet Node,  !- Component 1 Inlet Node Name
-    Bath_ZN_1_FLR_1 SHW_default Water Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Bath_ZN_1_FLR_1 SHW_default Water Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Demand Load Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterUse:Connections,    !- Component 1 Object Type
     Kitchen_ZN_1_FLR_1 SHW_default,  !- Component 1 Name
     Kitchen_ZN_1_FLR_1 SHW_default Water Inlet Node,  !- Component 1 Inlet Node Name
-    Kitchen_ZN_1_FLR_1 SHW_default Water Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Kitchen_ZN_1_FLR_1 SHW_default Water Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Demand Outlet Pipe,  !- Component 1 Name
     SWHSys1 Demand Mixer-SWHSys1 Demand Outlet Pipe,  !- Component 1 Inlet Node Name
-    SWHSys1 Demand Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SWHSys1 Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterHeater:Mixed,       !- Component 1 Object Type
     SWHSys1 Water Heater,    !- Component 1 Name
     SWHSys1 Pump-SWHSys1 Water HeaterNode,  !- Component 1 Inlet Node Name
-    SWHSys1 Supply Equipment Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    SWHSys1 Supply Equipment Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
     SWHSys1 Supply Equip Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    SWHSys1 Supply Equip Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    SWHSys1 Supply Equip Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     SWHSys1 Pump,            !- Component 1 Name
     SWHSys1 Supply Inlet Node,  !- Component 1 Inlet Node Name
-    SWHSys1 Pump-SWHSys1 Water HeaterNodeviaConnector,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    SWHSys1 Pump-SWHSys1 Water HeaterNodeviaConnector;  !- Component 1 Outlet Node Name
 
   Branch,
     SWHSys1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SWHSys1 Supply Outlet Pipe,  !- Component 1 Name
     SWHSys1 Supply Mixer-SWHSys1 Supply Outlet Pipe,  !- Component 1 Inlet Node Name
-    SWHSys1 Supply Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SWHSys1 Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   ConnectorList,
     SWHSys1 Demand Connectors,  !- Name
@@ -12590,7 +12674,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Block,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Block Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12607,7 +12691,7 @@
     0.058320;                !- Block 4 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Block,
-    AnnualDemandBaseCharge,  !- Name
+    AnnualDemandBaseCharge,  !- Utility Cost Charge Block Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12622,7 +12706,7 @@
     0.046965;                !- Block 3 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FuelCostAdjustEnergyCharge,  !- Name
+    FuelCostAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12630,7 +12714,7 @@
     0.002028;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    QualPollutionControlAdjustEnergyCharge,  !- Name
+    QualPollutionControlAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12638,7 +12722,7 @@
     0.000536;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SoxNoxRiderAdjustEnergyCharge,  !- Name
+    SoxNoxRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12646,7 +12730,7 @@
     0.001127;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DSMRiderAdjustEnergyCharge,  !- Name
+    DSMRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12654,7 +12738,7 @@
     -0.000370;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    PurchPowerTrackerAdjustEnergyCharge,  !- Name
+    PurchPowerTrackerAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12662,7 +12746,7 @@
     -0.000031;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    MidwestISOAdjustEnergyCharge,  !- Name
+    MidwestISOAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12670,7 +12754,7 @@
     -0.000216;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    CleanCoalRiderEnergyCharge,  !- Name
+    CleanCoalRiderEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12678,7 +12762,7 @@
     0.000833;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MinDemand75kw,           !- Name
+    MinDemand75kw,           !- Utility Cost Qualify Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -12688,7 +12772,7 @@
     12;                      !- Number of Months
 
   UtilityCost:Charge:Simple,
-    TaxofeightPercent,       !- Name
+    TaxofeightPercent,       !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -12714,7 +12798,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Block,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Block Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12731,7 +12815,7 @@
     0.041179;                !- Block 4 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FuelCostAdjustEnergyCharge,  !- Name
+    FuelCostAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12739,7 +12823,7 @@
     0.002028;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    QualPollutionControlAdjustEnergyCharge,  !- Name
+    QualPollutionControlAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12747,7 +12831,7 @@
     0.000536;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SoxNoxRiderAdjustEnergyCharge,  !- Name
+    SoxNoxRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12755,7 +12839,7 @@
     0.001127;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DSMRiderAdjustEnergyCharge,  !- Name
+    DSMRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12763,7 +12847,7 @@
     0.000021;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    PurchPowerTrackerAdjustEnergyCharge,  !- Name
+    PurchPowerTrackerAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12771,7 +12855,7 @@
     0.000034;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    MidwestISOAdjustEnergyCharge,  !- Name
+    MidwestISOAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12779,7 +12863,7 @@
     -0.000203;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    CleanCoalRiderEnergyCharge,  !- Name
+    CleanCoalRiderEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12787,7 +12871,7 @@
     0.000807;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MaxDemand75kw,           !- Name
+    MaxDemand75kw,           !- Utility Cost Qualify Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -12797,7 +12881,7 @@
     1;                       !- Number of Months
 
   UtilityCost:Charge:Simple,
-    TaxofeightPercent,       !- Name
+    TaxofeightPercent,       !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -12821,7 +12905,7 @@
     Comm Gas;                !- Group Name
 
   UtilityCost:Charge:Simple,
-    MonthlyRateGasCharge,    !- Name
+    MonthlyRateGasCharge,    !- Utility Cost Charge Simple Name
     IN_EIAMonthlyRateGas,    !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -12846,7 +12930,7 @@
     7.63;                    !- December Value
 
   UtilityCost:Charge:Simple,
-    TaxofEightPercent,       !- Name
+    TaxofEightPercent,       !- Utility Cost Charge Simple Name
     IN_EIAMonthlyRateGas,    !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season

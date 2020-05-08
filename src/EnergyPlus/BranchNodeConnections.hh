@@ -1,209 +1,184 @@
+// EnergyPlus, Copyright (c) 1996-2020, The Board of Trustees of the University of Illinois,
+// The Regents of the University of California, through Lawrence Berkeley National Laboratory
+// (subject to receipt of any required approvals from the U.S. Dept. of Energy), Oak Ridge
+// National Laboratory, managed by UT-Battelle, Alliance for Sustainable Energy, LLC, and other
+// contributors. All rights reserved.
+//
+// NOTICE: This Software was developed under funding from the U.S. Department of Energy and the
+// U.S. Government consequently retains certain rights. As such, the U.S. Government has been
+// granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable,
+// worldwide license in the Software to reproduce, distribute copies to the public, prepare
+// derivative works, and perform publicly and display publicly, and to permit others to do so.
+//
+// Redistribution and use in source and binary forms, with or without modification, are permitted
+// provided that the following conditions are met:
+//
+// (1) Redistributions of source code must retain the above copyright notice, this list of
+//     conditions and the following disclaimer.
+//
+// (2) Redistributions in binary form must reproduce the above copyright notice, this list of
+//     conditions and the following disclaimer in the documentation and/or other materials
+//     provided with the distribution.
+//
+// (3) Neither the name of the University of California, Lawrence Berkeley National Laboratory,
+//     the University of Illinois, U.S. Dept. of Energy nor the names of its contributors may be
+//     used to endorse or promote products derived from this software without specific prior
+//     written permission.
+//
+// (4) Use of EnergyPlus(TM) Name. If Licensee (i) distributes the software in stand-alone form
+//     without changes from the version obtained under this License, or (ii) Licensee makes a
+//     reference solely to the software portion of its product, Licensee must refer to the
+//     software as "EnergyPlus version X" software, where "X" is the version number Licensee
+//     obtained under this License and may not use a different name for the software. Except as
+//     specifically required in this Section (4), Licensee shall not use in a company name, a
+//     product name, in advertising, publicity, or other promotional activities any name, trade
+//     name, trademark, logo, or other designation of "EnergyPlus", "E+", "e+" or confusingly
+//     similar designation, without the U.S. Department of Energy's prior written consent.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+// AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 #ifndef BranchNodeConnections_hh_INCLUDED
 #define BranchNodeConnections_hh_INCLUDED
 
 // ObjexxFCL Headers
-#include <ObjexxFCL/FArray1A.hh>
-#include <ObjexxFCL/FArray1S.hh>
+#include <ObjexxFCL/Array1D.hh>
 #include <ObjexxFCL/Optional.hh>
 
 // EnergyPlus Headers
-#include <EnergyPlus.hh>
+#include <EnergyPlus/EnergyPlus.hh>
 
 namespace EnergyPlus {
 
+// Forward
+namespace DataBranchNodeConnections {
+    struct NodeConnectionDef;
+}
+
 namespace BranchNodeConnections {
 
-	// Data
-	// MODULE PARAMETER DEFINITIONS:
-	// na
+    // Data
+    // MODULE PARAMETER DEFINITIONS:
+    // na
 
-	// DERIVED TYPE DEFINITIONS:
-	// na
+    // DERIVED TYPE DEFINITIONS:
+    // na
 
-	// MODULE VARIABLE DECLARATIONS:
-	// na
+    // MODULE VARIABLE DECLARATIONS:
+    // na
 
-	// SUBROUTINE SPECIFICATIONS FOR MODULE
+    // SUBROUTINE SPECIFICATIONS FOR MODULE
 
-	// Functions
+    // Functions
 
-	void
-	RegisterNodeConnection(
-		int const NodeNumber, // Number for this Node
-		std::string const & NodeName, // Name of this Node
-		std::string const & ObjectType, // Type of object this Node is connected to (e.g. Chiller:Electric)
-		std::string const & ObjectName, // Name of object this Node is connected to (e.g. MyChiller)
-		std::string const & ConnectionType, // Connection Type for this Node (must be valid)
-		int const FluidStream, // Count on Fluid Streams
-		bool const IsParent, // True when node is a parent node
-		bool & errFlag, // Will be True if errors already detected or if errors found here
-		Optional_string_const InputFieldName = _ // Input Field Name
-	);
+    void RegisterNodeConnection(int const NodeNumber,                    // Number for this Node
+                                std::string const &NodeName,             // Name of this Node
+                                std::string const &ObjectType,           // Type of object this Node is connected to (e.g. Chiller:Electric)
+                                std::string const &ObjectName,           // Name of object this Node is connected to (e.g. MyChiller)
+                                std::string const &ConnectionType,       // Connection Type for this Node (must be valid)
+                                int const FluidStream,                   // Count on Fluid Streams
+                                bool const IsParent,                     // True when node is a parent node
+                                bool &errFlag,                           // Will be True if errors already detected or if errors found here
+                                Optional_string_const InputFieldName = _ // Input Field Name
+    );
 
-	bool
-	IsValidConnectionType( std::string const & ConnectionType );
+    void OverrideNodeConnectionType(int const NodeNumber,              // Number for this Node
+                                    std::string const &NodeName,       // Name of this Node
+                                    std::string const &ObjectType,     // Type of object this Node is connected to (e.g. Chiller:Electric)
+                                    std::string const &ObjectName,     // Name of object this Node is connected to (e.g. MyChiller)
+                                    std::string const &ConnectionType, // Connection Type for this Node (must be valid)
+                                    int const FluidStream,             // Count on Fluid Streams
+                                    bool const IsParent,               // True when node is a parent node
+                                    bool &errFlag                      // Will be True if errors already detected or if errors found here
+    );
 
-	void
-	CheckNodeConnections( bool & ErrorsFound );
+    bool IsValidConnectionType(std::string const &ConnectionType);
 
-	bool
-	IsParentObject(
-		std::string const & ComponentType,
-		std::string const & ComponentName
-	);
+    void CheckNodeConnections(bool &ErrorsFound);
 
-	int
-	WhichParentSet(
-		std::string const & ComponentType,
-		std::string const & ComponentName
-	);
+    bool IsParentObject(std::string const &ComponentType, std::string const &ComponentName);
 
-	void
-	GetParentData(
-		std::string const & ComponentType,
-		std::string const & ComponentName,
-		std::string & InletNodeName,
-		int & InletNodeNum,
-		std::string & OutletNodeName,
-		int & OutletNodeNum,
-		bool & ErrorsFound
-	);
+    int WhichParentSet(std::string const &ComponentType, std::string const &ComponentName);
 
-	bool
-	IsParentObjectCompSet(
-		std::string const & ComponentType,
-		std::string const & ComponentName
-	);
+    void GetParentData(std::string const &ComponentType,
+                       std::string const &ComponentName,
+                       std::string &InletNodeName,
+                       int &InletNodeNum,
+                       std::string &OutletNodeName,
+                       int &OutletNodeNum,
+                       bool &ErrorsFound);
 
-	int
-	WhichCompSet(
-		std::string const & ComponentType,
-		std::string const & ComponentName
-	);
+    bool IsParentObjectCompSet(std::string const &ComponentType, std::string const &ComponentName);
 
-	int
-	WhichParentCompSet(
-		std::string const & ComponentType,
-		std::string const & ComponentName
-	);
+    int WhichCompSet(std::string const &ComponentType, std::string const &ComponentName);
 
-	int
-	GetNumChildren(
-		std::string const & ComponentType,
-		std::string const & ComponentName
-	);
+    int WhichParentCompSet(std::string const &ComponentType, std::string const &ComponentName);
 
-	void
-	GetComponentData(
-		std::string const & ComponentType,
-		std::string const & ComponentName,
-		bool & IsParent,
-		int & NumInlets,
-		FArray1D_string & InletNodeNames,
-		FArray1D_int & InletNodeNums,
-		FArray1D_int & InletFluidStreams,
-		int & NumOutlets,
-		FArray1D_string & OutletNodeNames,
-		FArray1D_int & OutletNodeNums,
-		FArray1D_int & OutletFluidStreams,
-		bool & ErrorsFound
-	);
+    int GetNumChildren(std::string const &ComponentType, std::string const &ComponentName);
 
-	void
-	GetChildrenData(
-		std::string const & ComponentType,
-		std::string const & ComponentName,
-		int & NumChildren,
-		FArray1S_string ChildrenCType,
-		FArray1S_string ChildrenCName,
-		FArray1S_string InletNodeName,
-		FArray1S_int InletNodeNum,
-		FArray1S_string OutletNodeName,
-		FArray1S_int OutletNodeNum,
-		bool & ErrorsFound
-	);
+    void GetComponentData(std::string const &ComponentType,
+                          std::string const &ComponentName,
+                          bool &IsParent,                    // true or false
+                          int &NumInlets,
+                          Array1D_string &InletNodeNames,
+                          Array1D_int &InletNodeNums,
+                          Array1D_int &InletFluidStreams,
+                          int &NumOutlets,
+                          Array1D_string &OutletNodeNames,
+                          Array1D_int &OutletNodeNums,
+                          Array1D_int &OutletFluidStreams,
+                          bool &ErrorsFound                  // set to true if errors found, unchanged otherwise
+    );
 
-	void
-	SetUpCompSets(
-		std::string const & ParentType, // Parent Object Type
-		std::string const & ParentName, // Parent Object Name
-		std::string const & CompType, // Component Type
-		std::string const & CompName, // Component Name
-		std::string const & InletNode, // Inlet Node Name
-		std::string const & OutletNode, // Outlet Node Name
-		Optional_string_const Description = _ // Description
-	);
+    void GetChildrenData(std::string const &ComponentType,
+                         std::string const &ComponentName,
+                         int &NumChildren,
+                         Array1D_string &ChildrenCType,
+                         Array1D_string &ChildrenCName,
+                         Array1D_string &InletNodeName,
+                         Array1D_int &InletNodeNum,
+                         Array1D_string &OutletNodeName,
+                         Array1D_int &OutletNodeNum,
+                         bool &ErrorsFound);
 
-	void
-	TestInletOutletNodes( bool & ErrorsFound );
+    void SetUpCompSets(std::string const &ParentType,        // Parent Object Type
+                       std::string const &ParentName,        // Parent Object Name
+                       std::string const &CompType,          // Component Type
+                       std::string const &CompName,          // Component Name
+                       std::string const &InletNode,         // Inlet Node Name
+                       std::string const &OutletNode,        // Outlet Node Name
+                       Optional_string_const Description = _ // Description
+    );
 
-	void
-	TestCompSet(
-		std::string const & CompType, // Component Type
-		std::string const & CompName, // Component Name
-		std::string const & InletNode, // Inlet Node Name
-		std::string const & OutletNode, // Outlet Node Name
-		std::string const & Description // Description of Node Pair (for warning message)
-	);
+    void TestInletOutletNodes(bool &ErrorsFound);
 
-	void
-	TestCompSetInletOutletNodes( bool & ErrorsFound );
+    void TestCompSet(std::string const &CompType,   // Component Type
+                     std::string const &CompName,   // Component Name
+                     std::string const &InletNode,  // Inlet Node Name
+                     std::string const &OutletNode, // Outlet Node Name
+                     std::string const &Description // Description of Node Pair (for warning message)
+    );
 
-	void
-	GetNodeConnectionType(
-		int const NodeNumber,
-		FArray1D_int & NodeConnectType,
-		bool & errFlag
-	);
+    void TestCompSetInletOutletNodes(bool &ErrorsFound);
 
-	void
-	FindAllNumbersInList(
-		int const WhichNumber,
-		FArray1A_int const ListOfItems,
-		int const NumItems,
-		int & CountOfItems, // Number of items found
-		FArray1D_int & AllNumbersInList // Index array to all numbers found
-	);
+    void GetNodeConnectionType(int const NodeNumber, Array1D_int &NodeConnectType, bool &errFlag);
 
-	template< typename A >
-	inline
-	void
-	FindAllNumbersInList(
-		int const WhichNumber,
-		MArray1< A, int > const & ListOfItems,
-		int const NumItems,
-		int & CountOfItems, // Number of items found
-		FArray1D_int & AllNumbersInList // Index array to all numbers found
-	)
-	{
-		FindAllNumbersInList( WhichNumber, FArray1D_int( ListOfItems ), NumItems, CountOfItems, AllNumbersInList );
-	}
+    void FindAllNodeNumbersInList(int const WhichNumber,
+                                  Array1D<DataBranchNodeConnections::NodeConnectionDef> const &NodeConnections,
+                                  int const NumItems,
+                                  int &CountOfItems,            // Number of items found
+                                  Array1D_int &AllNumbersInList // Index array to all numbers found
+    );
 
-	//     NOTICE
+} // namespace BranchNodeConnections
 
-	//     Copyright © 1996-2014 The Board of Trustees of the University of Illinois
-	//     and The Regents of the University of California through Ernest Orlando Lawrence
-	//     Berkeley National Laboratory.  All rights reserved.
-
-	//     Portions of the EnergyPlus software package have been developed and copyrighted
-	//     by other individuals, companies and institutions.  These portions have been
-	//     incorporated into the EnergyPlus software package under license.   For a complete
-	//     list of contributors, see "Notice" located in main.cc.
-
-	//     NOTICE: The U.S. Government is granted for itself and others acting on its
-	//     behalf a paid-up, nonexclusive, irrevocable, worldwide license in this data to
-	//     reproduce, prepare derivative works, and perform publicly and display publicly.
-	//     Beginning five (5) years after permission to assert copyright is granted,
-	//     subject to two possible five year renewals, the U.S. Government is granted for
-	//     itself and others acting on its behalf a paid-up, non-exclusive, irrevocable
-	//     worldwide license in this data to reproduce, prepare derivative works,
-	//     distribute copies to the public, perform publicly and display publicly, and to
-	//     permit others to do so.
-
-	//     TRADEMARKS: EnergyPlus is a trademark of the US Department of Energy.
-
-} // BranchNodeConnections
-
-} // EnergyPlus
+} // namespace EnergyPlus
 
 #endif

@@ -53,13 +53,13 @@
 !****** SIMULATION CONTROLS ********************************
 !***********************************************************
 
-  Version,8.3;
+  Version,9.3;
 
   Building,
     FHX House,               !- Name
     0.0,                     !- North Axis {deg}
     Suburbs,                 !- Terrain
-    0.05,                    !- Loads Convergence Tolerance Value
+    0.05,                    !- Loads Convergence Tolerance Value {W}
     0.05,                    !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     35,                      !- Maximum Number of Warmup Days
@@ -76,8 +76,10 @@
     Annual Run,              !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -175,7 +177,7 @@
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     0.0,                     !- Outdoor Air Flow per Zone {m3/s}
     0.0,                     !- Outdoor Air Flow Air Changes per Hour {1/hr}
-    ;                        !- Outdoor Air Flow Rate Fraction Schedule Name
+    ;                        !- Outdoor Air Schedule Name
 
   Sizing:Zone,
     Basement,                !- Zone or ZoneList Name
@@ -199,7 +201,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   Sizing:Zone,
     Main Floor,              !- Zone or ZoneList Name
@@ -223,7 +230,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   Sizing:Plant,
     Condenser Loop,          !- Plant or Condenser Loop Name
@@ -356,10 +368,10 @@
     NoWind,                  !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    0,0,-3.1,  !- X,Y,Z ==> Vertex 1 {m}
-    15,0,-3.1,  !- X,Y,Z ==> Vertex 2 {m}
-    15,0,0,  !- X,Y,Z ==> Vertex 3 {m}
-    0,0,0;  !- X,Y,Z ==> Vertex 4 {m}
+    0,0,0,  !- X,Y,Z ==> Vertex 1 {m}
+    0,0,-3.1,  !- X,Y,Z ==> Vertex 2 {m}
+    15,0,-3.1,  !- X,Y,Z ==> Vertex 3 {m}
+    15,0,0;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
     Basement Wall 2,         !- Name
@@ -372,9 +384,9 @@
     NoWind,                  !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    0,10,-3.1,  !- X,Y,Z ==> Vertex 1 {m}
+    15,10,0,  !- X,Y,Z ==> Vertex 1 {m}
     15,10,-3.1,  !- X,Y,Z ==> Vertex 2 {m}
-    15,10,0,  !- X,Y,Z ==> Vertex 3 {m}
+    0,10,-3.1,  !- X,Y,Z ==> Vertex 3 {m}
     0,10,0;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
@@ -388,10 +400,10 @@
     NoWind,                  !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    15,0,-3.1,  !- X,Y,Z ==> Vertex 1 {m}
-    15,10,-3.1,  !- X,Y,Z ==> Vertex 2 {m}
-    15,10,0,  !- X,Y,Z ==> Vertex 3 {m}
-    15,0,0;  !- X,Y,Z ==> Vertex 4 {m}
+    15,0,0,  !- X,Y,Z ==> Vertex 1 {m}
+    15,0,-3.1,  !- X,Y,Z ==> Vertex 2 {m}
+    15,10,-3.1,  !- X,Y,Z ==> Vertex 3 {m}
+    15,10,0;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
     Basement Wall 4,         !- Name
@@ -404,10 +416,10 @@
     NoWind,                  !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    0,0,-3.1,  !- X,Y,Z ==> Vertex 1 {m}
-    0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
-    0,10,0,  !- X,Y,Z ==> Vertex 3 {m}
-    0,10,-3.1;  !- X,Y,Z ==> Vertex 4 {m}
+    0,10,0,  !- X,Y,Z ==> Vertex 1 {m}
+    0,10,-3.1,  !- X,Y,Z ==> Vertex 2 {m}
+    0,0,-3.1,  !- X,Y,Z ==> Vertex 3 {m}
+    0,0,0;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
     Basement Floor,          !- Name
@@ -438,8 +450,8 @@
     4,                       !- Number of Vertices
     0,10,0,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
-    10,0,0,  !- X,Y,Z ==> Vertex 3 {m}
-    10,10,0;  !- X,Y,Z ==> Vertex 4 {m}
+    15,0,0,  !- X,Y,Z ==> Vertex 3 {m}
+    15,10,0;  !- X,Y,Z ==> Vertex 4 {m}
 
   SurfaceProperty:OtherSideConditionsModel,
     BasementWallOSCM,        !- Name
@@ -479,10 +491,10 @@
     WindExposed,             !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    0,0,0,  !- X,Y,Z ==> Vertex 1 {m}
-    15,0,0,  !- X,Y,Z ==> Vertex 2 {m}
-    15,0,3.1,  !- X,Y,Z ==> Vertex 3 {m}
-    0,0,3.1;  !- X,Y,Z ==> Vertex 4 {m}
+    0,0,3.1,  !- X,Y,Z ==> Vertex 1 {m}
+    0,0,0,  !- X,Y,Z ==> Vertex 2 {m}
+    15,0,0,  !- X,Y,Z ==> Vertex 3 {m}
+    15,0,3.1;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
     Main Floor Wall 2,       !- Name
@@ -495,9 +507,9 @@
     WindExposed,             !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    0,10,0,  !- X,Y,Z ==> Vertex 1 {m}
+    15,10,3.1,  !- X,Y,Z ==> Vertex 1 {m}
     15,10,0,  !- X,Y,Z ==> Vertex 2 {m}
-    15,10,3.1,  !- X,Y,Z ==> Vertex 3 {m}
+    0,10,0,  !- X,Y,Z ==> Vertex 3 {m}
     0,10,3.1;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
@@ -511,10 +523,10 @@
     WindExposed,             !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    15,0,0,  !- X,Y,Z ==> Vertex 1 {m}
-    15,10,0,  !- X,Y,Z ==> Vertex 2 {m}
-    15,10,3.1,  !- X,Y,Z ==> Vertex 3 {m}
-    15,0,3.1;  !- X,Y,Z ==> Vertex 4 {m}
+    15,0,3.1,  !- X,Y,Z ==> Vertex 1 {m}
+    15,0,0,  !- X,Y,Z ==> Vertex 2 {m}
+    15,10,0,  !- X,Y,Z ==> Vertex 3 {m}
+    15,10,3.1;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
     Main Floor Wall 4,       !- Name
@@ -527,10 +539,10 @@
     WindExposed,             !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    0,0,0,  !- X,Y,Z ==> Vertex 1 {m}
-    0,0,3.1,  !- X,Y,Z ==> Vertex 2 {m}
-    0,10,3.1,  !- X,Y,Z ==> Vertex 3 {m}
-    0,10,0;  !- X,Y,Z ==> Vertex 4 {m}
+    0,10,3.1,  !- X,Y,Z ==> Vertex 1 {m}
+    0,10,0,  !- X,Y,Z ==> Vertex 2 {m}
+    0,0,0,  !- X,Y,Z ==> Vertex 3 {m}
+    0,0,3.1;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
     Main Floor Roof,         !- Name
@@ -545,8 +557,8 @@
     4,                       !- Number of Vertices
     0,10,3.1,  !- X,Y,Z ==> Vertex 1 {m}
     0,0,3.1,  !- X,Y,Z ==> Vertex 2 {m}
-    10,0,3.1,  !- X,Y,Z ==> Vertex 3 {m}
-    10,10,3.1;  !- X,Y,Z ==> Vertex 4 {m}
+    15,0,3.1,  !- X,Y,Z ==> Vertex 3 {m}
+    15,10,3.1;  !- X,Y,Z ==> Vertex 4 {m}
 
 !***********************************************************
 !****** ABOVE-GROUND MATERIALS/CONSTRUCTIONS ***************
@@ -674,9 +686,8 @@
     2576,                    !- Soil Specific Heat {J/kg-K}
     30,                      !- Soil Moisture Content Volume Fraction {percent}
     50,                      !- Soil Moisture Content Volume Fraction at Saturation {percent}
-    15.5,                    !- Kusuda-Achenbach Average Surface Temperature {C}
-    12.8,                    !- Kusuda-Achenbach Average Amplitude of Surface Temperature {C}
-    17.3,                    !- Kusuda-Achenbach Phase Shift of Minimum Surface Temperature {days}
+    Site:GroundTemperature:Undisturbed:KusudaAchenbach,  !- Undisturbed Ground Temperature Model Type
+    KATemps,                 !- Undisturbed Ground Temperature Model Name
     Yes,                     !- This Domain Includes Basement Surface Interaction
     6,                       !- Width of Basement Floor in Ground Domain {m}
     2.5,                     !- Depth of Basement Wall In Ground Domain {m}
@@ -688,6 +699,15 @@
     0.408,                   !- Evapotranspiration Ground Cover Parameter
     1,                       !- Number of Pipe Circuits Entered for this Domain
     My Pipe Circuit;         !- Pipe Circuit 1
+
+  Site:GroundTemperature:Undisturbed:KusudaAchenbach,
+    KATemps,                 !- Name
+    1.08,                    !- Soil Thermal Conductivity {W/m-K}
+    962,                     !- Soil Density {kg/m3}
+    2576,                    !- Soil Specific Heat {J/kg-K}
+    15.5,                    !- Average Soil Surface Temperature {C}
+    12.8,                    !- Average Amplitude of Surface Temperature {deltaC}
+    17.3;                    !- Phase Shift of Minimum Surface Temperature {days}
 
   PipingSystem:Underground:PipeCircuit,
     My Pipe Circuit,         !- Name
@@ -757,14 +777,17 @@
     Zone2Inlets,             !- Zone Air Inlet Node or NodeList Name
     Zone 2 Outlet Node,      !- Zone Air Exhaust Node or NodeList Name
     Zone 2 Node,             !- Zone Air Node Name
-    Zone 2 Return Node;      !- Zone Return Air Node Name
+    Zone 2 Return Node;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Zone2Equipment,          !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:WaterToAirHeatPump,  !- Zone Equipment 1 Object Type
     Zone2WTAHP,              !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:WaterToAirHeatPump,
     Zone2WTAHP,              !- Name
@@ -773,12 +796,12 @@
     Zone 2 Inlet Node,       !- Air Outlet Node Name
     OutdoorAir:Mixer,        !- Outdoor Air Mixer Object Type
     Zone 2 Mixer,            !- Outdoor Air Mixer Name
-    Autosize,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    Autosize,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    ,                        !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
-    0.0,                     !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
-    0.0,                     !- Outdoor Air Flow Rate During Heating Operation {m3/s}
-    ,                        !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    Autosize,                !- Cooling Supply Air Flow Rate {m3/s}
+    Autosize,                !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- No Load Supply Air Flow Rate {m3/s}
+    0.0,                     !- Cooling Outdoor Air Flow Rate {m3/s}
+    0.0,                     !- Heating Outdoor Air Flow Rate {m3/s}
+    ,                        !- No Load Outdoor Air Flow Rate {m3/s}
     Fan:OnOff,               !- Supply Air Fan Object Type
     Zone 2 Fan,              !- Supply Air Fan Name
     Coil:Heating:WaterToAirHeatPump:EquationFit,  !- Heating Coil Object Type
@@ -789,7 +812,7 @@
     60.0,                    !- Heat Pump Time Constant {s}
     0.01,                    !- Fraction of On-Cycle Power Use
     60,                      !- Heat Pump Fan Delay Time {s}
-    Coil:Heating:Gas,        !- Supplemental Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Supplemental Heating Coil Object Type
     Heat Pump DX Supp Heating Coil 2,  !- Supplemental Heating Coil Name
     60.0,                    !- Maximum Supply Air Temperature from Supplemental Heater {C}
     20.0,                    !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
@@ -878,10 +901,11 @@
     Sys 2 Mixed Air Node,    !- Air Inlet Node Name
     Sys 2 Cooling Coil Air Inlet Node;  !- Air Outlet Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Heat Pump DX Supp Heating Coil 2,  !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     32000,                   !- Nominal Capacity {W}
     Sys 2 SuppHeating Coil Air Inlet Node,  !- Air Inlet Node Name
     Zone 2 Inlet Node;       !- Air Outlet Node Name
@@ -896,14 +920,17 @@
     Zone1Inlets,             !- Zone Air Inlet Node or NodeList Name
     Zone 1 Outlet Node,      !- Zone Air Exhaust Node or NodeList Name
     Zone 1 Node,             !- Zone Air Node Name
-    Zone 1 Return Node;      !- Zone Return Air Node Name
+    Zone 1 Return Node;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Zone1Equipment,          !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:WaterToAirHeatPump,  !- Zone Equipment 1 Object Type
     Zone1WTAHP,              !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:WaterToAirHeatPump,
     Zone1WTAHP,              !- Name
@@ -912,12 +939,12 @@
     Zone 1 Inlet Node,       !- Air Outlet Node Name
     OutdoorAir:Mixer,        !- Outdoor Air Mixer Object Type
     Zone 1 Mixer,            !- Outdoor Air Mixer Name
-    Autosize,                !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    Autosize,                !- Supply Air Flow Rate During Heating Operation {m3/s}
-    ,                        !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
-    0.0,                     !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
-    0.0,                     !- Outdoor Air Flow Rate During Heating Operation {m3/s}
-    ,                        !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    Autosize,                !- Cooling Supply Air Flow Rate {m3/s}
+    Autosize,                !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- No Load Supply Air Flow Rate {m3/s}
+    0.0,                     !- Cooling Outdoor Air Flow Rate {m3/s}
+    0.0,                     !- Heating Outdoor Air Flow Rate {m3/s}
+    ,                        !- No Load Outdoor Air Flow Rate {m3/s}
     Fan:OnOff,               !- Supply Air Fan Object Type
     Zone 1 Fan,              !- Supply Air Fan Name
     Coil:Heating:WaterToAirHeatPump:EquationFit,  !- Heating Coil Object Type
@@ -928,7 +955,7 @@
     60.0,                    !- Heat Pump Time Constant {s}
     0.01,                    !- Fraction of On-Cycle Power Use
     60,                      !- Heat Pump Fan Delay Time {s}
-    Coil:Heating:Gas,        !- Supplemental Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Supplemental Heating Coil Object Type
     Heat Pump DX Supp Heating Coil 1,  !- Supplemental Heating Coil Name
     60.0,                    !- Maximum Supply Air Temperature from Supplemental Heater {C}
     20.0,                    !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
@@ -1017,10 +1044,11 @@
     Sys 1 Mixed Air Node,    !- Air Inlet Node Name
     Sys 1 Cooling Coil Air Inlet Node;  !- Air Outlet Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Heat Pump DX Supp Heating Coil 1,  !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     32000,                   !- Nominal Capacity {W}
     Sys 1 SuppHeating Coil Air Inlet Node,  !- Air Inlet Node Name
     Zone 1 Inlet Node;       !- Air Outlet Node Name
@@ -1048,7 +1076,9 @@
     Condenser Demand Outlet Node,  !- Demand Side Outlet Node Name
     Condenser Demand Side Branches,  !- Condenser Demand Side Branch List Name
     Condenser Demand Side Connectors,  !- Condenser Demand Side Connector List Name
-    SequentialLoad;          !- Load Distribution Scheme
+    SequentialLoad,          !- Load Distribution Scheme
+    ,                        !- Pressure Simulation Type
+    20;                      !- Loop Circulation Time {minutes}
 
   SetpointManager:Scheduled,
     Main Loop Setpoint Manager,  !- Name
@@ -1083,33 +1113,27 @@
 
   Branch,
     Condenser Supply Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Cond Circ Pump,          !- Component 1 Name
     Condenser Supply Inlet Node,  !- Component 1 Inlet Node Name
-    Condenser Pump Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Condenser Pump Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Condenser Supply GHE Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     PipingSystem:Underground:PipeCircuit,  !- Component 1 Object Type
     My Pipe Circuit,         !- Component 1 Name
     Piping System Inlet Node,!- Component 1 Inlet Node Name
-    Piping System Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Piping System Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Condenser Supply Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Condenser Supply Side Bypass,  !- Component 1 Name
     Cond Supply Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Cond Supply Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Cond Supply Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Condenser Supply Side Bypass,  !- Name
@@ -1118,13 +1142,11 @@
 
   Branch,
     Condenser Supply Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Condenser Supply Outlet, !- Component 1 Name
     Condenser Supply Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Condenser Supply Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Condenser Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Condenser Supply Outlet, !- Name
@@ -1150,13 +1172,11 @@
 
   Branch,
     Condenser Demand Inlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Condenser Demand Inlet Pipe,  !- Component 1 Name
     Condenser Demand Inlet Node,  !- Component 1 Inlet Node Name
-    Condenser Demand Entrance Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Condenser Demand Entrance Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Condenser Demand Inlet Pipe,  !- Name
@@ -1165,53 +1185,43 @@
 
   Branch,
     Sys 1 Gshp Cooling Condenser Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:WaterToAirHeatPump:EquationFit,  !- Component 1 Object Type
     Sys 1 Heat Pump Cooling Mode,  !- Component 1 Name
     Sys 1 Water to Air Heat Pump Source Side1 Inlet Node,  !- Component 1 Inlet Node Name
-    Sys 1 Water to Air Heat Pump Source Side1 Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Sys 1 Water to Air Heat Pump Source Side1 Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Sys 1 Gshp Heating Condenser Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:WaterToAirHeatPump:EquationFit,  !- Component 1 Object Type
     Sys 1 Heat Pump Heating Mode,  !- Component 1 Name
     Sys 1 Water to Air Heat Pump Source Side2 Inlet Node,  !- Component 1 Inlet Node Name
-    Sys 1 Water to Air Heat Pump Source Side2 Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Sys 1 Water to Air Heat Pump Source Side2 Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Sys 2 Gshp Cooling Condenser Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:WaterToAirHeatPump:EquationFit,  !- Component 1 Object Type
     Sys 2 Heat Pump Cooling Mode,  !- Component 1 Name
     Sys 2 Water to Air Heat Pump Source Side1 Inlet Node,  !- Component 1 Inlet Node Name
-    Sys 2 Water to Air Heat Pump Source Side1 Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Sys 2 Water to Air Heat Pump Source Side1 Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Sys 2 Gshp Heating Condenser Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:WaterToAirHeatPump:EquationFit,  !- Component 1 Object Type
     Sys 2 Heat Pump Heating Mode,  !- Component 1 Name
     Sys 2 Water to Air Heat Pump Source Side2 Inlet Node,  !- Component 1 Inlet Node Name
-    Sys 2 Water to Air Heat Pump Source Side2 Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Sys 2 Water to Air Heat Pump Source Side2 Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Condenser Demand Bypass Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Condenser Demand Side Bypass,  !- Component 1 Name
     Cond Demand Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Cond Demand Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Cond Demand Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Condenser Demand Side Bypass,  !- Name
@@ -1220,13 +1230,11 @@
 
   Branch,
     Condenser Demand Outlet Branch,  !- Name
-    0,                       !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Condenser Demand Outlet Pipe,  !- Component 1 Name
     Condenser Demand Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Condenser Demand Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Condenser Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Condenser Demand Outlet Pipe,  !- Name
@@ -1282,16 +1290,16 @@
     Cond Circ Pump,          !- Name
     Condenser Supply Inlet Node,  !- Inlet Node Name
     Condenser Pump Outlet Node,  !- Outlet Node Name
-    .004,                    !- Rated Flow Rate {m3/s}
-    5000,                    !- Rated Pump Head {Pa}
-    25,                      !- Rated Power Consumption {W}
+    .004,                    !- Design Maximum Flow Rate {m3/s}
+    5000,                    !- Design Pump Head {Pa}
+    25,                      !- Design Power Consumption {W}
     .87,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     INTERMITTENT;            !- Pump Control Type
 
   Curve:Quadratic,

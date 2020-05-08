@@ -1,12 +1,12 @@
 // Global Streams Collection
 //
-// Project: Objexx Fortran Compatibility Library (ObjexxFCL)
+// Project: Objexx Fortran-C++ Library (ObjexxFCL)
 //
-// Version: 4.0.0
+// Version: 4.2.0
 //
 // Language: C++
 //
-// Copyright (c) 2000-2014 Objexx Engineering, Inc. All Rights Reserved.
+// Copyright (c) 2000-2017 Objexx Engineering, Inc. All Rights Reserved.
 // Use of this source code or any derivative of it is restricted by license.
 // Licensing is available from Objexx Engineering, Inc.:  http://objexx.com
 
@@ -83,7 +83,7 @@ namespace gio {
 			return true;
 		} else {
 			auto i( fix_unit_streams_.find( unit ) );
-			return ( i != fix_unit_streams_.end() ? true : false );
+			return ( i != fix_unit_streams_.end() );
 		}
 	}
 
@@ -96,7 +96,7 @@ namespace gio {
 			return true;
 		} else {
 			auto i( fix_name_streams_.find( name ) );
-			return ( i != fix_name_streams_.end() ? true : false );
+			return ( i != fix_name_streams_.end() );
 		}
 	}
 
@@ -123,7 +123,7 @@ namespace gio {
 		for ( auto const & s : fix_unit_streams_ ) {
 			if ( s.second == &stream ) return s.first;
 		}
-		return -1; // => No such name connected
+		return -1; // => No such stream connected
 	}
 
 	// Add an Input File Stream

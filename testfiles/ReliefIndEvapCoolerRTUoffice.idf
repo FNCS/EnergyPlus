@@ -33,7 +33,7 @@
 !         The relief air that would have been dumped outside is fed into the secondary side of the
 !         indirect evaporative cooler.  Systems are set to Night Cycle during setup/setback.
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,6;
 
@@ -44,8 +44,9 @@
   HeatBalanceAlgorithm,ConductionTransferFunction;
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    20;                      !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    20;                      !- Shading Calculation Update Frequency
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
@@ -55,11 +56,13 @@
     NO;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
@@ -69,7 +72,7 @@
 
   ! PHOENIX_AZ_USA Annual Heating Design Conditions Wind Speed=2m/s Wind Dir=120
   ! Coldest Month=December
-  ! PHOENIX_AZ_USA Annual Heating 99.6%, MaxDB=2.9°C
+  ! PHOENIX_AZ_USA Annual Heating 99.6%, MaxDB=2.9Â°C
 
   SizingPeriod:DesignDay,
     PHOENIX Ann Htg 99.6% Condns DB,  !- Name
@@ -101,7 +104,7 @@
 
   ! PHOENIX Annual Cooling Design Conditions Wind Speed=4.1m/s Wind Dir=270
   ! Hottest Month=July
-  ! PHOENIX_AZ_USA Annual Cooling (DB=>MWB) .4%, MaxDB=43.4°C MWB=21.1°C
+  ! PHOENIX_AZ_USA Annual Cooling (DB=>MWB) .4%, MaxDB=43.4Â°C MWB=21.1Â°C
 
   SizingPeriod:DesignDay,
     PHOENIX Ann Clg .4% Condns DB=>MWB,  !- Name
@@ -393,7 +396,7 @@
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     CounterClockWise,        !- Vertex Entry Direction
-    relative;                !- Coordinate System
+    Relative;                !- Coordinate System
 
   Zone,
     ZN1_Fl1_S_Space,         !- Name
@@ -2542,7 +2545,6 @@
     ZN1_Fl1_S_Space:ExtWall:South,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2558,7 +2560,6 @@
     ZN3_Fl1_E_Space:ExtWall:East,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2574,7 +2575,6 @@
     ZN5_Fl1_W_Space:ExtWall:West,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2590,7 +2590,6 @@
     ZN7_Fl1_N_Space:ExtWall:North,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2606,7 +2605,6 @@
     ZN11_Fl2_S_Space:ExtWall:South,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2622,7 +2620,6 @@
     ZN13_Fl2_E_Space:ExtWall:East,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2638,7 +2635,6 @@
     ZN15_Fl2_W_Space:ExtWall:West,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2654,7 +2650,6 @@
     ZN17_Fl2_N_Space:ExtWall:North,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3417,7 +3412,7 @@
     Base Case,               !- Name
     0.000000,                !- North Axis {deg}
     Country,                 !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -3771,7 +3766,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN1_Fl1_S_Space, !- Name
@@ -3842,33 +3842,27 @@
 
   Branch,
     Air Loop Main Branch ZN1,!- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN1,              !- Component 1 Name
     Air Loop Inlet Node ZN1, !- Component 1 Inlet Node Name
     Mixed Air Node ZN1,      !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN1,       !- Component 2 Name
     Mixed Air Node ZN1,      !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN1,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN1,  !- Component 3 Name
     Evap Cooler Outlet Node ZN1,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN1,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN1,   !- Component 4 Name
     Cooling Coil Air Outlet Node ZN1,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN1,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN1,          !- Component 5 Name
     Heating Coil Air Outlet Node ZN1,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN1,!- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN1;!- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN1,  !- Name
@@ -3903,6 +3897,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -3927,7 +3922,7 @@
     Zone ZN1 Inlets,         !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN1 Node,                !- Zone Air Node Name
-    ZN1 Outlet Node;         !- Zone Return Air Node Name
+    ZN1 Outlet Node;         !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN1 Thermostat,          !- Name
@@ -3938,10 +3933,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN1 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN1 DirectAir,      !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN1 DirectAir ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN1,    !- Name
@@ -3966,13 +3964,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN1,  !- Name
     Zone Equipment Inlet Node ZN1,  !- Inlet Node Name
-    ZN1 Inlet Node;          !- Outlet 1 Node Name
+    ZN1 Inlet Node ATInlet;  !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN1 DirectAir,      !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    ZN1 Inlet Node,          !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN1 Inlet Node ATInlet,  !- Air Inlet Node Name
+    ZN1 Inlet Node,          !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN1 DirectAir ADU,  !- Name
+    ZN1 Inlet Node,          !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN1 DirectAir,      !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN1,  !- Name
@@ -3983,10 +3993,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN1;            !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN1,   !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN1,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN1,  !- Air Outlet Node Name
@@ -3999,22 +4010,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    0.8,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    0.8,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN1,      !- Primary Air Inlet Node Name
-    Evap Cooler Outlet Node ZN1, !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    Evap Cooler Outlet Node ZN1,  !- Primary Air Outlet Node Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN1,     !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN1 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN1,   !- Sensor Node Name
-    Relief Air Outlet Node ZN1, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN1 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN1,!- Sensor Node Name
+    Relief Air Outlet Node ZN1,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -4105,7 +4116,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN3_Fl1_E_Space, !- Name
@@ -4176,33 +4192,27 @@
 
   Branch,
     Air Loop Main Branch ZN3,!- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN3,              !- Component 1 Name
     Air Loop Inlet Node ZN3, !- Component 1 Inlet Node Name
     Mixed Air Node ZN3,      !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN3,       !- Component 2 Name
     Mixed Air Node ZN3,      !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN3,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN3,  !- Component 3 Name
     Evap Cooler Outlet Node ZN3,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN3,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN3,   !- Component 4 Name
     Cooling Coil Air Outlet Node ZN3,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN3,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN3,          !- Component 5 Name
     Heating Coil Air Outlet Node ZN3,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN3,!- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN3;!- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN3,  !- Name
@@ -4237,6 +4247,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -4261,7 +4272,7 @@
     Zone ZN3 Inlets,         !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN3 Node,                !- Zone Air Node Name
-    ZN3 Outlet Node;         !- Zone Return Air Node Name
+    ZN3 Outlet Node;         !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN3 Thermostat,          !- Name
@@ -4272,10 +4283,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN3 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN3 DirectAir,      !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN3 DirectAir ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN3,    !- Name
@@ -4300,13 +4314,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN3,  !- Name
     Zone Equipment Inlet Node ZN3,  !- Inlet Node Name
-    ZN3 Inlet Node;          !- Outlet 1 Node Name
+    ZN3 Inlet Node ATInlet;  !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN3 DirectAir,      !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    ZN3 Inlet Node,          !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN3 Inlet Node ATInlet,  !- Air Inlet Node Name
+    ZN3 Inlet Node,          !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN3 DirectAir ADU,  !- Name
+    ZN3 Inlet Node,          !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN3 DirectAir,      !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN3,  !- Name
@@ -4317,10 +4343,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN3;            !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN3,   !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN3,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN3,  !- Air Outlet Node Name
@@ -4333,22 +4360,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    1.0,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    1.0,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN3,      !- Primary Air Inlet Node Name
-    Evap Cooler Outlet Node ZN3, !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    Evap Cooler Outlet Node ZN3,  !- Primary Air Outlet Node Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN3,     !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN3 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN3,   !- Sensor Node Name
-    Relief Air Outlet Node ZN3, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN3 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN3,!- Sensor Node Name
+    Relief Air Outlet Node ZN3,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -4439,7 +4466,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN5_Fl1_W_Space, !- Name
@@ -4510,33 +4542,27 @@
 
   Branch,
     Air Loop Main Branch ZN5,!- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN5,              !- Component 1 Name
     Air Loop Inlet Node ZN5, !- Component 1 Inlet Node Name
     Mixed Air Node ZN5,      !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN5,       !- Component 2 Name
     Mixed Air Node ZN5,      !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN5,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN5,  !- Component 3 Name
     Evap Cooler Outlet Node ZN5,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN5,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN5,   !- Component 4 Name
     Cooling Coil Air Outlet Node ZN5,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN5,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN5,          !- Component 5 Name
     Heating Coil Air Outlet Node ZN5,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN5,!- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN5;!- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN5,  !- Name
@@ -4571,6 +4597,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -4595,7 +4622,7 @@
     Zone ZN5 Inlets,         !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN5 Node,                !- Zone Air Node Name
-    ZN5 Outlet Node;         !- Zone Return Air Node Name
+    ZN5 Outlet Node;         !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN5 Thermostat,          !- Name
@@ -4606,10 +4633,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN5 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN5 DirectAir,      !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN5 DirectAir ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN5,    !- Name
@@ -4634,13 +4664,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN5,  !- Name
     Zone Equipment Inlet Node ZN5,  !- Inlet Node Name
-    ZN5 Inlet Node;          !- Outlet 1 Node Name
+    ZN5 Inlet Node ATInlet;  !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN5 DirectAir,      !- Name
     Always_on,               !- Availability Schedule Name
-    ZN5 Inlet Node,          !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN5 Inlet Node ATInlet,  !- Air Inlet Node Name
+    ZN5 Inlet Node,          !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN5 DirectAir ADU,  !- Name
+    ZN5 Inlet Node,          !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN5 DirectAir,      !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN5,  !- Name
@@ -4651,10 +4693,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN5;            !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN5,   !- Name
     Always_on,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN5,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN5,  !- Air Outlet Node Name
@@ -4667,22 +4710,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    1.4,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    1.4,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN5,      !- Primary Air Inlet Node Name
-    Evap Cooler Outlet Node ZN5, !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    Evap Cooler Outlet Node ZN5,  !- Primary Air Outlet Node Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN5,     !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN5 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN5,   !- Sensor Node Name
-    Relief Air Outlet Node ZN5, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN5 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN5,!- Sensor Node Name
+    Relief Air Outlet Node ZN5,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -4773,7 +4816,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN7_fl1_N_Space, !- Name
@@ -4844,33 +4892,27 @@
 
   Branch,
     Air Loop Main Branch ZN7,!- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN7,              !- Component 1 Name
     Air Loop Inlet Node ZN7, !- Component 1 Inlet Node Name
     Mixed Air Node ZN7,      !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN7,       !- Component 2 Name
     Mixed Air Node ZN7,      !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN7,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN7,  !- Component 3 Name
     Evap Cooler Outlet Node ZN7,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN7,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN7,   !- Component 4 Name
     Cooling Coil Air Outlet Node ZN7,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN7,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN7,          !- Component 5 Name
     Heating Coil Air Outlet Node ZN7,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN7,!- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN7;!- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN7,  !- Name
@@ -4905,6 +4947,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -4929,7 +4972,7 @@
     Zone ZN7 Inlets,         !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN7 Node,                !- Zone Air Node Name
-    ZN7 Outlet Node;         !- Zone Return Air Node Name
+    ZN7 Outlet Node;         !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN7 Thermostat,          !- Name
@@ -4940,10 +4983,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN7 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN7 DirectAir,      !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN7 DirectAir ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN7,    !- Name
@@ -4968,13 +5014,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN7,  !- Name
     Zone Equipment Inlet Node ZN7,  !- Inlet Node Name
-    ZN7 Inlet Node;          !- Outlet 1 Node Name
+    ZN7 Inlet Node ATInlet;  !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN7 DirectAir,      !- Name
     Always_on,               !- Availability Schedule Name
-    ZN7 Inlet Node,          !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN7 Inlet Node ATInlet,  !- Air Inlet Node Name
+    ZN7 Inlet Node,          !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN7 DirectAir ADU,  !- Name
+    ZN7 Inlet Node,          !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN7 DirectAir,      !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN7,  !- Name
@@ -4985,10 +5043,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN7;            !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN7,   !- Name
     Always_on,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN7,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN7,  !- Air Outlet Node Name
@@ -5001,22 +5060,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    0.8,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    0.8,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN7,      !- Primary Air Inlet Node Name
     Evap Cooler Outlet Node ZN7,  !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN7,     !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN7 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN7,   !- Sensor Node Name
-    Relief Air Outlet Node ZN7, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN7 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN7,!- Sensor Node Name
+    Relief Air Outlet Node ZN7,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -5107,7 +5166,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN9_Fl1_Core_Space,  !- Name
@@ -5178,33 +5242,27 @@
 
   Branch,
     Air Loop Main Branch ZN9,!- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN9,              !- Component 1 Name
     Air Loop Inlet Node ZN9, !- Component 1 Inlet Node Name
     Mixed Air Node ZN9,      !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN9,       !- Component 2 Name
     Mixed Air Node ZN9,      !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN9,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN9,  !- Component 3 Name
     Evap Cooler Outlet Node ZN9,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN9,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN9,   !- Component 4 Name
     Cooling Coil Air Outlet Node ZN9,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN9,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN9,          !- Component 5 Name
     Heating Coil Air Outlet Node ZN9,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN9,!- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN9;!- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN9,  !- Name
@@ -5239,6 +5297,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -5263,7 +5322,7 @@
     Zone ZN9 Inlets,         !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN9 Node,                !- Zone Air Node Name
-    ZN9 Outlet Node;         !- Zone Return Air Node Name
+    ZN9 Outlet Node;         !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN9 Thermostat,          !- Name
@@ -5274,10 +5333,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN9 Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN9 DirectAir,      !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN9 DirectAir ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN9,    !- Name
@@ -5302,13 +5364,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN9,  !- Name
     Zone Equipment Inlet Node ZN9,  !- Inlet Node Name
-    ZN9 Inlet Node;          !- Outlet 1 Node Name
+    ZN9 Inlet Node ATInlet;  !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN9 DirectAir,      !- Name
     Always_on,               !- Availability Schedule Name
-    ZN9 Inlet Node,          !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN9 Inlet Node ATInlet,  !- Air Inlet Node Name
+    ZN9 Inlet Node,          !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN9 DirectAir ADU,  !- Name
+    ZN9 Inlet Node,          !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN9 DirectAir,      !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN9,  !- Name
@@ -5319,10 +5393,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN9;            !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN9,   !- Name
     Always_on,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN9,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN9,  !- Air Outlet Node Name
@@ -5335,22 +5410,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    1.1,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    1.1,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN9,      !- Primary Air Inlet Node Name
     Evap Cooler Outlet Node ZN9,  !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN9,     !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN9 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN9,   !- Sensor Node Name
-    Relief Air Outlet Node ZN9, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN9 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN9,!- Sensor Node Name
+    Relief Air Outlet Node ZN9,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -5441,7 +5516,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN11_Fl2_S_Space,!- Name
@@ -5450,7 +5530,7 @@
     0.0,                     !- Outdoor Air Flow per Zone Floor Area {m3/s-m2}
     ;                        !- Outdoor Air Flow per Zone {m3/s}
 
-   Sizing:System,
+  Sizing:System,
     Direct DX air Loop ZN11, !- AirLoop Name
     sensible,                !- Type of Load to Size On
     autosize,                !- Design Outdoor Air Flow Rate {m3/s}
@@ -5512,33 +5592,27 @@
 
   Branch,
     Air Loop Main Branch ZN11,  !- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN11,             !- Component 1 Name
     Air Loop Inlet Node ZN11,!- Component 1 Inlet Node Name
     Mixed Air Node ZN11,     !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN11,      !- Component 2 Name
     Mixed Air Node ZN11,     !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN11,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN11,  !- Component 3 Name
     Evap Cooler Outlet Node ZN11,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN11,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN11,  !- Component 4 Name
     Cooling Coil Air Outlet Node ZN11,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN11,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN11,         !- Component 5 Name
     Heating Coil Air Outlet Node ZN11,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN11,  !- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN11;  !- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN11, !- Name
@@ -5573,6 +5647,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -5597,7 +5672,7 @@
     Zone ZN11 Inlets,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN11 Node,               !- Zone Air Node Name
-    ZN11 Outlet Node;        !- Zone Return Air Node Name
+    ZN11 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN11 Thermostat,         !- Name
@@ -5608,10 +5683,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN11 Equipment,     !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN11 DirectAir,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN11 DirectAir ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN11,   !- Name
@@ -5636,13 +5714,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN11,  !- Name
     Zone Equipment Inlet Node ZN11,  !- Inlet Node Name
-    ZN11 Inlet Node;         !- Outlet 1 Node Name
+    ZN11 Inlet Node ATInlet; !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN11 DirectAir,     !- Name
     Always_on,               !- Availability Schedule Name
-    ZN11 Inlet Node,         !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN11 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZN11 Inlet Node,         !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN11 DirectAir ADU, !- Name
+    ZN11 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN11 DirectAir,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN11,  !- Name
@@ -5653,38 +5743,39 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN11;           !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN11,  !- Name
     Always_on,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN11,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN11,  !- Air Outlet Node Name
     Air Loop Outlet Node ZN11;  !- Temperature Setpoint Node Name
 
   EvaporativeCooler:Indirect:ResearchSpecial,
-    Indirect Evap ZN11,       !- Name
+    Indirect Evap ZN11,      !- Name
     On_Except_Winter_Night,  !- Availability Schedule Name
     1.2,                     !- Cooler Wetbulb Design Effectiveness
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    0.9,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    0.9,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN11,     !- Primary Air Inlet Node Name
-    Evap Cooler Outlet Node ZN11, !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    Evap Cooler Outlet Node ZN11,  !- Primary Air Outlet Node Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
-    Purge Air Inlet ZN11,     !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN11 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN11,   !- Sensor Node Name
-    Relief Air Outlet Node ZN11, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN11,    !- Secondary Air Inlet Node Name
+    Purge Air Inlet ZN11 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN11,  !- Sensor Node Name
+    Relief Air Outlet Node ZN11,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -5775,7 +5866,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN13_Fl2_E_Space,!- Name
@@ -5846,33 +5942,27 @@
 
   Branch,
     Air Loop Main Branch ZN13,  !- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN13,             !- Component 1 Name
     Air Loop Inlet Node ZN13,!- Component 1 Inlet Node Name
     Mixed Air Node ZN13,     !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN13,      !- Component 2 Name
     Mixed Air Node ZN13,     !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN13,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN13,  !- Component 3 Name
     Evap Cooler Outlet Node ZN13,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN13,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN13,  !- Component 4 Name
     Cooling Coil Air Outlet Node ZN13,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN13,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN13,         !- Component 5 Name
     Heating Coil Air Outlet Node ZN13,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN13,  !- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN13;  !- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN13, !- Name
@@ -5907,6 +5997,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -5931,7 +6022,7 @@
     Zone ZN13 Inlets,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN13 Node,               !- Zone Air Node Name
-    ZN13 Outlet Node;        !- Zone Return Air Node Name
+    ZN13 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN13 Thermostat,         !- Name
@@ -5942,10 +6033,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN13 Equipment,     !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN13 DirectAir,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN13 DirectAir ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN13,   !- Name
@@ -5970,13 +6064,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN13,  !- Name
     Zone Equipment Inlet Node ZN13,  !- Inlet Node Name
-    ZN13 Inlet Node;         !- Outlet 1 Node Name
+    ZN13 Inlet Node ATInlet; !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN13 DirectAir,     !- Name
     Always_on,               !- Availability Schedule Name
-    ZN13 Inlet Node,         !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN13 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZN13 Inlet Node,         !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN13 DirectAir ADU, !- Name
+    ZN13 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN13 DirectAir,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN13,  !- Name
@@ -5987,10 +6093,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN13;           !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN13,  !- Name
     Always_on,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN13,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN13,  !- Air Outlet Node Name
@@ -6003,22 +6110,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    1.2,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    1.2,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN13,     !- Primary Air Inlet Node Name
-    Evap Cooler Outlet Node ZN13, !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    Evap Cooler Outlet Node ZN13,  !- Primary Air Outlet Node Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN13,    !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN13 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN13,   !- Sensor Node Name
-    Relief Air Outlet Node ZN13, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN13 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN13,  !- Sensor Node Name
+    Relief Air Outlet Node ZN13,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -6109,7 +6216,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN15_Fl2_W_Space,!- Name
@@ -6180,33 +6292,27 @@
 
   Branch,
     Air Loop Main Branch ZN15,  !- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN15,             !- Component 1 Name
     Air Loop Inlet Node ZN15,!- Component 1 Inlet Node Name
     Mixed Air Node ZN15,     !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN15,      !- Component 2 Name
     Mixed Air Node ZN15,     !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN15,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN15,  !- Component 3 Name
     Evap Cooler Outlet Node ZN15,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN15,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN15,  !- Component 4 Name
     Cooling Coil Air Outlet Node ZN15,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN15,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN15,         !- Component 5 Name
     Heating Coil Air Outlet Node ZN15,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN15,  !- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN15;  !- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN15, !- Name
@@ -6241,6 +6347,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -6265,7 +6372,7 @@
     Zone ZN15 Inlets,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN15 Node,               !- Zone Air Node Name
-    ZN15 Outlet Node;        !- Zone Return Air Node Name
+    ZN15 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN15 Thermostat,         !- Name
@@ -6276,10 +6383,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN15 Equipment,     !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN15 DirectAir,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN15 DirectAir ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN15,   !- Name
@@ -6304,13 +6414,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN15,  !- Name
     Zone Equipment Inlet Node ZN15,  !- Inlet Node Name
-    ZN15 Inlet Node;         !- Outlet 1 Node Name
+    ZN15 Inlet Node ATInlet; !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN15 DirectAir,     !- Name
     Always_on,               !- Availability Schedule Name
-    ZN15 Inlet Node,         !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN15 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZN15 Inlet Node,         !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN15 DirectAir ADU, !- Name
+    ZN15 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN15 DirectAir,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN15,  !- Name
@@ -6321,10 +6443,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN15;           !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN15,  !- Name
     Always_on,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN15,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN15,  !- Air Outlet Node Name
@@ -6337,22 +6460,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    1.5,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    1.5,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN15,     !- Primary Air Inlet Node Name
-    Evap Cooler Outlet Node ZN15, !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    Evap Cooler Outlet Node ZN15,  !- Primary Air Outlet Node Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN15,    !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN15 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN15,   !- Sensor Node Name
-    Relief Air Outlet Node ZN15, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN15 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN15,  !- Sensor Node Name
+    Relief Air Outlet Node ZN15,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -6443,7 +6566,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN17_Fl2_N_Space,!- Name
@@ -6514,33 +6642,27 @@
 
   Branch,
     Air Loop Main Branch ZN17,  !- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN17,             !- Component 1 Name
     Air Loop Inlet Node ZN17,!- Component 1 Inlet Node Name
     Mixed Air Node ZN17,     !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN17,      !- Component 2 Name
     Mixed Air Node ZN17,     !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN17,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN17,  !- Component 3 Name
     Evap Cooler Outlet Node ZN17,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN17,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN17,  !- Component 4 Name
     Cooling Coil Air Outlet Node ZN17,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN17,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN17,         !- Component 5 Name
     Heating Coil Air Outlet Node ZN17,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN17,  !- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN17;  !- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN17, !- Name
@@ -6575,6 +6697,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -6599,7 +6722,7 @@
     Zone ZN17 Inlets,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN17 Node,               !- Zone Air Node Name
-    ZN17 Outlet Node;        !- Zone Return Air Node Name
+    ZN17 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN17 Thermostat,         !- Name
@@ -6610,10 +6733,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN17 Equipment,     !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN17 DirectAir,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN17 DirectAir ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN17,   !- Name
@@ -6638,13 +6764,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN17,  !- Name
     Zone Equipment Inlet Node ZN17,  !- Inlet Node Name
-    ZN17 Inlet Node;         !- Outlet 1 Node Name
+    ZN17 Inlet Node ATInlet; !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN17 DirectAir,     !- Name
     Always_on,               !- Availability Schedule Name
-    ZN17 Inlet Node,         !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN17 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZN17 Inlet Node,         !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN17 DirectAir ADU, !- Name
+    ZN17 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN17 DirectAir,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN17,  !- Name
@@ -6655,10 +6793,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN17;           !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN17,  !- Name
     Always_on,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN17,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN17,  !- Air Outlet Node Name
@@ -6671,22 +6810,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    0.9,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    0.9,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN17,     !- Primary Air Inlet Node Name
-    Evap Cooler Outlet Node ZN17, !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    Evap Cooler Outlet Node ZN17,  !- Primary Air Outlet Node Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN17,    !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN17 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN17,   !- Sensor Node Name
-    Relief Air Outlet Node ZN17, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN17 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN17,  !- Sensor Node Name
+    Relief Air Outlet Node ZN17,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio
@@ -6777,7 +6916,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN19_Fl2_Core_Space,  !- Name
@@ -6848,33 +6992,27 @@
 
   Branch,
     Air Loop Main Branch ZN19,  !- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys ZN19,             !- Component 1 Name
     Air Loop Inlet Node ZN19,!- Component 1 Inlet Node Name
     Mixed Air Node ZN19,     !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     EvaporativeCooler:Indirect:ResearchSpecial,  !- Component 2 Object Type
     Indirect Evap ZN19,      !- Component 2 Name
     Mixed Air Node ZN19,     !- Component 2 Inlet Node Name
     Evap Cooler Outlet Node ZN19,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     CoilSystem:Cooling:DX,   !- Component 3 Object Type
     DX Cooling Coil System ZN19,  !- Component 3 Name
     Evap Cooler Outlet Node ZN19,  !- Component 3 Inlet Node Name
     Cooling Coil Air Outlet Node ZN19,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
-    Coil:Heating:Gas,        !- Component 4 Object Type
+    Coil:Heating:Fuel,       !- Component 4 Object Type
     Main Heating Coil ZN19,  !- Component 4 Name
     Cooling Coil Air Outlet Node ZN19,  !- Component 4 Inlet Node Name
     Heating Coil Air Outlet Node ZN19,  !- Component 4 Outlet Node Name
-    PASSIVE,                 !- Component 4 Branch Control Type
     Fan:ConstantVolume,      !- Component 5 Object Type
     Supply Fan ZN19,         !- Component 5 Name
     Heating Coil Air Outlet Node ZN19,  !- Component 5 Inlet Node Name
-    Air Loop Outlet Node ZN19,  !- Component 5 Outlet Node Name
-    ACTIVE;                  !- Component 5 Branch Control Type
+    Air Loop Outlet Node ZN19;  !- Component 5 Outlet Node Name
 
   AirLoopHVAC,
     Direct DX air Loop ZN19, !- Name
@@ -6909,6 +7047,7 @@
     HVACoperationSchd,       !- Fan Schedule Name
     CycleOnAny,              !- Control Type
     1.0,                     !- Thermostat Tolerance {deltaC}
+    FixedRunTime,            !- Cycling Run Time Control Type
     3600;                    !- Cycling Run Time {s}
 
   AirLoopHVAC:OutdoorAirSystem,
@@ -6933,7 +7072,7 @@
     Zone ZN19 Inlets,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN19 Node,               !- Zone Air Node Name
-    ZN19 Outlet Node;        !- Zone Return Air Node Name
+    ZN19 Outlet Node;        !- Zone Return Air Node or NodeList Name
 
   ZoneControl:Thermostat,
     ZN19 Thermostat,         !- Name
@@ -6944,10 +7083,13 @@
 
   ZoneHVAC:EquipmentList,
     Zone ZN19 Equipment,     !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone ZN19 DirectAir,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone ZN19 DirectAir ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirLoopHVAC:SupplyPath,
     DirectSupplyPath ZN19,   !- Name
@@ -6972,13 +7114,25 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter ZN19,  !- Name
     Zone Equipment Inlet Node ZN19,  !- Inlet Node Name
-    ZN19 Inlet Node;         !- Outlet 1 Node Name
+    ZN19 Inlet Node ATInlet; !- Outlet 1 Node Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone ZN19 DirectAir,     !- Name
     Always_on,               !- Availability Schedule Name
-    ZN19 Inlet Node,         !- Zone Supply Air Node Name
-    autosize;                !- Maximum Air Flow Rate {m3/s}
+    ZN19 Inlet Node ATInlet, !- Air Inlet Node Name
+    ZN19 Inlet Node,         !- Air Outlet Node Name
+    autosize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone ZN19 DirectAir ADU, !- Name
+    ZN19 Inlet Node,         !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone ZN19 DirectAir,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System ZN19,  !- Name
@@ -6989,10 +7143,11 @@
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     ACDXCoil ZN19;           !- Cooling Coil Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Main Heating Coil ZN19,  !- Name
     Always_on,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     autosize,                !- Nominal Capacity {W}
     Cooling Coil Air Outlet Node ZN19,  !- Air Inlet Node Name
     Heating Coil Air Outlet Node ZN19,  !- Air Outlet Node Name
@@ -7005,22 +7160,22 @@
     ,                        !- Wetbulb Effectiveness Flow Ratio Modifier Curve Name
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
-    30.0,                    !- Recirculating Water Pump Power Consumption {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    30.0,                    !- Recirculating Water Pump Design Power {W}
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    1.8,                     !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    428.571428571429,        !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    1.8,                     !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    428.571428571429,        !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     Mixed Air Node ZN19,     !- Primary Air Inlet Node Name
-    Evap Cooler Outlet Node ZN19, !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    Evap Cooler Outlet Node ZN19,  !- Primary Air Outlet Node Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9,                     !- Dewpoint Effectiveness Factor
     Purge Air Inlet ZN19,    !- Secondary Air Inlet Node Name
-    Purge Air Inlet ZN19 Outlet Node, !- Secondary Air Outlet Node Name
-    Air Loop Outlet Node ZN19,   !- Sensor Node Name
-    Relief Air Outlet Node ZN19, !- Relief Air Inlet Node Name
+    Purge Air Inlet ZN19 Outlet Node,  !- Secondary Air Outlet Node Name
+    Air Loop Outlet Node ZN19,  !- Sensor Node Name
+    Relief Air Outlet Node ZN19,  !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
     ,                        !- Drift Loss Fraction
     ;                        !- Blowdown Concentration Ratio

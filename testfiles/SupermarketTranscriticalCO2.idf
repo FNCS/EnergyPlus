@@ -30,8 +30,8 @@
 !
 ! Location:                Miami, FL USA
 !
-! Design Days:             MIAMI_FL_USA Annual Heating 99.6%, MaxDB=8.7캜
-!                          MIAMI_FL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2캜 MWB=25.3캜
+! Design Days:             MIAMI_FL_USA Annual Heating 99.6%, MaxDB=8.7째C
+!                          MIAMI_FL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2째C MWB=25.3째C
 !
 ! Run Period (Weather File): Winter 1/14, Summer 7/7, USA_FL_Miami.Intl.AP_722020_TMY3
 !
@@ -43,7 +43,7 @@
 !           block covered with gypsum board on each surface. The roof is a built up roof with 1/2 in slag over 3/8 in
 !           felt and membrane with R-11 insulation over 6 in lightweight concrete, an air gap separates the interior
 !           acoustical tiles. The windows are single pane 6mm clear and double pane 6mm clear with 6mm air gap.
-!           The window to wall ratio is approxomately 0.0016.
+!           The window to wall ratio is approximately 0.0016.
 !
 !           The building is oriented due north with front of building facing east.
 !
@@ -109,7 +109,7 @@
 ! Purchased Chilled Water:        No
 ! Purchased Hot Water:            No
 ! HVAC System:                    AirLoopHVAC:Unitary:Furnace:HeatCool
-! Coils:                          Coil:Cooling:DX:SingleSpeed, Coil:Heating:Gas
+! Coils:                          Coil:Cooling:DX:SingleSpeed, Coil:Heating:Fuel
 ! Pumps:                          None
 ! Boilers:                        None
 ! Chillers:                       None
@@ -124,7 +124,7 @@
 ! Utility Tariffs:                None
 !
 
-  Version,8.3;
+  Version,9.3;
 
 !-   ===========  ALL OBJECTS IN CLASS: SIMULATIONCONTROL ===========
 
@@ -141,7 +141,7 @@
     None,                    !- Name
     0,                       !- North Axis {deg}
     Suburbs,                 !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     MinimalShadowing,        !- Solar Distribution
     50,                      !- Maximum Number of Warmup Days
@@ -175,10 +175,10 @@
 !-   ===========  ALL OBJECTS IN CLASS: SIZINGPERIOD:DESIGNDAY ===========
  ! Using Design Conditions from "Climate Design Data 2009 ASHRAE Handbook"
  ! Miami Intl Ap_FL_USA Extreme Annual Wind Speeds, 1%=9.2m/s, 2.5%=8.4m/s, 5%=7.7m/s
- ! Miami Intl Ap_FL_USA Extreme Annual Temperatures, Max Drybulb=5.1캜 Min Drybulb=35캜
+ ! Miami Intl Ap_FL_USA Extreme Annual Temperatures, Max Drybulb=5.1째C Min Drybulb=35째C
  ! Miami Intl Ap_FL_USA Annual Heating Design Conditions Wind Speed=3.8m/s Wind Dir=340
  ! Coldest Month=JAN
- ! Miami Intl Ap_FL_USA Annual Heating 99.6%, MaxDB=8.7캜
+ ! Miami Intl Ap_FL_USA Annual Heating 99.6%, MaxDB=8.7째C
 
   SizingPeriod:DesignDay,
     Miami Intl Ap Ann Htg 99.6% Condns DB,  !- Name
@@ -210,7 +210,7 @@
 
  ! Miami Intl Ap Annual Cooling Design Conditions Wind Speed=4.5m/s Wind Dir=140
  ! Hottest Month=JUL
- ! Miami Intl Ap_FL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2캜 MWB=25.3캜
+ ! Miami Intl Ap_FL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2째C MWB=25.3째C
 
   SizingPeriod:DesignDay,
     Miami Intl Ap Ann Clg .4% Condns DB=>MWB,  !- Name
@@ -243,11 +243,13 @@
 !-   ===========  ALL OBJECTS IN CLASS: RUNPERIOD ===========
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     14,                      !- Begin Day of Month
+    ,                        !- Begin Year
     1,                       !- End Month
     14,                      !- End Day of Month
+    ,                        !- End Year
     ,                        !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
@@ -256,11 +258,13 @@
     No;                      !- Use Weather File Snow Indicators
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 2,            !- Name
     7,                       !- Begin Month
     7,                       !- Begin Day of Month
+    ,                        !- Begin Year
     7,                       !- End Month
     7,                       !- End Day of Month
+    ,                        !- End Year
     ,                        !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
@@ -600,7 +604,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 4:00,0,           !- Field 4
     Until: 4:17,1,           !- Field 6
     Until: 14:00,0,          !- Field 8
@@ -612,7 +616,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 4:00,0,           !- Field 4
     Until: 4:22,1,           !- Field 6
     Until: 14:00,0,          !- Field 8
@@ -624,7 +628,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 08:00,0,          !- Field 4
     Until: 08:17,1,          !- Field 6
     Until: 18:00,0,          !- Field 8
@@ -636,7 +640,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 08:00,0,          !- Field 4
     Until: 08:22,1,          !- Field 6
     Until: 18:00,0,          !- Field 8
@@ -648,7 +652,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 11:00,0,          !- Field 4
     Until: 11:20,1,          !- Field 6
     Until: 23:00,0,          !- Field 8
@@ -660,7 +664,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 11:00,0,          !- Field 4
     Until: 11:30,1,          !- Field 6
     Until: 23:00,0,          !- Field 8
@@ -672,7 +676,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 07:00,0,          !- Field 4
     Until: 07:17,1,          !- Field 6
     Until: 17:00,0,          !- Field 8
@@ -684,7 +688,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 07:00,0,          !- Field 4
     Until: 07:22,1,          !- Field 6
     Until: 17:00,0,          !- Field 8
@@ -696,7 +700,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 06:00,0,          !- Field 4
     Until: 06:17,1,          !- Field 6
     Until: 16:00,0,          !- Field 8
@@ -708,7 +712,7 @@
     ON/OFF,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 06:00,0,          !- Field 4
     Until: 06:22,1,          !- Field 6
     Until: 16:00,0,          !- Field 8
@@ -1189,7 +1193,6 @@
     Main_ExtWall_d_e,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1205,7 +1208,6 @@
     Main_ExtWall_d_e,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1221,7 +1223,6 @@
     Main_ExtWall_d_e,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     ,                        !- Multiplier
     4,                       !- Number of Vertices
@@ -1235,25 +1236,25 @@
   InternalMass,
     BackRoom_Furniture1,     !- Name
     FurnitureConstruction,   !- Construction Name
-    BackRoom,                !- Zone Name
+    BackRoom,                !- Zone or ZoneList Name
     95.0;                    !- Surface Area {m2}
 
   InternalMass,
     BackRoom_Furniture2,     !- Name
     FurnitureConstruction,   !- Construction Name
-    BackRoom,                !- Zone Name
+    BackRoom,                !- Zone or ZoneList Name
     95.0;                    !- Surface Area {m2}
 
   InternalMass,
     SalesFloor_Furniture1,   !- Name
     FurnitureConstruction,   !- Construction Name
-    SalesFloor,              !- Zone Name
+    SalesFloor,              !- Zone or ZoneList Name
     845.0;                   !- Surface Area {m2}
 
   InternalMass,
     SalesFloor_Furniture2,   !- Name
     FurnitureConstruction,   !- Construction Name
-    SalesFloor,              !- Zone Name
+    SalesFloor,              !- Zone or ZoneList Name
     845.0;                   !- Surface Area {m2}
 
 !-   ===========  ALL OBJECTS IN CLASS: PEOPLE ===========
@@ -1387,33 +1388,63 @@
 
 !-   ===========  ALL OBJECTS IN CLASS: AIRTERMINAL:SINGLEDUCT:UNCONTROLLED ===========
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone1DirectAir,          !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    SalesFloor Inlet Node,   !- Zone Supply Air Node Name
-    5.225;                   !- Maximum Air Flow Rate {m3/s}
+    SalesFloor Inlet Node ATInlet,  !- Air Inlet Node Name
+    SalesFloor Inlet Node,   !- Air Outlet Node Name
+    5.225,                   !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  ZoneHVAC:AirDistributionUnit,
+    Zone1DirectAir ADU,      !- Name
+    SalesFloor Inlet Node,   !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone1DirectAir,          !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone2DirectAir,          !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    BackRoom Inlet Node,     !- Zone Supply Air Node Name
-    0.275;                   !- Maximum Air Flow Rate {m3/s}
+    BackRoom Inlet Node ATInlet,  !- Air Inlet Node Name
+    BackRoom Inlet Node,     !- Air Outlet Node Name
+    0.275,                   !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone2DirectAir ADU,      !- Name
+    BackRoom Inlet Node,     !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone2DirectAir,          !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
 !-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:EQUIPMENTLIST ===========
 
   ZoneHVAC:EquipmentList,
     Zone1Equipment,          !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone1DirectAir,          !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone1DirectAir ADU,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentList,
     Zone2Equipment,          !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone2DirectAir,          !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone2DirectAir ADU,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
 !-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:EQUIPMENTCONNECTIONS ===========
 
@@ -1423,7 +1454,7 @@
     Zone1Inlets,             !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     SalesFloor Node,         !- Zone Air Node Name
-    SalesFloor Outlet Node;  !- Zone Return Air Node Name
+    SalesFloor Outlet Node;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentConnections,
     BackRoom,                !- Zone Name
@@ -1431,7 +1462,7 @@
     Zone2Inlets,             !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     BackRoom Node,           !- Zone Air Node Name
-    BackRoom Outlet Node;    !- Zone Return Air Node Name
+    BackRoom Outlet Node;    !- Zone Return Air Node or NodeList Name
 
 !-   ===========  ALL OBJECTS IN CLASS: FAN:ONOFF ===========
 
@@ -1463,25 +1494,28 @@
     WindACEIRFT,             !- Energy Input Ratio Function of Temperature Curve Name
     WindACEIRFFF,            !- Energy Input Ratio Function of Flow Fraction Curve Name
     WindACPLFFPLR,           !- Part Load Fraction Correlation Curve Name
+    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     1000,                    !- Nominal Time for Condensate Removal to Begin {s}
     1.5,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
     3.0,                     !- Maximum Cycling Rate {cycles/hr}
     45.0;                    !- Latent Capacity Time Constant {s}
 
-!-   ===========  ALL OBJECTS IN CLASS: COIL:HEATING:GAS ===========
+!-   ===========  ALL OBJECTS IN CLASS: COIL:HEATING:FUEL ===========
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Furnace Heating Coil 1,  !- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     100000,                  !- Nominal Capacity {W}
     Heating Coil Air Inlet Node,  !- Air Inlet Node Name
     Reheat Coil Air Inlet Node;  !- Air Outlet Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     Humidistat Reheat Coil 1,!- Name
     FanAndCoilAvailSched,    !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     100000,                  !- Nominal Capacity {W}
     Reheat Coil Air Inlet Node,  !- Air Inlet Node Name
     Air Loop Outlet Node;    !- Air Outlet Node Name
@@ -1495,19 +1529,19 @@
     Air Loop Outlet Node,    !- Furnace Air Outlet Node Name
     ContinuousFanSchedule,   !- Supply Air Fan Operating Mode Schedule Name
     80,                      !- Maximum Supply Air Temperature {C}
-    5.5,                     !- Supply Air Flow Rate During Cooling Operation {m3/s}
-    5.5,                     !- Supply Air Flow Rate During Heating Operation {m3/s}
-    5.5,                     !- Supply Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+    5.5,                     !- Cooling Supply Air Flow Rate {m3/s}
+    5.5,                     !- Heating Supply Air Flow Rate {m3/s}
+    5.5,                     !- No Load Supply Air Flow Rate {m3/s}
     SalesFloor,              !- Controlling Zone or Thermostat Location
     Fan:OnOff,               !- Supply Fan Object Type
     Supply Fan 1,            !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     Furnace Heating Coil 1,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     Furnace ACDXCoil 1,      !- Cooling Coil Name
     CoolReheat,              !- Dehumidification Control Type
-    Coil:Heating:Gas,        !- Reheat Coil Object Type
+    Coil:Heating:Fuel,       !- Reheat Coil Object Type
     Humidistat Reheat Coil 1;!- Reheat Coil Name
 
 !-   ===========  ALL OBJECTS IN CLASS: CONTROLLER:OUTDOORAIR ===========
@@ -1581,8 +1615,8 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter,!- Name
     Zone Equipment Inlet Node,  !- Inlet Node Name
-    SalesFloor Inlet Node,   !- Outlet 1 Node Name
-    BackRoom Inlet Node;     !- Outlet 2 Node Name
+    SalesFloor Inlet Node ATInlet,  !- Outlet 1 Node Name
+    BackRoom Inlet Node ATInlet;  !- Outlet 2 Node Name
 
 !-   ===========  ALL OBJECTS IN CLASS: AIRLOOPHVAC:SUPPLYPATH ===========
 
@@ -1612,18 +1646,15 @@
 
   Branch,
     Air Loop Main Branch,    !- Name
-    5.5,                     !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     OA Sys 1,                !- Component 1 Name
     Outdoor Air Mixer Inlet Node,  !- Component 1 Inlet Node Name
     Mixed Air Node,          !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     AirLoopHVAC:Unitary:Furnace:HeatCool,  !- Component 2 Object Type
     Supermarket Rooftop DX w/ Gas Heat,  !- Component 2 Name
     Mixed Air Node,          !- Component 2 Inlet Node Name
-    Air Loop Outlet Node,    !- Component 2 Outlet Node Name
-    ACTIVE;                  !- Component 2 Branch Control Type
+    Air Loop Outlet Node;    !- Component 2 Outlet Node Name
 
 !-   ===========  ALL OBJECTS IN CLASS: BRANCHLIST ===========
 
@@ -2147,8 +2178,8 @@
     8000.0,                  !- Rated Fan Power {W}
     0.2,                     !- Minimum Fan Air Flow Ratio {dimensionless}
     27.0,                    !- Transition Temperature {C}
-    3.0,                     !- Transcritical Approach Temperature {DeltaC}
-    10.0,                    !- Subcritical Temperature Difference {DeltaC}
+    3.0,                     !- Transcritical Approach Temperature {deltaC}
+    10.0,                    !- Subcritical Temperature Difference {deltaC}
     10.0,                    !- Minimum Condensing Temperature {C}
     ,                        !- Air Inlet Node Name
     RefrigGasCooler,         !- End-Use Subcategory
@@ -2476,13 +2507,13 @@
 ! Capacity Curve for Bitzer 2GSL-3K-4SU (R-744) - Subcritical Operation
 ! Frequency:  60 Hz
 ! Results in Watts, Inputs:  Sat Suction Temp (C), Sat Discharge Temp (C)
-! Nominal Capacity:  13110 W (-30캜 SST, -5캜 SDT)
-! Rated Subcooling:  0캜
-! Rated Suction Gas Superheat:  10캜
-! Minimum SST:  -50캜
-! Maximum SST:  -15캜
-! Minimum SDT:  -20캜
-! Maximum SDT:   15캜
+! Nominal Capacity:  13110 W (-30째C SST, -5째C SDT)
+! Rated Subcooling:  0째C
+! Rated Suction Gas Superheat:  10째C
+! Minimum SST:  -50째C
+! Maximum SST:  -15째C
+! Minimum SDT:  -20째C
+! Maximum SDT:   15째C
 !
 
   Curve:Bicubic,
@@ -2505,13 +2536,13 @@
 ! Power Curve for Bitzer 2GSL-3K-4SU (R-744) - Subcritical Operation
 ! Frequency:  60 Hz
 ! Results in Watts, Inputs:  Sat Suction Temp (C), Sat Discharge Temp (C)
-! Nominal Power:  2660 W (-30캜 SST, -5캜 SDT)
-! Rated Subcooling:  0캜
-! Rated Suction Gas Superheat:  10캜
-! Minimum SST:  -50캜
-! Maximum SST:  -15캜
-! Minimum SDT:  -20캜
-! Maximum SDT:   15캜
+! Nominal Power:  2660 W (-30째C SST, -5째C SDT)
+! Rated Subcooling:  0째C
+! Rated Suction Gas Superheat:  10째C
+! Minimum SST:  -50째C
+! Maximum SST:  -15째C
+! Minimum SDT:  -20째C
+! Maximum SDT:   15째C
 !
 
   Curve:Bicubic,
@@ -2534,13 +2565,13 @@
 ! Capacity Curve for Bitzer 4FTC-20K (R-744) - Subcritical Operation
 ! Frequency:  60 Hz (estimated performance)
 ! Results in Watts, Inputs:  Sat Suction Temp (C), Sat Discharge Temp (C)
-! Nominal Capacity:  59340 W (-15캜 SST, 15캜 SDT)
-! Rated Subcooling:  0캜
-! Rated Suction Gas Superheat:  10캜
-! Minimum SST:  -20캜
-! Maximum SST:    0캜
-! Minimum SDT:    5캜
-! Maximum SDT:   25캜
+! Nominal Capacity:  59340 W (-15째C SST, 15째C SDT)
+! Rated Subcooling:  0째C
+! Rated Suction Gas Superheat:  10째C
+! Minimum SST:  -20째C
+! Maximum SST:    0째C
+! Minimum SDT:    5째C
+! Maximum SDT:   25째C
 !
 
   Curve:Bicubic,
@@ -2563,13 +2594,13 @@
 ! Power Curve for Bitzer 4FTC-20K (R-744) - Subcritical Operation
 ! Frequency:  60 Hz (estimated performance)
 ! Results in Watts, Inputs:  Sat Suction Temp (C), Sat Discharge Temp (C)
-! Nominal Power:  14890 W (-15캜 SST, 15캜 SDT)
-! Rated Subcooling:  0캜
-! Rated Suction Gas Superheat:  10캜
-! Minimum SST:  -20캜
-! Maximum SST:    0캜
-! Minimum SDT:    5캜
-! Maximum SDT:   25캜
+! Nominal Power:  14890 W (-15째C SST, 15째C SDT)
+! Rated Subcooling:  0째C
+! Rated Suction Gas Superheat:  10째C
+! Minimum SST:  -20째C
+! Maximum SST:    0째C
+! Minimum SDT:    5째C
+! Maximum SDT:   25째C
 !
 
   Curve:Bicubic,
@@ -2592,10 +2623,10 @@
 ! Capacity Curve for Bitzer 4FTC-20K (R-744) - Transcritical Operation
 ! Frequency:  60 Hz (estimated performance)
 ! Results in Watts, Inputs:  Sat Suction Temp (C), Gas Cooler Outlet Enthalpy (J/kg)
-! Nominal Capacity:  43090 W (-10캜 SST, Tgo = 35캜, Pgc = 9000000 Pa)
-! Rated Suction Gas Superheat:  10캜
-! Minimum SST:  -20캜
-! Maximum SST:    0캜
+! Nominal Capacity:  43090 W (-10째C SST, Tgo = 35째C, Pgc = 9000000 Pa)
+! Rated Suction Gas Superheat:  10째C
+! Minimum SST:  -20째C
+! Maximum SST:    0째C
 ! Minimum Gas Cooler Outlet Enthalpy:  291650 J/kg
 ! Maximum Gas Cooler Outlet Enthalpy:  313040 J/kg
 !
@@ -2620,10 +2651,10 @@
 ! Power Curve for Bitzer 4FTC-20K (R-744) - Transcritical Operation
 ! Frequency:  60 Hz (estimated performance)
 ! Results in Watts, Inputs:  Sat Suction Temp (C), Gas Cooler Pressure (Pa)
-! Nominal Power:  25360 W (-10캜 SST, Tgo = 35캜, Pgc = 9000000 Pa)
-! Rated Suction Gas Superheat:  10캜
-! Minimum SST:  -20캜
-! Maximum SST:    0캜
+! Nominal Power:  25360 W (-10째C SST, Tgo = 35째C, Pgc = 9000000 Pa)
+! Rated Suction Gas Superheat:  10째C
+! Minimum SST:  -20째C
+! Maximum SST:    0째C
 ! Minimum Gas Cooler Pressure:  7500000 Pa
 ! Maximum Gas Cooler Pressure:  10000000 Pa
 !
@@ -2692,7 +2723,7 @@
 !-   ===========  ALL OBJECTS IN CLASS: FLUIDPROPERTIES:SATURATED ===========
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Pressure,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -2706,7 +2737,7 @@
     7.3640E+6,7.3773E+6;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -2720,7 +2751,7 @@
     3.2032E+5,3.3225E+5;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -2734,7 +2765,7 @@
     3.4541E+5,3.3225E+5;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Density,                 !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -2748,7 +2779,7 @@
     5.2118E+2,4.6760E+2;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     Density,                 !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -2762,7 +2793,7 @@
     4.1579E+2,4.6760E+2;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -2776,7 +2807,7 @@
     6.8973E+5,1.0207E+14;
 
   FluidProperties:Saturated,
-    R744,                    !- Name
+    R744,                    !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R744SaturatedTemperatures,  !- Temperature Values Name
@@ -7317,7 +7348,7 @@
 
   Output:Variable,*,Cooling Coil Electric Energy,timestep;
 
-  Output:Variable,*,Heating Coil Air Heating Rate,timestep;
+  Output:Variable,*,Heating Coil Heating Rate,timestep;
 
   Output:Variable,*,Heating Coil Runtime Fraction,timestep;
 
@@ -7417,5 +7448,5 @@
     displayallwarnings;      !- Key 1
 
   Output:SQLite,
-    Simple;
+    Simple;                  !- Option Type
 

@@ -37,7 +37,7 @@
 !
 ! WeatherFilename=USA_IL_Chicago-OHare_TMY2.epw
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,4;
 
@@ -49,11 +49,13 @@
     No;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
@@ -75,13 +77,13 @@
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     CounterClockWise,        !- Vertex Entry Direction
-    relative;                !- Coordinate System
+    Relative;                !- Coordinate System
 
   Building,
     AutoBuilt model,         !- Name
     -5.0,                    !- North Axis {deg}
     City,                    !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.2,                     !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -96,7 +98,7 @@
 
 ! CHICAGO_IL_USA Annual Heating Design Conditions Wind Speed=4.9m/s Wind Dir=270
 ! Coldest Month=January
-! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6°C
+! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Htg 99.6% Condns DB,  !- Name
@@ -128,7 +130,7 @@
 
 ! CHICAGO Annual Cooling Design Conditions Wind Speed=5.3m/s Wind Dir=230
 ! Hottest Month=July
-! CHICAGO_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2°C MWB=23.8°C
+! CHICAGO_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2Â°C MWB=23.8Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Clg .4% Condns DB=>MWB,  !- Name
@@ -802,26 +804,6 @@
     Krypton,                 !- Gas Type
     0.0079;                  !- Thickness {m}
 
-  Construction,
-    North_window,            !- Name
-    103 Clear_6.DAT,         !- Outside Layer
-    KRYPTON 8MM,             !- Layer 2
-    COATED POLY-88,          !- Layer 3
-    KRYPTON 3MM,             !- Layer 4
-    COATED POLY-88,          !- Layer 5
-    KRYPTON 8MM,             !- Layer 6
-    103 Clear_6.DAT;         !- Layer 7
-
-  Construction,
-    nonnorth_window,         !- Name
-    103 Clear_6.DAT,         !- Outside Layer
-    KRYPTON 8MM,             !- Layer 2
-    COATED POLY-33,          !- Layer 3
-    KRYPTON 3MM,             !- Layer 4
-    COATED POLY-88,          !- Layer 5
-    KRYPTON 8MM,             !- Layer 6
-    103 Clear_6.DAT;         !- Layer 7
-
 ! insulation level at R-21 IP + 21.6 clear
 
   Construction,
@@ -898,44 +880,8 @@
     23.79;                   !- Cost per Area {$/m2}
 
   Construction,
-    INT-FLOOR-TOPSIDE,       !- Name
-    MAT-CC05 4  MW CONCRETE, !- Outside Layer
-    CP02 CARPET PAD;         !- Layer 2
-
-  Construction,
-    INT-FLOOR-UNDERSIDE,     !- Name
-    CP02 CARPET PAD,         !- Outside Layer
-    MAT-CC05 4  MW CONCRETE; !- Layer 2
-
-  Construction,
     InteriorFurnishings,     !- Name
     Wood 6inch;              !- Outside Layer
-
-  Construction,
-    INT-FLOOR-SLAB,          !- Name
-    MAT-CC05 4  MW CONCRETE; !- Outside Layer
-
-  Construction,
-    Raised-Floor-TopSide,    !- Name
-    1.5  MW CONCRETE,        !- Outside Layer
-    CP02 CARPET PAD;         !- Layer 2
-
-  Construction,
-    Raised-Floor-UnderSide,  !- Name
-    CP02 CARPET PAD,         !- Outside Layer
-    1.5  MW CONCRETE;        !- Layer 2
-
-  Construction,
-    TDD_Pipe,                !- Name
-    Very High Reflectivity Surface;  !- Outside Layer
-
-  Construction,
-    TDD_Dome,                !- Name
-    Clear Acrylic Plastic;   !- Outside Layer
-
-  Construction,
-    TDD_Diffuser,            !- Name
-    Diffusing Acrylic Plastic;  !- Outside Layer
 
   WindowMaterial:Glazing,
     CLEAR 3MM(206),          !- Name
@@ -2148,31 +2094,31 @@
   InternalMass,
     ZN1_S_Space_1,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN1_S_Space_1,           !- Zone Name
+    ZN1_S_Space_1,           !- Zone or ZoneList Name
     897.599;                 !- Surface Area {m2}
 
   InternalMass,
     ZN2_E_Space_1,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN2_E_Space_1,           !- Zone Name
+    ZN2_E_Space_1,           !- Zone or ZoneList Name
     132.747;                 !- Surface Area {m2}
 
   InternalMass,
     ZN3_N_Space_1,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN3_N_Space_1,           !- Zone Name
+    ZN3_N_Space_1,           !- Zone or ZoneList Name
     897.599;                 !- Surface Area {m2}
 
   InternalMass,
     ZN4_W_Space_1,           !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN4_W_Space_1,           !- Zone Name
+    ZN4_W_Space_1,           !- Zone or ZoneList Name
     132.747;                 !- Surface Area {m2}
 
   InternalMass,
     ZN5_Core_Space_1,        !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN5_Core_Space_1,        !- Zone Name
+    ZN5_Core_Space_1,        !- Zone or ZoneList Name
     1655.308;                !- Surface Area {m2}
 
   FenestrationSurface:Detailed,
@@ -2182,7 +2128,6 @@
     ZN1_S_Space_1:ExtWall:South,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2198,7 +2143,6 @@
     ZN2_E_Space_1:ExtWall:East,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2214,7 +2158,6 @@
     ZN3_N_Space_1:ExtWall:North,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2230,7 +2173,6 @@
     ZN4_W_Space_1:ExtWall:West,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.500,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2382,7 +2324,7 @@
     ACTIVITY_SCH,            !- Activity Level Schedule Name
     3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     ,                        !- Enable ASHRAE 55 Comfort Warnings
-    Zone Averaged,           !- Mean Radiant Temperature Calculation Type
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
     ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
@@ -2403,7 +2345,7 @@
     ACTIVITY_SCH,            !- Activity Level Schedule Name
     3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     ,                        !- Enable ASHRAE 55 Comfort Warnings
-    Zone Averaged,           !- Mean Radiant Temperature Calculation Type
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
     ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
@@ -2424,7 +2366,7 @@
     ACTIVITY_SCH,            !- Activity Level Schedule Name
     3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     ,                        !- Enable ASHRAE 55 Comfort Warnings
-    Zone Averaged,           !- Mean Radiant Temperature Calculation Type
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
     ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
@@ -2445,7 +2387,7 @@
     ACTIVITY_SCH,            !- Activity Level Schedule Name
     3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     ,                        !- Enable ASHRAE 55 Comfort Warnings
-    Zone Averaged,           !- Mean Radiant Temperature Calculation Type
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
     ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
@@ -2466,7 +2408,7 @@
     ACTIVITY_SCH,            !- Activity Level Schedule Name
     3.82E-8,                 !- Carbon Dioxide Generation Rate {m3/s-W}
     ,                        !- Enable ASHRAE 55 Comfort Warnings
-    Zone Averaged,           !- Mean Radiant Temperature Calculation Type
+    ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
     ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
@@ -2696,7 +2638,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN1_S_Space_1,   !- Name
@@ -2711,14 +2658,17 @@
     ZN1_S_Space_1 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN1_S_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN1_S_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN1_S_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN1_S_Space_1 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN1_S_Space_1 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN1_S_Space_1 ATU,       !- Name
@@ -2746,7 +2696,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN1_S_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -2769,13 +2719,11 @@
 
   Branch,
     ZN1_S_Space_1 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN1_S_Space_1 Reheat Coil,  !- Component 1 Name
     ZN1_S_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN1_S_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN1_S_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Sizing:Zone,
     ZN2_E_Space_1,           !- Zone or ZoneList Name
@@ -2799,7 +2747,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN2_E_Space_1,   !- Name
@@ -2814,14 +2767,17 @@
     ZN2_E_Space_1 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN2_E_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN2_E_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN2_E_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN2_E_Space_1 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN2_E_Space_1 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN2_E_Space_1 ATU,       !- Name
@@ -2849,7 +2805,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN2_E_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -2872,13 +2828,11 @@
 
   Branch,
     ZN2_E_Space_1 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN2_E_Space_1 Reheat Coil,  !- Component 1 Name
     ZN2_E_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN2_E_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN2_E_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Sizing:Zone,
     ZN3_N_Space_1,           !- Zone or ZoneList Name
@@ -2902,7 +2856,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN3_N_Space_1,   !- Name
@@ -2917,14 +2876,17 @@
     ZN3_N_Space_1 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN3_N_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN3_N_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN3_N_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN3_N_Space_1 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN3_N_Space_1 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN3_N_Space_1 ATU,       !- Name
@@ -2952,7 +2914,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN3_N_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -2975,13 +2937,11 @@
 
   Branch,
     ZN3_N_Space_1 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN3_N_Space_1 Reheat Coil,  !- Component 1 Name
     ZN3_N_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN3_N_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN3_N_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Sizing:Zone,
     ZN4_W_Space_1,           !- Zone or ZoneList Name
@@ -3005,7 +2965,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN4_W_Space_1,   !- Name
@@ -3020,14 +2985,17 @@
     ZN4_W_Space_1 Inlets,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN4_W_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN4_W_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN4_W_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN4_W_Space_1 Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN4_W_Space_1 ATU,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN4_W_Space_1 ATU,       !- Name
@@ -3055,7 +3023,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN4_W_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -3078,13 +3046,11 @@
 
   Branch,
     ZN4_W_Space_1 HW-Branch, !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN4_W_Space_1 Reheat Coil,  !- Component 1 Name
     ZN4_W_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN4_W_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN4_W_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Sizing:Zone,
     ZN5_Core_Space_1,        !- Zone or ZoneList Name
@@ -3108,7 +3074,12 @@
     0,                       !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN5_Core_Space_1,!- Name
@@ -3123,14 +3094,17 @@
     ZN5_Core_Space_1 Inlets, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZN5_Core_Space_1 Zone Air Node,  !- Zone Air Node Name
-    ZN5_Core_Space_1 Return Outlet;  !- Zone Return Air Node Name
+    ZN5_Core_Space_1 Return Outlet;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZN5_Core_Space_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN5_Core_Space_1 ATU,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN5_Core_Space_1 ATU,    !- Name
@@ -3158,7 +3132,7 @@
     0.0,                     !- Minimum Hot Water or Steam Flow Rate {m3/s}
     ZN5_Core_Space_1 Supply Inlet,  !- Air Outlet Node Name
     0.001,                   !- Convergence Tolerance
-    Reverse,                 !- Damper Heating Action
+    ReverseWithLimits,       !- Damper Heating Action
     AUTOCALCULATE,           !- Maximum Flow per Zone Floor Area During Reheat {m3/s-m2}
     AUTOCALCULATE;           !- Maximum Flow Fraction During Reheat
 
@@ -3181,13 +3155,11 @@
 
   Branch,
     ZN5_Core_Space_1 HW-Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     ZN5_Core_Space_1 Reheat Coil,  !- Component 1 Name
     ZN5_Core_Space_1 Reheat Coil HW Inlet,  !- Component 1 Inlet Node Name
-    ZN5_Core_Space_1 Reheat Coil HW Outlet,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    ZN5_Core_Space_1 Reheat Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Sizing:System,
     VAV SYS 1,               !- AirLoop Name
@@ -3205,17 +3177,17 @@
     no,                      !- 100% Outdoor Air in Heating
     0.008,                   !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0,                       !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0,                       !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0,                       !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0,                       !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ,                        !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -3253,28 +3225,23 @@
 
   Branch,
     VAV SYS 1 Main Branch,   !- Name
-    autosize,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV SYS 1 OA System,     !- Component 1 Name
     VAV SYS 1 Air Loop Inlet,!- Component 1 Inlet Node Name
     VAV SYS 1 Mixed Air Outlet,  !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     Coil:Cooling:Water:DetailedGeometry,  !- Component 2 Object Type
     VAV SYS 1 Cooling Coil,  !- Component 2 Name
     VAV SYS 1 Mixed Air Outlet,  !- Component 2 Inlet Node Name
     VAV SYS 1 Cooling Coil Outlet,  !- Component 2 Outlet Node Name
-    PASSIVE,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV SYS 1 Heating Coil,  !- Component 3 Name
     VAV SYS 1 Cooling Coil Outlet,  !- Component 3 Inlet Node Name
     VAV SYS 1 Heating Coil Outlet,  !- Component 3 Outlet Node Name
-    PASSIVE,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV SYS 1 Supply Fan,    !- Component 4 Name
     VAV SYS 1 Heating Coil Outlet,  !- Component 4 Inlet Node Name
-    VAV SYS 1 Air Loop Outlet,  !- Component 4 Outlet Node Name
-    ACTIVE;                  !- Component 4 Branch Control Type
+    VAV SYS 1 Air Loop Outlet;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:SupplyPath,
     VAV SYS 1 Supply Path,   !- Name
@@ -3370,13 +3337,11 @@
 
   Branch,
     VAV SYS 1 ChW-Branch,    !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water:DetailedGeometry,  !- Component 1 Object Type
     VAV SYS 1 Cooling Coil,  !- Component 1 Name
     VAV SYS 1 Cooling Coil ChW Inlet,  !- Component 1 Inlet Node Name
-    VAV SYS 1 Cooling Coil ChW Outlet,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV SYS 1 Cooling Coil ChW Outlet;  !- Component 1 Outlet Node Name
 
   Coil:Heating:Water,
     VAV SYS 1 Heating Coil,  !- Name
@@ -3418,13 +3383,11 @@
 
   Branch,
     VAV SYS 1 HW-Branch,     !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV SYS 1 Heating Coil,  !- Component 1 Name
     VAV SYS 1 Heating Coil HW Inlet,  !- Component 1 Inlet Node Name
-    VAV SYS 1 Heating Coil HW Outlet,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV SYS 1 Heating Coil HW Outlet;  !- Component 1 Outlet Node Name
 
   Fan:VariableVolume,
     VAV SYS 1 Supply Fan,    !- Name
@@ -3526,13 +3489,11 @@
 
   Branch,
     CHW Demand 1 ChW Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CHW Demand 1 ChW Inlet Pipe,  !- Component 1 Name
     CHW Demand 1 ChW Demand Inlet Node,  !- Component 1 Inlet Node Name
-    CHW Demand 1 ChW Demand Entrance Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    CHW Demand 1 ChW Demand Entrance Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CHW Demand 1 ChW Inlet Pipe,  !- Name
@@ -3541,13 +3502,11 @@
 
   Branch,
     CHW Demand 1 ChW Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CHW Demand 1 ChW Outlet Pipe,  !- Component 1 Name
     CHW Demand 1 ChW Demand Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    CHW Demand 1 ChW Demand Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    CHW Demand 1 ChW Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CHW Demand 1 ChW Outlet Pipe,  !- Name
@@ -3556,13 +3515,11 @@
 
   Branch,
     CHW Demand 1 ChW Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CHW Demand 1 ChW Bypass Pipe,  !- Component 1 Name
     CHW Demand 1 ChW Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    CHW Demand 1 ChW Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    CHW Demand 1 ChW Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CHW Demand 1 ChW Bypass Pipe,  !- Name
@@ -3612,13 +3569,11 @@
 
   Branch,
     HW Demand 1 HW Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HW Demand 1 HW Inlet Pipe,  !- Component 1 Name
     HW Demand 1 HW Demand Inlet Node,  !- Component 1 Inlet Node Name
-    HW Demand 1 HW Demand Entrance Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    HW Demand 1 HW Demand Entrance Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     HW Demand 1 HW Inlet Pipe,  !- Name
@@ -3627,13 +3582,11 @@
 
   Branch,
     HW Demand 1 HW Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HW Demand 1 HW Outlet Pipe,  !- Component 1 Name
     HW Demand 1 HW Demand Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    HW Demand 1 HW Demand Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    HW Demand 1 HW Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     HW Demand 1 HW Outlet Pipe,  !- Name
@@ -3642,13 +3595,11 @@
 
   Branch,
     HW Demand 1 HW Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HW Demand 1 HW Bypass Pipe,  !- Component 1 Name
     HW Demand 1 HW Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    HW Demand 1 HW Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    HW Demand 1 HW Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     HW Demand 1 HW Bypass Pipe,  !- Name
@@ -3716,33 +3667,27 @@
 
   Branch,
     Chiller Plant Chiller Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric,        !- Component 1 Object Type
     Chiller Plant Chiller,   !- Component 1 Name
     Chiller Plant Chiller Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Chiller Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant Chiller Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Chiller Plant ChW Supply Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant ChW Supply Side Bypass,  !- Component 1 Name
     Chiller Plant ChW Supply Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant ChW Supply Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Chiller Plant ChW Supply Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Chiller Plant ChW Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant ChW Supply Outlet,  !- Component 1 Name
     Chiller Plant ChW Supply Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant ChW Supply Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Chiller Plant ChW Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chiller Plant ChW Supply Side Bypass,  !- Name
@@ -3758,22 +3703,20 @@
     Chiller Plant ChW Circ Pump,  !- Name
     Chiller Plant ChW Supply Inlet Node,  !- Inlet Node Name
     Chiller Plant ChW Pump Outlet Node,  !- Outlet Node Name
-    autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    autosize,                !- Rated Power Consumption {W}
+    autosize,                !- Design Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     INTERMITTENT;            !- Pump Control Type
 
   Branch,
     Chiller Plant ChW Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:ConstantSpeed,      !- Component 1 Object Type
     Chiller Plant ChW Circ Pump,  !- Component 1 Name
     Chiller Plant ChW Supply Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant ChW Pump Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant ChW Pump Outlet Node;  !- Component 1 Outlet Node Name
 
   PlantEquipmentOperationSchemes,
     Chiller Plant Operation, !- Name
@@ -3861,13 +3804,11 @@
 
   Branch,
     Chiller Plant Condenser Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Cnd Demand Inlet Pipe,  !- Component 1 Name
     Chiller Plant Cnd Demand Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Cnd Demand In Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Chiller Plant Cnd Demand In Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chiller Plant Cnd Demand Inlet Pipe,  !- Name
@@ -3876,23 +3817,19 @@
 
   Branch,
     Chiller Plant Chiller Condenser Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric,        !- Component 1 Object Type
     Chiller Plant Chiller,   !- Component 1 Name
     Chiller Plant Chiller Cond Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Chiller Cond Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant Chiller Cond Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Chiller Plant Condenser Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Condenser Demand Side Bypass,  !- Component 1 Name
     Chiller Plant Condenser Demand Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Condenser Demand Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Chiller Plant Condenser Demand Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chiller Plant Condenser Demand Side Bypass,  !- Name
@@ -3901,13 +3838,11 @@
 
   Branch,
     Chiller Plant Condenser Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Condenser Demand Outlet,  !- Component 1 Name
     Chiller Plant Condenser Demand Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Cnd Demand Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Chiller Plant Cnd Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chiller Plant Condenser Demand Outlet,  !- Name
@@ -3980,23 +3915,19 @@
 
   Branch,
     Chiller Plant Condenser Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     CoolingTower:SingleSpeed,!- Component 1 Object Type
     Chiller Plant Condenser, !- Component 1 Name
     Chiller Plant Condenser Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Condenser Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant Condenser Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Chiller Plant Condenser Supply Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Condenser Supply Side Bypass,  !- Component 1 Name
     Chiller Plant Condenser Supply Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Condenser Supply Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Chiller Plant Condenser Supply Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chiller Plant Condenser Supply Side Bypass,  !- Name
@@ -4005,13 +3936,11 @@
 
   Branch,
     Chiller Plant Condenser Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Chiller Plant Condenser Supply Outlet,  !- Component 1 Name
     Chiller Plant Condenser Supply Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Cnd Supply Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Chiller Plant Cnd Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Chiller Plant Condenser Supply Outlet,  !- Name
@@ -4022,27 +3951,25 @@
     Chiller Plant Cnd Circ Pump,  !- Name
     Chiller Plant Cnd Supply Inlet Node,  !- Inlet Node Name
     Chiller Plant Cnd Pump Outlet Node,  !- Outlet Node Name
-    autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    autosize,                !- Rated Power Consumption {W}
+    autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     INTERMITTENT;            !- Pump Control Type
 
   Branch,
     Chiller Plant Condenser Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Chiller Plant Cnd Circ Pump,  !- Component 1 Name
     Chiller Plant Cnd Supply Inlet Node,  !- Component 1 Inlet Node Name
-    Chiller Plant Cnd Pump Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Chiller Plant Cnd Pump Outlet Node;  !- Component 1 Outlet Node Name
 
   CondenserEquipmentOperationSchemes,
     Chiller Plant Condenser Loop Operation,  !- Name
@@ -4069,9 +3996,9 @@
     autosize,                !- Design Air Flow Rate {m3/s}
     autosize,                !- Design Fan Power {W}
     autosize,                !- Design U-Factor Times Area Value {W/K}
-    autocalculate,           !- Free Convection Air Flow Rate {m3/s}
-    ,                        !- Free Convection Air Flow Rate Sizing Factor
-    autocalculate,           !- Free Convection U-Factor Times Area Value {W/K}
+    autocalculate,           !- Free Convection Regime Air Flow Rate {m3/s}
+    ,                        !- Free Convection Regime Air Flow Rate Sizing Factor
+    autocalculate,           !- Free Convection Regime U-Factor Times Area Value {W/K}
     ,                        !- Free Convection U-Factor Times Area Value Sizing Factor
     ,                        !- Performance Input Method
     ,                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
@@ -4140,33 +4067,27 @@
 
   Branch,
     Boiler Plant Boiler Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Boiler:HotWater,         !- Component 1 Object Type
     Boiler Plant Boiler,     !- Component 1 Name
     Boiler Plant Boiler Inlet Node,  !- Component 1 Inlet Node Name
-    Boiler Plant Boiler Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Boiler Plant Boiler Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Boiler Plant HW Supply Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Boiler Plant HW Supply Side Bypass,  !- Component 1 Name
     Boiler Plant HW Supply Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    Boiler Plant HW Supply Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    BYPASS;                  !- Component 1 Branch Control Type
+    Boiler Plant HW Supply Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     Boiler Plant HW Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     Boiler Plant HW Supply Outlet,  !- Component 1 Name
     Boiler Plant HW Supply Exit Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    Boiler Plant HW Supply Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE;                 !- Component 1 Branch Control Type
+    Boiler Plant HW Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     Boiler Plant HW Supply Side Bypass,  !- Name
@@ -4182,27 +4103,25 @@
     Boiler Plant HW Circ Pump,  !- Name
     Boiler Plant HW Supply Inlet Node,  !- Inlet Node Name
     Boiler Plant HW Pump Outlet Node,  !- Outlet Node Name
-    autosize,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    autosize,                !- Rated Power Consumption {W}
+    autosize,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    autosize,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0,                       !- Minimum Flow Rate {m3/s}
+    0,                       !- Design Minimum Flow Rate {m3/s}
     INTERMITTENT;            !- Pump Control Type
 
   Branch,
     Boiler Plant HW Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     Boiler Plant HW Circ Pump,  !- Component 1 Name
     Boiler Plant HW Supply Inlet Node,  !- Component 1 Inlet Node Name
-    Boiler Plant HW Pump Outlet Node,  !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Boiler Plant HW Pump Outlet Node;  !- Component 1 Outlet Node Name
 
   PlantEquipmentOperationSchemes,
     Boiler Plant Operation,  !- Name
@@ -4228,7 +4147,6 @@
     0.900000,                !- Nominal Thermal Efficiency
     LeavingBoiler,           !- Efficiency Curve Temperature Evaluation Variable
     BoilerEfficiency,        !- Normalized Boiler Efficiency Curve Name
-    81.,                     !- Design Water Outlet Temperature {C}
     autosize,                !- Design Water Flow Rate {m3/s}
     0.0,                     !- Minimum Part Load Ratio
     1.2,                     !- Maximum Part Load Ratio

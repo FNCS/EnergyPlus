@@ -1,19 +1,18 @@
 // Global I/O Support
 //
-// Project: Objexx Fortran Compatibility Library (ObjexxFCL)
+// Project: Objexx Fortran-C++ Library (ObjexxFCL)
 //
-// Version: 4.0.0
+// Version: 4.2.0
 //
 // Language: C++
 //
-// Copyright (c) 2000-2014 Objexx Engineering, Inc. All Rights Reserved.
+// Copyright (c) 2000-2017 Objexx Engineering, Inc. All Rights Reserved.
 // Use of this source code or any derivative of it is restricted by license.
 // Licensing is available from Objexx Engineering, Inc.:  http://objexx.com
 
 // ObjexxFCL Headers
 #include <ObjexxFCL/gio.hh>
 #include <ObjexxFCL/Backspace.hh>
-#include <ObjexxFCL/Fstring.hh>
 #include <ObjexxFCL/GlobalStreams.hh>
 #include <ObjexxFCL/IOFlags.hh>
 #include <ObjexxFCL/Stream.hh>
@@ -23,11 +22,18 @@
 // C++ Headers
 #include <cassert>
 #include <cstdio>
+#include <fstream>
 #include <iostream>
+#include <istream>
+#include <ostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #ifdef _WIN32
+#ifdef _WIN64
+#define stat _stat64
+#else
 #define stat _stat
+#endif
 #endif
 
 namespace ObjexxFCL {
@@ -121,13 +127,6 @@ open( Unit const unit, Name const & name, IOFlags & flags )
 
 // Open File on Specified Unit
 bool
-open( Unit const unit, Fstring const & name, IOFlags & flags )
-{
-	return open( unit, std::string( name.trimmed() ), flags );
-}
-
-// Open File on Specified Unit
-bool
 open( Unit const unit, Name const & name, std::ios_base::openmode const mode )
 {
 	IOFlags flags( IOFlags::handler() );
@@ -141,24 +140,10 @@ open( Unit const unit, Name const & name, std::ios_base::openmode const mode )
 
 // Open File on Specified Unit
 bool
-open( Unit const unit, Fstring const & name, std::ios_base::openmode const mode )
-{
-	return open( unit, std::string( name.trimmed() ), mode );
-}
-
-// Open File on Specified Unit
-bool
 open( Unit const unit, Name const & name )
 {
 	IOFlags flags( IOFlags::handler() );
 	return open( unit, name, flags );
-}
-
-// Open File on Specified Unit
-bool
-open( Unit const unit, Fstring const & name )
-{
-	return open( unit, std::string( name.trimmed() ) );
 }
 
 // Open Default File on Specified Unit
@@ -193,13 +178,6 @@ open( Name const & name, IOFlags & flags )
 
 // Open File and Return Unit
 Unit
-open( Fstring const & name, IOFlags & flags )
-{
-	return open( std::string( name.trimmed() ), flags );
-}
-
-// Open File and Return Unit
-Unit
 open( Name const & name, std::ios_base::openmode const mode )
 {
 	Unit const unit( streams().next_unit() );
@@ -209,25 +187,11 @@ open( Name const & name, std::ios_base::openmode const mode )
 
 // Open File and Return Unit
 Unit
-open( Fstring const & name, std::ios_base::openmode const mode )
-{
-	return open( std::string( name.trimmed() ), mode );
-}
-
-// Open File and Return Unit
-Unit
 open( Name const & name )
 {
 	Unit const unit( streams().next_unit() );
 	open( unit, name );
 	return unit;
-}
-
-// Open File and Return Unit
-Unit
-open( Fstring const & name )
-{
-	return open( std::string( name.trimmed() ) );
 }
 
 // Open Default File and Return Unit
@@ -629,11 +593,11 @@ inquire( Unit const unit, IOFlags & flags )
 		flags.name( Stream_p->name() );
 		flags.exists( Stream_p->is_open() ? true : std::ifstream( Stream_p->name() ).good() );
 		flags.open( Stream_p->is_open() );
-		flags.read( Stream_p->read() );
-		flags.write( Stream_p->write() );
-		flags.binary( Stream_p->binary() );
-		flags.append( Stream_p->append() );
-		flags.asis( Stream_p->asis() );
+		flags.status( Stream_p->status() );
+		flags.access( Stream_p->access() );
+		flags.action( Stream_p->action() );
+		flags.form( Stream_p->form() );
+		flags.positioning( Stream_p->positioning() );
 		if ( Stream_p->is_open() ) {
 			flags.size( Stream_p->size() );
 			flags.pos( Stream_p->pos() );
@@ -658,11 +622,11 @@ inquire( Name const & name, IOFlags & flags )
 		flags.unit( streams().unit( name ) );
 		flags.exists( Stream_p->is_open() ? true : std::ifstream( name ).good() );
 		flags.open( Stream_p->is_open() );
-		flags.read( Stream_p->read() );
-		flags.write( Stream_p->write() );
-		flags.binary( Stream_p->binary() );
-		flags.append( Stream_p->append() );
-		flags.asis( Stream_p->asis() );
+		flags.status( Stream_p->status() );
+		flags.access( Stream_p->access() );
+		flags.action( Stream_p->action() );
+		flags.form( Stream_p->form() );
+		flags.positioning( Stream_p->positioning() );
 		if ( Stream_p->is_open() ) {
 			flags.size( Stream_p->size() );
 			flags.pos( Stream_p->pos() );
@@ -683,14 +647,7 @@ inquire( Name const & name, IOFlags & flags )
 
 // Inquire by Name
 void
-inquire( Fstring const & name, IOFlags & flags )
-{
-	inquire( std::string( name.trimmed() ), flags );
-}
-
-// Inquire by Name
-void
-inquire( c_cstring const name, IOFlags & flags )
+inquire( char const * const name, IOFlags & flags )
 {
 	inquire( std::string( name ), flags );
 }
@@ -705,7 +662,7 @@ file_exists( std::string const & file_name )
 
 // File Exists?
 bool
-file_exists( c_cstring const file_name )
+file_exists( char const * const file_name )
 {
 	struct stat file_stat;
 	return ( stat( file_name, &file_stat ) == 0 );
@@ -720,7 +677,7 @@ file_openable( std::string const & file_name )
 
 // File Openable?
 bool
-file_openable( c_cstring const file_name )
+file_openable( char const * const file_name )
 {
 	return std::ifstream( file_name ).good();
 }

@@ -13,7 +13,7 @@
 ! Plant:    None.
 !
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,4;
 
@@ -21,7 +21,7 @@
     BUILDING #1,             !- Name
     0.0000000E+00,           !- North Axis {deg}
     Suburbs,                 !- Terrain
-    3.9999999E-02,           !- Loads Convergence Tolerance Value
+    3.9999999E-02,           !- Loads Convergence Tolerance Value {W}
     0.2500000,               !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -40,7 +40,7 @@
     -7.00,                   !- Time Zone {hr}
     1712.00;                 !- Elevation {m}
 
- ! CEDAR_CITY_UT_USA Annual Heating 99%, MaxDB=-12.8°C
+ ! CEDAR_CITY_UT_USA Annual Heating 99%, MaxDB=-12.8Â°C
 
   SizingPeriod:DesignDay,
     CEDAR_CITY Ann Htg 99% Condns DB,  !- Name
@@ -70,7 +70,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
- ! CEDAR_CITY_UT_USA Annual Cooling (DB=>MWB) 1%, MaxDB=32.9°C MWB=14.8°C
+ ! CEDAR_CITY_UT_USA Annual Cooling (DB=>MWB) 1%, MaxDB=32.9Â°C MWB=14.8Â°C
 
   SizingPeriod:DesignDay,
     CEDAR_CITY Ann Clg 1% Condns DB=>MWB,  !- Name
@@ -101,11 +101,13 @@
     1.00;                    !- Sky Clearness
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -425,7 +427,6 @@
     Zn001:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -521,7 +522,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -662,13 +662,11 @@
 
   Branch,
     Air Loop Main Branch,    !- Name
-    1.3,                     !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Fan:ConstantVolume,      !- Component 1 Object Type
     Supply Fan 1,            !- Component 1 Name
     Air Loop Inlet Node,     !- Component 1 Inlet Node Name
-    Air Loop Outlet Node,    !- Component 1 Outlet Node Name
-    ACTIVE;                  !- Component 1 Branch Control Type
+    Air Loop Outlet Node;    !- Component 1 Outlet Node Name
 
   AirLoopHVAC:SupplyPath,
     TrombeSupplyPath,        !- Name
@@ -688,7 +686,7 @@
   AirLoopHVAC:ZoneSplitter,
     Zone Supply Air Splitter,!- Name
     Trombe Plenum Outlet Node,  !- Inlet Node Name
-    Zone 1 Inlet Node;       !- Outlet 1 Node Name
+    Zone 1 Inlet Node ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     TrombeReturnPath,        !- Name
@@ -707,7 +705,7 @@
     Zone 1 Inlets,           !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Zone 1 Node,             !- Zone Air Node Name
-    Zone 1 Outlet Node;      !- Zone Return Air Node Name
+    Zone 1 Outlet Node;      !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Zone 1 Inlets,           !- Name
@@ -715,16 +713,31 @@
 
   ZoneHVAC:EquipmentList,
     Zone 1 Equipment,        !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Zone 1 Direct Air,       !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Zone 1 Direct Air ADU,   !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Zone 1 Direct Air,       !- Name
     FanSchedule,             !- Availability Schedule Name
-    Zone 1 Inlet Node,       !- Zone Supply Air Node Name
-    0.1;                     !- Maximum Air Flow Rate {m3/s}
+    Zone 1 Inlet Node ATInlet,  !- Air Inlet Node Name
+    Zone 1 Inlet Node,       !- Air Outlet Node Name
+    0.1,                     !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Zone 1 Direct Air ADU,   !- Name
+    Zone 1 Inlet Node,       !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Zone 1 Direct Air,       !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   Fan:ConstantVolume,
     Supply Fan 1,            !- Name

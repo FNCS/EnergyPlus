@@ -8,8 +8,8 @@
 !
 ! Location:                Colorado Springs, CO
 !
-! Design Days:             COLORADO_SPRGS_CO_USA Annual Heating 99.6%, MaxDB=-18.4캜
-!                          COLORADO_SPRGS_CO_USA Annual Cooling (DB=>MWB) .4%, MaxDB=32.1캜 MWB=14.6캜
+! Design Days:             COLORADO_SPRGS_CO_USA Annual Heating 99.6%, MaxDB=-18.4째C
+!                          COLORADO_SPRGS_CO_USA Annual Cooling (DB=>MWB) .4%, MaxDB=32.1째C MWB=14.6째C
 !
 ! Run Period (Weather File): 5/1 through 5/10, COLORADO_SPRGS_CO_USA TMY2
 !
@@ -101,7 +101,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,4;
 
@@ -109,7 +109,7 @@
     PSI HOUSE DORM AND OFFICES,  !- Name
     36.87000,                !- North Axis {deg}
     Suburbs,                 !- Terrain
-    3.9999999E-02,           !- Loads Convergence Tolerance Value
+    3.9999999E-02,           !- Loads Convergence Tolerance Value {W}
     0.4000000,               !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -129,12 +129,14 @@
     Yes;                     !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     5,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     5,                       !- End Month
     10,                      !- End Day of Month
-    UseWeatherFile,          !- Day of Week for Start Day
+    ,                        !- End Year
+    ,                        !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
@@ -152,10 +154,10 @@
  !  Data Source=ASHRAE 2005 Annual Design Conditions
  ! Using Design Conditions from "Climate Design Data 2005 ASHRAE Handbook"
  ! COLORADO_SPRGS_CO_USA Extreme Annual Wind Speeds, 1%=12.4m/s, 2.5%=10.9m/s, 5%=9.2m/s
- ! COLORADO_SPRGS_CO_USA Extreme Annual Temperatures, Max Drybulb=34.8캜 Min Drybulb=-22.6캜
+ ! COLORADO_SPRGS_CO_USA Extreme Annual Temperatures, Max Drybulb=34.8째C Min Drybulb=-22.6째C
  ! COLORADO_SPRGS_CO_USA Annual Heating Design Conditions Wind Speed=2.8m/s Wind Dir=20
  ! Coldest Month=January
- ! COLORADO_SPRGS_CO_USA Annual Heating 99.6%, MaxDB=-18.4캜
+ ! COLORADO_SPRGS_CO_USA Annual Heating 99.6%, MaxDB=-18.4째C
 
   SizingPeriod:DesignDay,
     COLORADO_SPRGS Ann Htg 99.6% Condns DB,  !- Name
@@ -187,7 +189,7 @@
 
  ! COLORADO_SPRGS Annual Cooling Design Conditions Wind Speed=5.3m/s Wind Dir=180
  ! Hottest Month=July
- ! COLORADO_SPRGS_CO_USA Annual Cooling (DB=>MWB) .4%, MaxDB=32.1캜 MWB=14.6캜
+ ! COLORADO_SPRGS_CO_USA Annual Cooling (DB=>MWB) .4%, MaxDB=32.1째C MWB=14.6째C
 
   SizingPeriod:DesignDay,
     COLORADO_SPRGS Ann Clg .4% Condns DB=>MWB,  !- Name
@@ -616,7 +618,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     5857.501,                !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000000E+00,           !- Fraction Latent
     0.3000000,               !- Fraction Radiant
     0.0000000E+00;           !- Fraction Lost
@@ -636,25 +638,29 @@
     0.0000000E+00;           !- Velocity Squared Term Coefficient
 
   Daylighting:Controls,
+    PSI FOYER_DaylCtrl,      !- Name
     PSI FOYER,               !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    7.7,                     !- X-Coordinate of First Reference Point {m}
-    -1.4,                    !- Y-Coordinate of First Reference Point {m}
-    0.9,                     !- Z-Coordinate of First Reference Point {m}
-    0.0,                     !- X-Coordinate of Second Reference Point {m}
-    0.0,                     !- Y-Coordinate of Second Reference Point {m}
-    0.8,                     !- Z-Coordinate of Second Reference Point {m}
-    1.0,                     !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    500.,                    !- Illuminance Setpoint at First Reference Point {lux}
-    500,                     !- Illuminance Setpoint at Second Reference Point {lux}
-    1,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Continuous,              !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    1,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    PSI FOYER_DaylRefPt1,    !- Glare Calculation Daylighting Reference Point Name
     180.0,                   !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     22,                      !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    1,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    PSI FOYER_DaylRefPt1,    !- Daylighting Reference Point 1 Name
+    1.0,                     !- Fraction of Zone Controlled by Reference Point 1
+    500.;                    !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    PSI FOYER_DaylRefPt1,    !- Name
+    PSI FOYER,               !- Zone Name
+    7.7,                     !- X-Coordinate of Reference Point {m}
+    -1.4,                    !- Y-Coordinate of Reference Point {m}
+    0.9;                     !- Z-Coordinate of Reference Point {m}
 
   People,
     DORM ROOMS AND COMMON AREAS,  !- Name
@@ -711,7 +717,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     29287.51,                !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000000E+00,           !- Fraction Latent
     0.3000000,               !- Fraction Radiant
     0.0000000E+00;           !- Fraction Lost
@@ -731,25 +737,29 @@
     0.0000000E+00;           !- Velocity Squared Term Coefficient
 
   Daylighting:Controls,
+    DORM ROOMS AND COMMON AREAS_DaylCtrl,  !- Name
     DORM ROOMS AND COMMON AREAS,  !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    17.56,                   !- X-Coordinate of First Reference Point {m}
-    10.08,                   !- Y-Coordinate of First Reference Point {m}
-    0.9,                     !- Z-Coordinate of First Reference Point {m}
-    0.0,                     !- X-Coordinate of Second Reference Point {m}
-    0.0,                     !- Y-Coordinate of Second Reference Point {m}
-    0.8,                     !- Z-Coordinate of Second Reference Point {m}
-    1.0,                     !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    500.,                    !- Illuminance Setpoint at First Reference Point {lux}
-    500,                     !- Illuminance Setpoint at Second Reference Point {lux}
-    1,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Continuous,              !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    1,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    DORM ROOMS AND COMMON AREAS_DaylRefPt1,  !- Glare Calculation Daylighting Reference Point Name
     180.0,                   !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     22,                      !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    1,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    DORM ROOMS AND COMMON AREAS_DaylRefPt1,  !- Daylighting Reference Point 1 Name
+    1.0,                     !- Fraction of Zone Controlled by Reference Point 1
+    500.;                    !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    DORM ROOMS AND COMMON AREAS_DaylRefPt1,  !- Name
+    DORM ROOMS AND COMMON AREAS,  !- Zone Name
+    17.56,                   !- X-Coordinate of Reference Point {m}
+    10.08,                   !- Y-Coordinate of Reference Point {m}
+    0.9;                     !- Z-Coordinate of Reference Point {m}
 
   People,
     Office Zones with People,!- Name
@@ -806,7 +816,7 @@
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
     197,                     !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000000E+00,           !- Fraction Latent
     0.3000000,               !- Fraction Radiant
     0.0000000E+00;           !- Fraction Lost
@@ -826,73 +836,86 @@
     0.0000000E+00;           !- Velocity Squared Term Coefficient
 
   Daylighting:Controls,
+    LEFT FORK_DaylCtrl,      !- Name
     LEFT FORK,               !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    22.07,                   !- X-Coordinate of First Reference Point {m}
-    31.46,                   !- Y-Coordinate of First Reference Point {m}
-    0.9,                     !- Z-Coordinate of First Reference Point {m}
-    0.0,                     !- X-Coordinate of Second Reference Point {m}
-    0.0,                     !- Y-Coordinate of Second Reference Point {m}
-    0.8,                     !- Z-Coordinate of Second Reference Point {m}
-    1.0,                     !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    500.,                    !- Illuminance Setpoint at First Reference Point {lux}
-    500,                     !- Illuminance Setpoint at Second Reference Point {lux}
-    1,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Continuous,              !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    1,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    LEFT FORK_DaylRefPt1,    !- Glare Calculation Daylighting Reference Point Name
     180.0,                   !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     22,                      !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    1,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    LEFT FORK_DaylRefPt1,    !- Daylighting Reference Point 1 Name
+    1.0,                     !- Fraction of Zone Controlled by Reference Point 1
+    500.;                    !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    LEFT FORK_DaylRefPt1,    !- Name
+    LEFT FORK,               !- Zone Name
+    22.07,                   !- X-Coordinate of Reference Point {m}
+    31.46,                   !- Y-Coordinate of Reference Point {m}
+    0.9;                     !- Z-Coordinate of Reference Point {m}
 
   Daylighting:Controls,
+    MIDDLE FORK_DaylCtrl,    !- Name
     MIDDLE FORK,             !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    31.22,                   !- X-Coordinate of First Reference Point {m}
-    28.41,                   !- Y-Coordinate of First Reference Point {m}
-    0.9,                     !- Z-Coordinate of First Reference Point {m}
-    0.0,                     !- X-Coordinate of Second Reference Point {m}
-    0.0,                     !- Y-Coordinate of Second Reference Point {m}
-    0.8,                     !- Z-Coordinate of Second Reference Point {m}
-    1.0,                     !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    500.,                    !- Illuminance Setpoint at First Reference Point {lux}
-    500,                     !- Illuminance Setpoint at Second Reference Point {lux}
-    1,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Continuous,              !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    1,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    MIDDLE FORK_DaylRefPt1,  !- Glare Calculation Daylighting Reference Point Name
     180.0,                   !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     22,                      !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    1,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    MIDDLE FORK_DaylRefPt1,  !- Daylighting Reference Point 1 Name
+    1.0,                     !- Fraction of Zone Controlled by Reference Point 1
+    500.;                    !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    MIDDLE FORK_DaylRefPt1,  !- Name
+    MIDDLE FORK,             !- Zone Name
+    31.22,                   !- X-Coordinate of Reference Point {m}
+    28.41,                   !- Y-Coordinate of Reference Point {m}
+    0.9;                     !- Z-Coordinate of Reference Point {m}
 
   Daylighting:Controls,
+    RIGHT FORK_DaylCtrl,     !- Name
     RIGHT FORK,              !- Zone Name
-    1,                       !- Total Daylighting Reference Points
-    36.7,                    !- X-Coordinate of First Reference Point {m}
-    20.48,                   !- Y-Coordinate of First Reference Point {m}
-    0.9,                     !- Z-Coordinate of First Reference Point {m}
-    0.0,                     !- X-Coordinate of Second Reference Point {m}
-    0.0,                     !- Y-Coordinate of Second Reference Point {m}
-    0.8,                     !- Z-Coordinate of Second Reference Point {m}
-    1.0,                     !- Fraction of Zone Controlled by First Reference Point
-    0.0,                     !- Fraction of Zone Controlled by Second Reference Point
-    500.,                    !- Illuminance Setpoint at First Reference Point {lux}
-    500,                     !- Illuminance Setpoint at Second Reference Point {lux}
-    1,                       !- Lighting Control Type
+    SplitFlux,               !- Daylighting Method
+    ,                        !- Availability Schedule Name
+    Continuous,              !- Lighting Control Type
+    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
+    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
+    1,                       !- Number of Stepped Control Steps
+    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    RIGHT FORK_DaylRefPt1,   !- Glare Calculation Daylighting Reference Point Name
     180.0,                   !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
     22,                      !- Maximum Allowable Discomfort Glare Index
-    0.3,                     !- Minimum Input Power Fraction for Continuous Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous Dimming Control
-    1,                       !- Number of Stepped Control Steps
-    1.0;                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
+    ,                        !- DElight Gridding Resolution {m2}
+    RIGHT FORK_DaylRefPt1,   !- Daylighting Reference Point 1 Name
+    1.0,                     !- Fraction of Zone Controlled by Reference Point 1
+    500.;                    !- Illuminance Setpoint at Reference Point 1 {lux}
+
+  Daylighting:ReferencePoint,
+    RIGHT FORK_DaylRefPt1,   !- Name
+    RIGHT FORK,              !- Zone Name
+    36.7,                    !- X-Coordinate of Reference Point {m}
+    20.48,                   !- Y-Coordinate of Reference Point {m}
+    0.9;                     !- Z-Coordinate of Reference Point {m}
 
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     CounterClockWise,        !- Vertex Entry Direction
     World,                   !- Coordinate System
-    World;                   !- Daylighting Reference Point Coordinate System
+    World,                   !- Daylighting Reference Point Coordinate System
+    World;                   !- Rectangular Surface Coordinate System
 
   BuildingSurface:Detailed,
     Zn001:Wall001,           !- Name
@@ -997,7 +1020,6 @@
     Zn001:Roof001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.1000005,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1017,10 +1039,10 @@
     WindExposed,             !- Wind Exposure
     0.5000000,               !- View Factor to Ground
     4,                       !- Number of Vertices
-    16.24583,-4.754909,6.096000,  !- X,Y,Z ==> Vertex 1 {m}
-    16.24583,-4.754909,0.0000000E+00,  !- X,Y,Z ==> Vertex 2 {m}
-    31.60779,15.72763,0.0000000E+00,  !- X,Y,Z ==> Vertex 3 {m}
-    31.60779,15.72763,6.096000;  !- X,Y,Z ==> Vertex 4 {m}
+    16.33727,-4.632988,6.096000,  !- X,Y,Z ==> Vertex 1 {m}
+    16.33727,-4.632988,0.0000000E+00,  !- X,Y,Z ==> Vertex 2 {m}
+    31.69923,15.84955,0.0000000E+00,  !- X,Y,Z ==> Vertex 3 {m}
+    31.69923,15.84955,6.096000;  !- X,Y,Z ==> Vertex 4 {m}
 
   FenestrationSurface:Detailed,
     Zn002:Wall001:Win001,    !- Name
@@ -1029,7 +1051,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1045,7 +1066,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1061,7 +1081,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1077,7 +1096,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1093,7 +1111,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1109,7 +1126,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1125,7 +1141,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1141,7 +1156,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1157,7 +1171,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1173,7 +1186,6 @@
     Zn002:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1205,7 +1217,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1221,7 +1232,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1237,7 +1247,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1253,7 +1262,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1269,7 +1277,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1285,7 +1292,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1301,7 +1307,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1317,7 +1322,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1333,7 +1337,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1349,7 +1352,6 @@
     Zn002:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1369,10 +1371,10 @@
     NoWind,                  !- Wind Exposure
     0.5000000,               !- View Factor to Ground
     4,                       !- Number of Vertices
-    3.566169,4.754874,6.096000,  !- X,Y,Z ==> Vertex 1 {m}
-    3.566169,4.754874,0.0000000E+00,  !- X,Y,Z ==> Vertex 2 {m}
-    16.24583,-4.754908,0.0000000E+00,  !- X,Y,Z ==> Vertex 3 {m}
-    16.24583,-4.754908,6.096000;  !- X,Y,Z ==> Vertex 4 {m}
+    3.657609,4.876794,6.096000,  !- X,Y,Z ==> Vertex 1 {m}
+    3.657609,4.876794,0.0000000E+00,  !- X,Y,Z ==> Vertex 2 {m}
+    16.33727,-4.632988,0.0000000E+00,  !- X,Y,Z ==> Vertex 3 {m}
+    16.33727,-4.632988,6.096000;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
     Zn002:Wall004,           !- Name
@@ -1477,7 +1479,6 @@
     Zn002:Roof001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1500,7 +1501,6 @@
     Zn002:Roof001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1535,13 +1535,13 @@
   InternalMass,
     Zn002:IntM001,           !- Name
     INTERIOR,                !- Construction Name
-    DORM ROOMS AND COMMON AREAS,  !- Zone Name
+    DORM ROOMS AND COMMON AREAS,  !- Zone or ZoneList Name
     408.7734;                !- Surface Area {m2}
 
   InternalMass,
     Zn002:IntM002,           !- Name
     PARTITION02,             !- Construction Name
-    DORM ROOMS AND COMMON AREAS,  !- Zone Name
+    DORM ROOMS AND COMMON AREAS,  !- Zone or ZoneList Name
     371.6122;                !- Surface Area {m2}
 
   BuildingSurface:Detailed,
@@ -1583,7 +1583,6 @@
     Zn003:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1615,7 +1614,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1631,7 +1629,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1647,7 +1644,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1663,7 +1659,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1679,7 +1674,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1695,7 +1689,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1711,7 +1704,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1727,7 +1719,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1743,7 +1734,6 @@
     Zn003:Wall003,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1839,7 +1829,6 @@
     Zn004:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1935,7 +1924,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1951,7 +1939,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1967,7 +1954,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1983,7 +1969,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -1999,7 +1984,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -2015,7 +1999,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -2031,7 +2014,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -2047,7 +2029,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -2063,7 +2044,6 @@
     Zn005:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -2095,7 +2075,6 @@
     Zn005:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.000000,                !- Multiplier
     4,                       !- Number of Vertices
@@ -2219,20 +2198,24 @@
     PSI FOYER INLETS,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     PSI FOYER NODE,          !- Zone Air Node Name
-    PSI FOYER OUTLET;        !- Zone Return Air Node Name
+    PSI FOYER OUTLET;        !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     PSI FOYER EQUIPMENT,     !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     PSI FOYER PURCHASED AIR, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     PSI FOYER PURCHASED AIR, !- Name
     ,                        !- Availability Schedule Name
     PSI FOYER INLETS,        !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -2292,20 +2275,24 @@
     DORM ROOMS AND COMMON AREAS INLETS,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     DORM ROOMS AND COMMON AREAS NODE,  !- Zone Air Node Name
-    DORM ROOMS AND COMMON AREAS OUTLET;  !- Zone Return Air Node Name
+    DORM ROOMS AND COMMON AREAS OUTLET;  !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     DORM ROOMS AND COMMON AREAS EQUIPMENT,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     DORM ROOMS AND COMMON AREAS PURCHASED AIR,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     DORM ROOMS AND COMMON AREAS PURCHASED AIR,  !- Name
     ,                        !- Availability Schedule Name
     DORM ROOMS AND COMMON AREAS INLETS,  !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -2365,20 +2352,24 @@
     LEFT FORK INLETS,        !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     LEFT FORK NODE,          !- Zone Air Node Name
-    LEFT FORK OUTLET;        !- Zone Return Air Node Name
+    LEFT FORK OUTLET;        !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     LEFT FORK EQUIPMENT,     !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     LEFT FORK PURCHASED AIR, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     LEFT FORK PURCHASED AIR, !- Name
     ,                        !- Availability Schedule Name
     LEFT FORK INLETS,        !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -2438,20 +2429,24 @@
     MIDDLE FORK INLETS,      !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MIDDLE FORK NODE,        !- Zone Air Node Name
-    MIDDLE FORK OUTLET;      !- Zone Return Air Node Name
+    MIDDLE FORK OUTLET;      !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     MIDDLE FORK EQUIPMENT,   !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     MIDDLE FORK PURCHASED AIR,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     MIDDLE FORK PURCHASED AIR,  !- Name
     ,                        !- Availability Schedule Name
     MIDDLE FORK INLETS,      !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -2511,20 +2506,24 @@
     RIGHT FORK INLETS,       !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     RIGHT FORK NODE,         !- Zone Air Node Name
-    RIGHT FORK OUTLET;       !- Zone Return Air Node Name
+    RIGHT FORK OUTLET;       !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     RIGHT FORK EQUIPMENT,    !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     RIGHT FORK PURCHASED AIR,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     RIGHT FORK PURCHASED AIR,!- Name
     ,                        !- Availability Schedule Name
     RIGHT FORK INLETS,       !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}

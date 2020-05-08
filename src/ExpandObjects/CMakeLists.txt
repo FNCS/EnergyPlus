@@ -4,9 +4,13 @@ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products"
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../Products" )
 
-SET(SRC epfilter.f90)
- 
-SET(STATIC_EXE FALSE)
+if(WIN32)
+  configure_file( ExpandObjects.rc.in "${CMAKE_CURRENT_BINARY_DIR}/ExpandObjects.rc" )
+endif()
+
+set(SRC epfilter.f90) 
+
+set(STATIC_EXE FALSE)
 
 if(APPLE)
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
@@ -28,6 +32,7 @@ elseif(UNIX)
     set(STATIC_EXE TRUE)
   endif()
 else()  # Windows
+  set(STATIC_EXE TRUE)
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
     # Set release flags to be empty
     set(CMAKE_Fortran_FLAGS_RELEASE "")
@@ -41,6 +46,12 @@ else()  # Windows
 endif()
 
 set(SKIP_BUILD_RPATH true)
+if (APPLE OR UNIX)
+  add_executable( ExpandObjects ${SRC} )
+else()  # windows
+  add_executable( ExpandObjects ${SRC} "${CMAKE_CURRENT_BINARY_DIR}/ExpandObjects.rc" )
+endif()
+set(SKIP_BUILD_RPATH TRUE)
 if (APPLE OR UNIX)
   add_executable( ExpandObjects ${SRC} )
 else()  # windows

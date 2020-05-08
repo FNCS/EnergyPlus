@@ -59,7 +59,7 @@
 !***** products, services or commercial entities. *****
 !!!__________________________________________
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,4;
 
@@ -71,18 +71,19 @@
     No;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     5,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     5,                       !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    Yes,                     !- Use Weather File Snow Indicators
-    1.0000;                  !- Number of Times Runperiod to be Repeated
+    Yes;                     !- Use Weather File Snow Indicators
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -102,8 +103,9 @@
     8;                       !- Maximum Plant Iterations
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    7,                       !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    7,                       !- Shading Calculation Update Frequency
     15000;                   !- Maximum Figures in Shadow Overlap Calculations
 
   GlobalGeometryRules,
@@ -116,7 +118,7 @@
     Benchmark Large Office New V1.1_3.1,  !- Name
     0.0000,                  !- North Axis {deg}
     City,                    !- Terrain
-    0.0400,                  !- Loads Convergence Tolerance Value
+    0.0400,                  !- Loads Convergence Tolerance Value {W}
     0.2000,                  !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -207,7 +209,7 @@
     9.69,                    !- Annual Average Outdoor Air Temperature {C}
     28.10;                   !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
 
-! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6°C
+! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Htg 99.6% Condns DB,  !- Name
@@ -237,7 +239,7 @@
     ,                        !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
-! CHICAGO_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2°C MWB=23.8°C
+! CHICAGO_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2Â°C MWB=23.8Â°C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Clg .4% Condns DB=>MWB,  !- Name
@@ -1108,24 +1110,6 @@
     ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
 
   Construction,
-    INT-FLOOR-SLAB,          !- Name
-    Std MAT-CC05 4  MW CONCRETE;  !- Outside Layer
-
-  ComponentCost:LineItem,
-    Interior Floor Slab,     !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    INT-FLOOR-SLAB,          !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    35,                      !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
     DropCeiling,             !- Name
     Std AC02;                !- Outside Layer
 
@@ -1137,141 +1121,6 @@
     ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     10,                      !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    INT-CEILING_SIMPLE,      !- Name
-    PW05_Plywood3/4_in;      !- Outside Layer
-
-  Construction,
-    Raised-Floor-TopSide,    !- Name
-    Std 1.5  MW CONCRETE,    !- Outside Layer
-    Std CP02 CARPET PAD;     !- Layer 2
-
-  Construction,
-    Raised-Floor-UnderSide,  !- Name
-    Std CP02 CARPET PAD,     !- Outside Layer
-    Std 1.5  MW CONCRETE;    !- Layer 2
-
-  Construction,
-    TDD_Pipe,                !- Name
-    Std Very High Reflectivity Surface;  !- Outside Layer
-
-  Construction,
-    TDD_Dome,                !- Name
-    Std Clear Acrylic Plastic;  !- Outside Layer
-
-  Construction,
-    TDD_Diffuser,            !- Name
-    Std Diffusing Acrylic Plastic;  !- Outside Layer
-
-  Construction,
-    Sloped_Metal_Roof,       !- Name
-    Std Steel_Brown_Regular, !- Outside Layer
-    Std PW05;                !- Layer 2
-
-  ComponentCost:LineItem,
-    Sloped Metal Roof,       !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Sloped_Metal_Roof,       !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    Gable_Wall,              !- Name
-    Std PW05;                !- Outside Layer
-
-  ComponentCost:LineItem,
-    Gable Wall,              !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Gable_Wall,              !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    AIR-WALL,                !- Name
-    MAT-AIR-WALL;            !- Outside Layer
-
-  ComponentCost:LineItem,
-    Air Wall,                !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    AIR-WALL,                !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    Std Swinging Door_con,   !- Name
-    Std Opaque Door panel_con;  !- Outside Layer
-
-  ComponentCost:LineItem,
-    Swinging Door Conditioned,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Std Swinging Door_con,   !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    Std Swinging Door_semi,  !- Name
-    Std Opaque Door panel_semi;  !- Outside Layer
-
-  ComponentCost:LineItem,
-    Swinging Door Semi-conditioned,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Std Swinging Door_semi,  !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ;                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-
-  Construction,
-    Std Overhead Door,       !- Name
-    Std Overhead Door Panel; !- Outside Layer
-
-  ComponentCost:LineItem,
-    Overhead Door,           !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Std Overhead Door,       !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1,                       !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
     ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
     ,                        !- Cost per Volume {$/m3}
@@ -1344,25 +1193,6 @@
     ,                        !- Type
     Construction,            !- Line Item Type
     std_window_UValue_3.237_SHGC_0.39_VT_0.495_west,  !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    215.9700,                !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    std_window_UValue_3.919_SHGC_0.49_VT_0.622,  !- Name
-    Theoretical Glass [81];  !- Outside Layer
-
-  ComponentCost:LineItem,
-    SkylightConst:std_window_UValue_3.919_SHGC_0.49_VT_0.622,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    std_window_UValue_3.919_SHGC_0.49_VT_0.622,  !- Item Name
     ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     215.9700,                !- Cost per Area {$/m2}
@@ -1449,69 +1279,6 @@
     ,                        !- Object End-Use Key
     ,                        !- Cost per Each {$}
     24.8600,                 !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    Mass_R-8.3 ci_ExposedFloor,  !- Name
-    Floor Insulation [2],    !- Outside Layer
-    MAT-CC05 8 HW CONCRETE,  !- Layer 2
-    CP02 CARPET PAD;         !- Layer 3
-
-  ComponentCost:LineItem,
-    exposed-floor:Mass_R-8.3 ci_ExposedFloor,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Mass_R-8.3 ci_ExposedFloor,  !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    34.6727,                 !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    Swinging_NR_door,        !- Name
-    METAL Door Medium 18Ga_1,!- Outside Layer
-    AIR,                     !- Layer 2
-    METAL Door Medium 18Ga_2;!- Layer 3
-
-  ComponentCost:LineItem,
-    door:Swinging_NR_door,   !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Swinging_NR_door,        !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1.0000,                  !- Cost per Area {$/m2}
-    ,                        !- Cost per Unit of Output Capacity {$/kW}
-    ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
-    ,                        !- Cost per Volume {$/m3}
-    ,                        !- Cost per Volume Rate {$/(m3/s)}
-    ,                        !- Cost per Energy per Temperature Difference {$/(W/K)}
-    ;                        !- Quantity {dimensionless}
-
-  Construction,
-    Non-Swinging_NR_door,    !- Name
-    METAL Door Medium 18Ga_1,!- Outside Layer
-    AIR [1],                 !- Layer 2
-    METAL Door Medium 18Ga_2;!- Layer 3
-
-  ComponentCost:LineItem,
-    non-swinging-door:Non-Swinging_NR_door,  !- Name
-    ,                        !- Type
-    Construction,            !- Line Item Type
-    Non-Swinging_NR_door,    !- Item Name
-    ,                        !- Object End-Use Key
-    ,                        !- Cost per Each {$}
-    1.0000,                  !- Cost per Area {$/m2}
     ,                        !- Cost per Unit of Output Capacity {$/kW}
     ,                        !- Cost per Unit of Output Capacity per COP {$/kW}
     ,                        !- Cost per Volume {$/m3}
@@ -1697,7 +1464,7 @@
   InternalMass,
     Basement_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    Basement,                !- Zone Name
+    Basement,                !- Zone or ZoneList Name
     7126.2120;               !- Surface Area {m2}
 
   People,
@@ -1819,7 +1586,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Basement,        !- Name
@@ -1846,7 +1618,7 @@
     Basement Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Basement Air Node,       !- Zone Air Node Name
-    Basement Return Air Node Name;  !- Zone Return Air Node Name
+    Basement Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Basement Inlet Nodes,    !- Name
@@ -1854,10 +1626,13 @@
 
   ZoneHVAC:EquipmentList,
     Basement Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Basement VAV Box,        !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Basement VAV Box,        !- Name
@@ -2016,7 +1791,7 @@
   InternalMass,
     Core_bottom_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Core_bottom,             !- Zone Name
+    Core_bottom,             !- Zone or ZoneList Name
     5064.6464;               !- Surface Area {m2}
 
   People,
@@ -2138,7 +1913,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Core_bottom,     !- Name
@@ -2165,7 +1945,7 @@
     Core_bottom Inlet Nodes, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Core_bottom Air Node,    !- Zone Air Node Name
-    Core_bottom Return Air Node Name;  !- Zone Return Air Node Name
+    Core_bottom Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Core_bottom Inlet Nodes, !- Name
@@ -2173,10 +1953,13 @@
 
   ZoneHVAC:EquipmentList,
     Core_bottom Equipment,   !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Core_bottom VAV Box,     !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Core_bottom VAV Box,     !- Name
@@ -2390,7 +2173,7 @@
   InternalMass,
     Core_mid_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    Core_mid,                !- Zone Name
+    Core_mid,                !- Zone or ZoneList Name
     5064.6464;               !- Surface Area {m2}
 
   People,
@@ -2512,7 +2295,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Core_mid,        !- Name
@@ -2539,7 +2327,7 @@
     Core_mid Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Core_mid Air Node,       !- Zone Air Node Name
-    Core_mid Return Air Node Name;  !- Zone Return Air Node Name
+    Core_mid Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Core_mid Inlet Nodes,    !- Name
@@ -2547,10 +2335,13 @@
 
   ZoneHVAC:EquipmentList,
     Core_mid Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Core_mid VAV Box,        !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Core_mid VAV Box,        !- Name
@@ -2764,7 +2555,7 @@
   InternalMass,
     Core_top_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    Core_top,                !- Zone Name
+    Core_top,                !- Zone or ZoneList Name
     5064.6464;               !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -2915,7 +2706,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Core_top,        !- Name
@@ -2942,7 +2738,7 @@
     Core_top Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Core_top Air Node,       !- Zone Air Node Name
-    Core_top Return Air Node Name;  !- Zone Return Air Node Name
+    Core_top Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Core_top Inlet Nodes,    !- Name
@@ -2950,10 +2746,13 @@
 
   ZoneHVAC:EquipmentList,
     Core_top Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Core_top VAV Box,        !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Core_top VAV Box,        !- Name
@@ -3091,7 +2890,6 @@
     Perimeter_bot_ZN_3_Wall_North,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3183,7 +2981,7 @@
   InternalMass,
     Perimeter_bot_ZN_3_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_bot_ZN_3,      !- Zone Name
+    Perimeter_bot_ZN_3,      !- Zone or ZoneList Name
     626.8257;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -3334,7 +3132,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_bot_ZN_3,  !- Name
@@ -3361,7 +3164,7 @@
     Perimeter_bot_ZN_3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_bot_ZN_3 Air Node,  !- Zone Air Node Name
-    Perimeter_bot_ZN_3 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_bot_ZN_3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_bot_ZN_3 Inlet Nodes,  !- Name
@@ -3369,10 +3172,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_bot_ZN_3 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_bot_ZN_3 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_bot_ZN_3 VAV Box,  !- Name
@@ -3455,7 +3261,6 @@
     Perimeter_bot_ZN_2_Wall_East,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3547,7 +3352,7 @@
   InternalMass,
     Perimeter_bot_ZN_2_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_bot_ZN_2,      !- Zone Name
+    Perimeter_bot_ZN_2,      !- Zone or ZoneList Name
     403.9503;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -3698,7 +3503,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_bot_ZN_2,  !- Name
@@ -3725,7 +3535,7 @@
     Perimeter_bot_ZN_2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_bot_ZN_2 Air Node,  !- Zone Air Node Name
-    Perimeter_bot_ZN_2 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_bot_ZN_2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_bot_ZN_2 Inlet Nodes,  !- Name
@@ -3733,10 +3543,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_bot_ZN_2 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_bot_ZN_2 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_bot_ZN_2 VAV Box,  !- Name
@@ -3819,7 +3632,6 @@
     Perimeter_bot_ZN_1_Wall_South,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3911,7 +3723,7 @@
   InternalMass,
     Perimeter_bot_ZN_1_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_bot_ZN_1,      !- Zone Name
+    Perimeter_bot_ZN_1,      !- Zone or ZoneList Name
     626.8394;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -4062,7 +3874,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_bot_ZN_1,  !- Name
@@ -4089,7 +3906,7 @@
     Perimeter_bot_ZN_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_bot_ZN_1 Air Node,  !- Zone Air Node Name
-    Perimeter_bot_ZN_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_bot_ZN_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_bot_ZN_1 Inlet Nodes,  !- Name
@@ -4097,10 +3914,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_bot_ZN_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_bot_ZN_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_bot_ZN_1 VAV Box,  !- Name
@@ -4183,7 +4003,6 @@
     Perimeter_bot_ZN_4_Wall_West,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4275,7 +4094,7 @@
   InternalMass,
     Perimeter_bot_ZN_4_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_bot_ZN_4,      !- Zone Name
+    Perimeter_bot_ZN_4,      !- Zone or ZoneList Name
     403.9503;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -4426,7 +4245,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_bot_ZN_4,  !- Name
@@ -4453,7 +4277,7 @@
     Perimeter_bot_ZN_4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_bot_ZN_4 Air Node,  !- Zone Air Node Name
-    Perimeter_bot_ZN_4 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_bot_ZN_4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_bot_ZN_4 Inlet Nodes,  !- Name
@@ -4461,10 +4285,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_bot_ZN_4 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_bot_ZN_4 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_bot_ZN_4 VAV Box,  !- Name
@@ -4547,7 +4374,6 @@
     Perimeter_mid_ZN_3_Wall_North,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -4639,7 +4465,7 @@
   InternalMass,
     Perimeter_mid_ZN_3_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_mid_ZN_3,      !- Zone Name
+    Perimeter_mid_ZN_3,      !- Zone or ZoneList Name
     626.8257;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -4790,7 +4616,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_mid_ZN_3,  !- Name
@@ -4817,7 +4648,7 @@
     Perimeter_mid_ZN_3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_mid_ZN_3 Air Node,  !- Zone Air Node Name
-    Perimeter_mid_ZN_3 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_mid_ZN_3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_mid_ZN_3 Inlet Nodes,  !- Name
@@ -4825,10 +4656,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_mid_ZN_3 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_mid_ZN_3 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_mid_ZN_3 VAV Box,  !- Name
@@ -4911,7 +4745,6 @@
     Perimeter_mid_ZN_2_Wall_East,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -5003,7 +4836,7 @@
   InternalMass,
     Perimeter_mid_ZN_2_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_mid_ZN_2,      !- Zone Name
+    Perimeter_mid_ZN_2,      !- Zone or ZoneList Name
     403.9503;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -5154,7 +4987,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_mid_ZN_2,  !- Name
@@ -5181,7 +5019,7 @@
     Perimeter_mid_ZN_2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_mid_ZN_2 Air Node,  !- Zone Air Node Name
-    Perimeter_mid_ZN_2 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_mid_ZN_2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_mid_ZN_2 Inlet Nodes,  !- Name
@@ -5189,10 +5027,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_mid_ZN_2 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_mid_ZN_2 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_mid_ZN_2 VAV Box,  !- Name
@@ -5291,7 +5132,6 @@
     Perimeter_mid_ZN_1_Wall_South,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -5367,7 +5207,7 @@
   InternalMass,
     Perimeter_mid_ZN_1_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_mid_ZN_1,      !- Zone Name
+    Perimeter_mid_ZN_1,      !- Zone or ZoneList Name
     626.8394;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -5518,7 +5358,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_mid_ZN_1,  !- Name
@@ -5545,7 +5390,7 @@
     Perimeter_mid_ZN_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_mid_ZN_1 Air Node,  !- Zone Air Node Name
-    Perimeter_mid_ZN_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_mid_ZN_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_mid_ZN_1 Inlet Nodes,  !- Name
@@ -5553,10 +5398,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_mid_ZN_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_mid_ZN_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_mid_ZN_1 VAV Box,  !- Name
@@ -5639,7 +5487,6 @@
     Perimeter_mid_ZN_4_Wall_West,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -5731,7 +5578,7 @@
   InternalMass,
     Perimeter_mid_ZN_4_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_mid_ZN_4,      !- Zone Name
+    Perimeter_mid_ZN_4,      !- Zone or ZoneList Name
     403.9503;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -5882,7 +5729,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_mid_ZN_4,  !- Name
@@ -5909,7 +5761,7 @@
     Perimeter_mid_ZN_4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_mid_ZN_4 Air Node,  !- Zone Air Node Name
-    Perimeter_mid_ZN_4 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_mid_ZN_4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_mid_ZN_4 Inlet Nodes,  !- Name
@@ -5917,10 +5769,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_mid_ZN_4 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_mid_ZN_4 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_mid_ZN_4 VAV Box,  !- Name
@@ -6003,7 +5858,6 @@
     Perimeter_top_ZN_3_Wall_North,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -6095,7 +5949,7 @@
   InternalMass,
     Perimeter_top_ZN_3_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_top_ZN_3,      !- Zone Name
+    Perimeter_top_ZN_3,      !- Zone or ZoneList Name
     626.8257;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -6246,7 +6100,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_top_ZN_3,  !- Name
@@ -6273,7 +6132,7 @@
     Perimeter_top_ZN_3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_top_ZN_3 Air Node,  !- Zone Air Node Name
-    Perimeter_top_ZN_3 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_top_ZN_3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_top_ZN_3 Inlet Nodes,  !- Name
@@ -6281,10 +6140,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_top_ZN_3 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_top_ZN_3 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_top_ZN_3 VAV Box,  !- Name
@@ -6367,7 +6229,6 @@
     Perimeter_top_ZN_2_Wall_East,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -6459,7 +6320,7 @@
   InternalMass,
     Perimeter_top_ZN_2_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_top_ZN_2,      !- Zone Name
+    Perimeter_top_ZN_2,      !- Zone or ZoneList Name
     403.9503;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -6610,7 +6471,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_top_ZN_2,  !- Name
@@ -6637,7 +6503,7 @@
     Perimeter_top_ZN_2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_top_ZN_2 Air Node,  !- Zone Air Node Name
-    Perimeter_top_ZN_2 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_top_ZN_2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_top_ZN_2 Inlet Nodes,  !- Name
@@ -6645,10 +6511,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_top_ZN_2 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_top_ZN_2 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_top_ZN_2 VAV Box,  !- Name
@@ -6731,7 +6600,6 @@
     Perimeter_top_ZN_1_Wall_South,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -6823,7 +6691,7 @@
   InternalMass,
     Perimeter_top_ZN_1_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_top_ZN_1,      !- Zone Name
+    Perimeter_top_ZN_1,      !- Zone or ZoneList Name
     626.8394;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -6974,7 +6842,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_top_ZN_1,  !- Name
@@ -7001,7 +6874,7 @@
     Perimeter_top_ZN_1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_top_ZN_1 Air Node,  !- Zone Air Node Name
-    Perimeter_top_ZN_1 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_top_ZN_1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_top_ZN_1 Inlet Nodes,  !- Name
@@ -7009,10 +6882,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_top_ZN_1 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_top_ZN_1 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_top_ZN_1 VAV Box,  !- Name
@@ -7095,7 +6971,6 @@
     Perimeter_top_ZN_4_Wall_West,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -7187,7 +7062,7 @@
   InternalMass,
     Perimeter_top_ZN_4_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    Perimeter_top_ZN_4,      !- Zone Name
+    Perimeter_top_ZN_4,      !- Zone or ZoneList Name
     403.9503;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -7338,7 +7213,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Perimeter_top_ZN_4,  !- Name
@@ -7365,7 +7245,7 @@
     Perimeter_top_ZN_4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Perimeter_top_ZN_4 Air Node,  !- Zone Air Node Name
-    Perimeter_top_ZN_4 Return Air Node Name;  !- Zone Return Air Node Name
+    Perimeter_top_ZN_4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Perimeter_top_ZN_4 Inlet Nodes,  !- Name
@@ -7373,10 +7253,13 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_top_ZN_4 Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Perimeter_top_ZN_4 VAV Box,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Perimeter_top_ZN_4 VAV Box,  !- Name
@@ -8151,17 +8034,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -8236,28 +8119,23 @@
 
   Branch,
     VAV_5 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV_5_OA,                !- Component 1 Name
     VAV_5 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     VAV_5_OA-VAV_5_CoolCNode,!- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     Coil:Cooling:Water,      !- Component 2 Object Type
     VAV_5_CoolC,             !- Component 2 Name
     VAV_5_OA-VAV_5_CoolCNode,!- Component 2 Inlet Node Name
     VAV_5_CoolC-VAV_5_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV_5_HeatC,             !- Component 3 Name
     VAV_5_CoolC-VAV_5_HeatCNode,  !- Component 3 Inlet Node Name
     VAV_5_HeatC-VAV_5_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV_5_Fan,               !- Component 4 Name
     VAV_5_HeatC-VAV_5_FanNode,  !- Component 4 Inlet Node Name
-    VAV_5 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    VAV_5 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     VAV_5_OA_Controllers,    !- Name
@@ -8523,17 +8401,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -8628,28 +8506,23 @@
 
   Branch,
     VAV_1 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV_1_OA,                !- Component 1 Name
     VAV_1 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     VAV_1_OA-VAV_1_CoolCNode,!- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     Coil:Cooling:Water,      !- Component 2 Object Type
     VAV_1_CoolC,             !- Component 2 Name
     VAV_1_OA-VAV_1_CoolCNode,!- Component 2 Inlet Node Name
     VAV_1_CoolC-VAV_1_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV_1_HeatC,             !- Component 3 Name
     VAV_1_CoolC-VAV_1_HeatCNode,  !- Component 3 Inlet Node Name
     VAV_1_HeatC-VAV_1_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV_1_Fan,               !- Component 4 Name
     VAV_1_HeatC-VAV_1_FanNode,  !- Component 4 Inlet Node Name
-    VAV_1 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    VAV_1 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     VAV_1_OA_Controllers,    !- Name
@@ -8918,17 +8791,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9023,28 +8896,23 @@
 
   Branch,
     VAV_2 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV_2_OA,                !- Component 1 Name
     VAV_2 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     VAV_2_OA-VAV_2_CoolCNode,!- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     Coil:Cooling:Water,      !- Component 2 Object Type
     VAV_2_CoolC,             !- Component 2 Name
     VAV_2_OA-VAV_2_CoolCNode,!- Component 2 Inlet Node Name
     VAV_2_CoolC-VAV_2_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV_2_HeatC,             !- Component 3 Name
     VAV_2_CoolC-VAV_2_HeatCNode,  !- Component 3 Inlet Node Name
     VAV_2_HeatC-VAV_2_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV_2_Fan,               !- Component 4 Name
     VAV_2_HeatC-VAV_2_FanNode,  !- Component 4 Inlet Node Name
-    VAV_2 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    VAV_2 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     VAV_2_OA_Controllers,    !- Name
@@ -9313,17 +9181,17 @@
     No,                      !- 100% Outdoor Air in Heating
     0.0085,                  !- Central Cooling Design Supply Air Humidity Ratio {kgWater/kgDryAir}
     0.008,                   !- Central Heating Design Supply Air Humidity Ratio {kgWater/kgDryAir}
-    DesignDay,               !- Cooling Design Air Flow Method
-    0.0,                     !- Cooling Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
-    DesignDay,               !- Heating Design Air Flow Method
-    0.0,                     !- Heating Design Air Flow Rate {m3/s}
-    ,                        !- Supply Air Flow Rate Per Floor Area During Heating Operation {m3/s-m2}
-    ,                        !- Fraction of Autosized Design Heating Supply Air Flow Rate
-    ,                        !- Fraction of Autosized Design Cooling Supply Air Flow Rate
-    ,                        !- Design Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+    DesignDay,               !- Cooling Supply Air Flow Rate Method
+    0.0,                     !- Cooling Supply Air Flow Rate {m3/s}
+    ,                        !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+    DesignDay,               !- Heating Supply Air Flow Rate Method
+    0.0,                     !- Heating Supply Air Flow Rate {m3/s}
+    ,                        !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+    ,                        !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+    ,                        !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+    ,                        !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
     CoolingDesignCapacity,   !- Cooling Design Capacity Method
@@ -9418,28 +9286,23 @@
 
   Branch,
     VAV_3 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     VAV_3_OA,                !- Component 1 Name
     VAV_3 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     VAV_3_OA-VAV_3_CoolCNode,!- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     Coil:Cooling:Water,      !- Component 2 Object Type
     VAV_3_CoolC,             !- Component 2 Name
     VAV_3_OA-VAV_3_CoolCNode,!- Component 2 Inlet Node Name
     VAV_3_CoolC-VAV_3_HeatCNode,  !- Component 2 Outlet Node Name
-    Passive,                 !- Component 2 Branch Control Type
     Coil:Heating:Water,      !- Component 3 Object Type
     VAV_3_HeatC,             !- Component 3 Name
     VAV_3_CoolC-VAV_3_HeatCNode,  !- Component 3 Inlet Node Name
     VAV_3_HeatC-VAV_3_FanNode,  !- Component 3 Outlet Node Name
-    Passive,                 !- Component 3 Branch Control Type
     Fan:VariableVolume,      !- Component 4 Object Type
     VAV_3_Fan,               !- Component 4 Name
     VAV_3_HeatC-VAV_3_FanNode,  !- Component 4 Inlet Node Name
-    VAV_3 Supply Equipment Outlet Node,  !- Component 4 Outlet Node Name
-    Active;                  !- Component 4 Branch Control Type
+    VAV_3 Supply Equipment Outlet Node;  !- Component 4 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     VAV_3_OA_Controllers,    !- Name
@@ -9692,38 +9555,34 @@
 
   Branch,
     SHWSys1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     SHWSys1 Pump,            !- Component 1 Name
     SHWSys1 Supply Inlet Node,  !- Component 1 Inlet Node Name
-    SHWSys1 Pump-SHWSys1 Water HeaterNodeviaConnector,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    SHWSys1 Pump-SHWSys1 Water HeaterNodeviaConnector;  !- Component 1 Outlet Node Name
 
   Branch,
     SHWSys1 Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterHeater:Mixed,       !- Component 1 Object Type
     SHWSys1 Water Heater,    !- Component 1 Name
     SHWSys1 Pump-SHWSys1 Water HeaterNode,  !- Component 1 Inlet Node Name
-    SHWSys1 Supply Equipment Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    SHWSys1 Supply Equipment Outlet Node;  !- Component 1 Outlet Node Name
 
   Pump:VariableSpeed,
     SHWSys1 Pump,            !- Name
     SHWSys1 Supply Inlet Node,  !- Inlet Node Name
     SHWSys1 Pump-SHWSys1 Water HeaterNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     0.85,                    !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0.0,                     !- Minimum Flow Rate {m3/s}
+    0.0,                     !- Design Minimum Flow Rate {m3/s}
     Intermittent,            !- Pump Control Type
     ;                        !- Pump Flow Rate Schedule Name
 
@@ -9784,13 +9643,11 @@
 
   Branch,
     SHWSys1 Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SHWSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
     SHWSys1 Supply Equip Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    SHWSys1 Supply Equip Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    SHWSys1 Supply Equip Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SHWSys1 Supply Equipment Bypass Pipe,  !- Name
@@ -9799,13 +9656,11 @@
 
   Branch,
     SHWSys1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SHWSys1 Supply Outlet Pipe,  !- Component 1 Name
     SHWSys1 Supply Mixer-SHWSys1 Supply Outlet Pipe,  !- Component 1 Inlet Node Name
-    SHWSys1 Supply Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SHWSys1 Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SHWSys1 Supply Outlet Pipe,  !- Name
@@ -9846,13 +9701,11 @@
 
   Branch,
     SHWSys1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SHWSys1 Demand Inlet Pipe,  !- Component 1 Name
     SHWSys1 Demand Inlet Node,  !- Component 1 Inlet Node Name
-    SHWSys1 Demand Inlet Pipe-SHWSys1 Demand Mixer,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SHWSys1 Demand Inlet Pipe-SHWSys1 Demand Mixer;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SHWSys1 Demand Inlet Pipe,  !- Name
@@ -9861,43 +9714,35 @@
 
   Branch,
     SHWSys1 Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterUse:Connections,    !- Component 1 Object Type
     Core_bottom Water Equipment,  !- Component 1 Name
     Core_bottom Water Equipment Water Inlet Node,  !- Component 1 Inlet Node Name
-    Core_bottom Water Equipment Water Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Core_bottom Water Equipment Water Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SHWSys1 Demand Load Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterUse:Connections,    !- Component 1 Object Type
     Core_mid Water Equipment,!- Component 1 Name
     Core_mid Water Equipment Water Inlet Node,  !- Component 1 Inlet Node Name
-    Core_mid Water Equipment Water Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Core_mid Water Equipment Water Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SHWSys1 Demand Load Branch 3,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     WaterUse:Connections,    !- Component 1 Object Type
     Core_top Water Equipment,!- Component 1 Name
     Core_top Water Equipment Water Inlet Node,  !- Component 1 Inlet Node Name
-    Core_top Water Equipment Water Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Core_top Water Equipment Water Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     SHWSys1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SHWSys1 Demand Bypass Pipe,  !- Component 1 Name
     SHWSys1 Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    SHWSys1 Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    SHWSys1 Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SHWSys1 Demand Bypass Pipe,  !- Name
@@ -9906,13 +9751,11 @@
 
   Branch,
     SHWSys1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     SHWSys1 Demand Outlet Pipe,  !- Component 1 Name
     SHWSys1 Demand Mixer-SHWSys1 Demand Outlet Pipe,  !- Component 1 Inlet Node Name
-    SHWSys1 Demand Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    SHWSys1 Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     SHWSys1 Demand Outlet Pipe,  !- Name
@@ -10014,38 +9857,34 @@
 
   Branch,
     HeatSys1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     HeatSys1 Pump,           !- Component 1 Name
     HeatSys1 Supply Inlet Node,  !- Component 1 Inlet Node Name
-    HeatSys1 Pump-HeatSys1 BoilerNodeviaConnector,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    HeatSys1 Pump-HeatSys1 BoilerNodeviaConnector;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Boiler:HotWater,         !- Component 1 Object Type
     HeatSys1 Boiler,         !- Component 1 Name
     HeatSys1 Pump-HeatSys1 BoilerNode,  !- Component 1 Inlet Node Name
-    HeatSys1 Supply Equipment Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    HeatSys1 Supply Equipment Outlet Node;  !- Component 1 Outlet Node Name
 
   Pump:VariableSpeed,
     HeatSys1 Pump,           !- Name
     HeatSys1 Supply Inlet Node,  !- Inlet Node Name
     HeatSys1 Pump-HeatSys1 BoilerNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     0.875,                   !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0.0,                     !- Minimum Flow Rate {m3/s}
+    0.0,                     !- Design Minimum Flow Rate {m3/s}
     Intermittent,            !- Pump Control Type
     ;                        !- Pump Flow Rate Schedule Name
 
@@ -10056,7 +9895,6 @@
     0.8,                     !- Nominal Thermal Efficiency
     LeavingBoiler,           !- Efficiency Curve Temperature Evaluation Variable
     ,                        !- Normalized Boiler Efficiency Curve Name
-    81.0000,                 !- Design Water Outlet Temperature {C}
     AUTOSIZE,                !- Design Water Flow Rate {m3/s}
     0.0,                     !- Minimum Part Load Ratio
     1.2,                     !- Maximum Part Load Ratio
@@ -10076,13 +9914,11 @@
 
   Branch,
     HeatSys1 Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
     HeatSys1 Supply Equip Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    HeatSys1 Supply Equip Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    HeatSys1 Supply Equip Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     HeatSys1 Supply Equipment Bypass Pipe,  !- Name
@@ -10091,13 +9927,11 @@
 
   Branch,
     HeatSys1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Supply Outlet Pipe,  !- Component 1 Name
     HeatSys1 Supply Mixer-HeatSys1 Supply Outlet Pipe,  !- Component 1 Inlet Node Name
-    HeatSys1 Supply Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    HeatSys1 Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     HeatSys1 Supply Outlet Pipe,  !- Name
@@ -10189,13 +10023,11 @@
 
   Branch,
     HeatSys1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Inlet Pipe,  !- Component 1 Name
     HeatSys1 Demand Inlet Node,  !- Component 1 Inlet Node Name
-    HeatSys1 Demand Inlet Pipe-HeatSys1 Demand Mixer,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    HeatSys1 Demand Inlet Pipe-HeatSys1 Demand Mixer;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     HeatSys1 Demand Inlet Pipe,  !- Name
@@ -10204,213 +10036,171 @@
 
   Branch,
     HeatSys1 Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Basement VAV Box Reheat Coil,  !- Component 1 Name
     Basement VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Basement VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Basement VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Core_bottom VAV Box Reheat Coil,  !- Component 1 Name
     Core_bottom VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Core_bottom VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Core_bottom VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 3,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Core_mid VAV Box Reheat Coil,  !- Component 1 Name
     Core_mid VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Core_mid VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Core_mid VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 4,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Core_top VAV Box Reheat Coil,  !- Component 1 Name
     Core_top VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Core_top VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Core_top VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 5,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_bot_ZN_3 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_bot_ZN_3 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_bot_ZN_3 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_bot_ZN_3 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 6,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_bot_ZN_2 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_bot_ZN_2 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_bot_ZN_2 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_bot_ZN_2 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 7,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_bot_ZN_1 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_bot_ZN_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_bot_ZN_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_bot_ZN_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 8,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_bot_ZN_4 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_bot_ZN_4 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_bot_ZN_4 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_bot_ZN_4 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 9,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_mid_ZN_3 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_mid_ZN_3 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_mid_ZN_3 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_mid_ZN_3 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 10,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_mid_ZN_2 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_mid_ZN_2 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_mid_ZN_2 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_mid_ZN_2 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 11,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_mid_ZN_1 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_mid_ZN_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_mid_ZN_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_mid_ZN_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 12,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_mid_ZN_4 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_mid_ZN_4 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_mid_ZN_4 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_mid_ZN_4 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 13,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_top_ZN_3 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_top_ZN_3 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_top_ZN_3 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_top_ZN_3 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 14,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_top_ZN_2 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_top_ZN_2 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_top_ZN_2 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_top_ZN_2 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 15,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_top_ZN_1 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_top_ZN_1 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_top_ZN_1 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_top_ZN_1 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 16,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     Perimeter_top_ZN_4 VAV Box Reheat Coil,  !- Component 1 Name
     Perimeter_top_ZN_4 VAV Box Reheat CoilDemand Inlet Node,  !- Component 1 Inlet Node Name
-    Perimeter_top_ZN_4 VAV Box Reheat CoilDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    Perimeter_top_ZN_4 VAV Box Reheat CoilDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 17,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV_5_HeatC,             !- Component 1 Name
     VAV_5_HeatCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_5_HeatCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_5_HeatCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 18,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV_1_HeatC,             !- Component 1 Name
     VAV_1_HeatCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_1_HeatCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_1_HeatCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 19,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV_2_HeatC,             !- Component 1 Name
     VAV_2_HeatCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_2_HeatCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_2_HeatCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Load Branch 20,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Heating:Water,      !- Component 1 Object Type
     VAV_3_HeatC,             !- Component 1 Name
     VAV_3_HeatCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_3_HeatCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_3_HeatCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     HeatSys1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Bypass Pipe,  !- Component 1 Name
     HeatSys1 Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    HeatSys1 Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    HeatSys1 Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     HeatSys1 Demand Bypass Pipe,  !- Name
@@ -10419,13 +10209,11 @@
 
   Branch,
     HeatSys1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     HeatSys1 Demand Outlet Pipe,  !- Component 1 Name
     HeatSys1 Demand Mixer-HeatSys1 Demand Outlet Pipe,  !- Component 1 Inlet Node Name
-    HeatSys1 Demand Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    HeatSys1 Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     HeatSys1 Demand Outlet Pipe,  !- Name
@@ -10527,38 +10315,34 @@
 
   Branch,
     CoolSys1 Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:VariableSpeed,      !- Component 1 Object Type
     CoolSys1 Pump,           !- Component 1 Name
     CoolSys1 Supply Inlet Node,  !- Component 1 Inlet Node Name
-    CoolSys1 Pump-CoolSys1 ChillerNodeviaConnector,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    CoolSys1 Pump-CoolSys1 ChillerNodeviaConnector;  !- Component 1 Outlet Node Name
 
   Branch,
     CoolSys1 Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric:EIR,    !- Component 1 Object Type
     CoolSys1 Chiller,        !- Component 1 Name
     CoolSys1 Pump-CoolSys1 ChillerNode,  !- Component 1 Inlet Node Name
-    CoolSys1 Supply Equipment Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    CoolSys1 Supply Equipment Outlet Node;  !- Component 1 Outlet Node Name
 
   Pump:VariableSpeed,
     CoolSys1 Pump,           !- Name
     CoolSys1 Supply Inlet Node,  !- Inlet Node Name
     CoolSys1 Pump-CoolSys1 ChillerNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Maximum Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     0.9,                     !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     0,                       !- Coefficient 1 of the Part Load Performance Curve
     1,                       !- Coefficient 2 of the Part Load Performance Curve
     0,                       !- Coefficient 3 of the Part Load Performance Curve
     0,                       !- Coefficient 4 of the Part Load Performance Curve
-    0.0,                     !- Minimum Flow Rate {m3/s}
+    0.0,                     !- Design Minimum Flow Rate {m3/s}
     Intermittent,            !- Pump Control Type
     ;                        !- Pump Flow Rate Schedule Name
 
@@ -10643,13 +10427,11 @@
 
   Branch,
     CoolSys1 Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Supply Equipment Bypass Pipe,  !- Component 1 Name
     CoolSys1 Supply Equip Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    CoolSys1 Supply Equip Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    CoolSys1 Supply Equip Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CoolSys1 Supply Equipment Bypass Pipe,  !- Name
@@ -10658,13 +10440,11 @@
 
   Branch,
     CoolSys1 Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Supply Outlet Pipe,  !- Component 1 Name
     CoolSys1 Supply Mixer-CoolSys1 Supply Outlet Pipe,  !- Component 1 Inlet Node Name
-    CoolSys1 Supply Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    CoolSys1 Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CoolSys1 Supply Outlet Pipe,  !- Name
@@ -10708,13 +10488,11 @@
 
   Branch,
     CoolSys1 Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Demand Inlet Pipe,  !- Component 1 Name
     CoolSys1 Demand Inlet Node,  !- Component 1 Inlet Node Name
-    CoolSys1 Demand Inlet Pipe-CoolSys1 Demand Mixer,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    CoolSys1 Demand Inlet Pipe-CoolSys1 Demand Mixer;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CoolSys1 Demand Inlet Pipe,  !- Name
@@ -10723,53 +10501,43 @@
 
   Branch,
     CoolSys1 Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     VAV_5_CoolC,             !- Component 1 Name
     VAV_5_CoolCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_5_CoolCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_5_CoolCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     CoolSys1 Demand Load Branch 2,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     VAV_1_CoolC,             !- Component 1 Name
     VAV_1_CoolCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_1_CoolCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_1_CoolCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     CoolSys1 Demand Load Branch 3,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     VAV_2_CoolC,             !- Component 1 Name
     VAV_2_CoolCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_2_CoolCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_2_CoolCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     CoolSys1 Demand Load Branch 4,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Coil:Cooling:Water,      !- Component 1 Object Type
     VAV_3_CoolC,             !- Component 1 Name
     VAV_3_CoolCDemand Inlet Node,  !- Component 1 Inlet Node Name
-    VAV_3_CoolCDemand Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    VAV_3_CoolCDemand Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     CoolSys1 Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Demand Bypass Pipe,  !- Component 1 Name
     CoolSys1 Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    CoolSys1 Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    CoolSys1 Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CoolSys1 Demand Bypass Pipe,  !- Name
@@ -10778,13 +10546,11 @@
 
   Branch,
     CoolSys1 Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     CoolSys1 Demand Outlet Pipe,  !- Component 1 Name
     CoolSys1 Demand Mixer-CoolSys1 Demand Outlet Pipe,  !- Component 1 Inlet Node Name
-    CoolSys1 Demand Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    CoolSys1 Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     CoolSys1 Demand Outlet Pipe,  !- Name
@@ -10874,31 +10640,27 @@
 
   Branch,
     TowerWaterSys Supply Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pump:ConstantSpeed,      !- Component 1 Object Type
     TowerWaterSys Pump,      !- Component 1 Name
     TowerWaterSys Supply Inlet Node,  !- Component 1 Inlet Node Name
-    TowerWaterSys Pump-TowerWaterSys CoolTowerNodeviaConnector,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    TowerWaterSys Pump-TowerWaterSys CoolTowerNodeviaConnector;  !- Component 1 Outlet Node Name
 
   Branch,
     TowerWaterSys Supply Equipment Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     CoolingTower:SingleSpeed,!- Component 1 Object Type
     TowerWaterSys CoolTower, !- Component 1 Name
     TowerWaterSys Pump-TowerWaterSys CoolTowerNode,  !- Component 1 Inlet Node Name
-    TowerWaterSys Supply Equipment Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    TowerWaterSys Supply Equipment Outlet Node;  !- Component 1 Outlet Node Name
 
   Pump:ConstantSpeed,
     TowerWaterSys Pump,      !- Name
     TowerWaterSys Supply Inlet Node,  !- Inlet Node Name
     TowerWaterSys Pump-TowerWaterSys CoolTowerNodeviaConnector,  !- Outlet Node Name
-    AUTOSIZE,                !- Rated Flow Rate {m3/s}
-    179352,                  !- Rated Pump Head {Pa}
-    AUTOSIZE,                !- Rated Power Consumption {W}
+    AUTOSIZE,                !- Design Flow Rate {m3/s}
+    179352,                  !- Design Pump Head {Pa}
+    AUTOSIZE,                !- Design Power Consumption {W}
     0.87,                    !- Motor Efficiency
     0.0,                     !- Fraction of Motor Inefficiencies to Fluid Stream
     Intermittent,            !- Pump Control Type
@@ -10912,15 +10674,19 @@
     AUTOSIZE,                !- Design Air Flow Rate {m3/s}
     AUTOSIZE,                !- Design Fan Power {W}
     AUTOSIZE,                !- Design U-Factor Times Area Value {W/K}
-    autocalculate,           !- Free Convection Air Flow Rate {m3/s}
-    ,                        !- Free Convection Air Flow Rate Sizing Factor
-    autocalculate,           !- Free Convection U-Factor Times Area Value {W/K}
+    autocalculate,           !- Free Convection Regime Air Flow Rate {m3/s}
+    ,                        !- Free Convection Regime Air Flow Rate Sizing Factor
+    autocalculate,           !- Free Convection Regime U-Factor Times Area Value {W/K}
     ,                        !- Free Convection U-Factor Times Area Value Sizing Factor
     UFactorTimesAreaAndDesignWaterFlowRate,  !- Performance Input Method
     ,                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
     ,                        !- Nominal Capacity {W}
     ,                        !- Free Convection Capacity {W}
     ,                        !- Free Convection Nominal Capacity Sizing Factor
+    ,                        !- Design Inlet Air Dry-Bulb Temperature {C}
+    ,                        !- Design Inlet Air Wet-Bulb Temperature {C}
+    ,                        !- Design Approach Temperature {deltaC}
+    ,                        !- Design Range Temperature {deltaC}
     ,                        !- Basin Heater Capacity {W/K}
     ,                        !- Basin Heater Setpoint Temperature {C}
     ,                        !- Basin Heater Operating Schedule Name
@@ -10940,13 +10706,11 @@
 
   Branch,
     TowerWaterSys Supply Equipment Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Supply Equipment Bypass Pipe,  !- Component 1 Name
     TowerWaterSys Supply Equip Bypass Inlet Node,  !- Component 1 Inlet Node Name
-    TowerWaterSys Supply Equip Bypass Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    TowerWaterSys Supply Equip Bypass Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     TowerWaterSys Supply Equipment Bypass Pipe,  !- Name
@@ -10955,13 +10719,11 @@
 
   Branch,
     TowerWaterSys Supply Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Supply Outlet Pipe,  !- Component 1 Name
     TowerWaterSys Supply Mixer-TowerWaterSys Supply Outlet Pipe,  !- Component 1 Inlet Node Name
-    TowerWaterSys Supply Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    TowerWaterSys Supply Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     TowerWaterSys Supply Outlet Pipe,  !- Name
@@ -10996,13 +10758,11 @@
 
   Branch,
     TowerWaterSys Demand Inlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Demand Inlet Pipe,  !- Component 1 Name
     TowerWaterSys Demand Inlet Node,  !- Component 1 Inlet Node Name
-    TowerWaterSys Demand Inlet Pipe-TowerWaterSys Demand Mixer,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    TowerWaterSys Demand Inlet Pipe-TowerWaterSys Demand Mixer;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     TowerWaterSys Demand Inlet Pipe,  !- Name
@@ -11011,23 +10771,19 @@
 
   Branch,
     TowerWaterSys Demand Load Branch 1,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Chiller:Electric:EIR,    !- Component 1 Object Type
     CoolSys1 Chiller,        !- Component 1 Name
     CoolSys1 Chiller Water Inlet Node,  !- Component 1 Inlet Node Name
-    CoolSys1 Chiller Water Outlet Node,  !- Component 1 Outlet Node Name
-    Active;                  !- Component 1 Branch Control Type
+    CoolSys1 Chiller Water Outlet Node;  !- Component 1 Outlet Node Name
 
   Branch,
     TowerWaterSys Demand Bypass Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Demand Bypass Pipe,  !- Component 1 Name
     TowerWaterSys Demand Bypass Pipe Inlet Node,  !- Component 1 Inlet Node Name
-    TowerWaterSys Demand Bypass Pipe Outlet Node,  !- Component 1 Outlet Node Name
-    Bypass;                  !- Component 1 Branch Control Type
+    TowerWaterSys Demand Bypass Pipe Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     TowerWaterSys Demand Bypass Pipe,  !- Name
@@ -11036,13 +10792,11 @@
 
   Branch,
     TowerWaterSys Demand Outlet Branch,  !- Name
-    ,                        !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     Pipe:Adiabatic,          !- Component 1 Object Type
     TowerWaterSys Demand Outlet Pipe,  !- Component 1 Name
     TowerWaterSys Demand Mixer-TowerWaterSys Demand Outlet Pipe,  !- Component 1 Inlet Node Name
-    TowerWaterSys Demand Outlet Node,  !- Component 1 Outlet Node Name
-    Passive;                 !- Component 1 Branch Control Type
+    TowerWaterSys Demand Outlet Node;  !- Component 1 Outlet Node Name
 
   Pipe:Adiabatic,
     TowerWaterSys Demand Outlet Pipe,  !- Name
@@ -11143,7 +10897,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Simple,
-    SummerBasicPeakCharge,   !- Name
+    SummerBasicPeakCharge,   !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     PeakEnergy,              !- Source Variable
     Summer,                  !- Season
@@ -11151,7 +10905,7 @@
     0.0956;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerBasicOFfPeakCharge,!- Name
+    SummerBasicOFfPeakCharge,!- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     OffPeakEnergy,           !- Source Variable
     Summer,                  !- Season
@@ -11159,7 +10913,7 @@
     0.0373;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterBasicPeakCharge,   !- Name
+    WinterBasicPeakCharge,   !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     PeakEnergy,              !- Source Variable
     Winter,                  !- Season
@@ -11167,7 +10921,7 @@
     0.0651;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterBasicOFfPeakCharge,!- Name
+    WinterBasicOFfPeakCharge,!- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     OffPeakEnergy,           !- Source Variable
     winter,                  !- Season
@@ -11175,7 +10929,7 @@
     0.0391;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DistributionCharge,      !- Name
+    DistributionCharge,      !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -11183,7 +10937,7 @@
     0.0021;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DistributionDemandCharge,!- Name
+    DistributionDemandCharge,!- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -11191,7 +10945,7 @@
     3.0144;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerDistributionDemandCharge,  !- Name
+    SummerDistributionDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     totalDemand,             !- Source Variable
     Summer,                  !- Season
@@ -11199,7 +10953,7 @@
     7.1715;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterDistributionDemandCharge,  !- Name
+    WinterDistributionDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     totalDemand,             !- Source Variable
     Winter,                  !- Season
@@ -11207,7 +10961,7 @@
     0.516;                   !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerGenerationDemandCharge,  !- Name
+    SummerGenerationDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     totalDemand,             !- Source Variable
     Summer,                  !- Season
@@ -11215,7 +10969,7 @@
     1.068;                   !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    TransmissionDemandCharge,!- Name
+    TransmissionDemandCharge,!- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -11223,7 +10977,7 @@
     1.5729;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MinDemand750kw,          !- Name
+    MinDemand750kw,          !- Utility Cost Qualify Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -11233,7 +10987,7 @@
     12;                      !- Number of Months
 
   UtilityCost:Charge:Simple,
-    taxofEightPercent,       !- Name
+    taxofEightPercent,       !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowLit750kw,  !- Tariff Name
     SubTotal,                !- Source Variable
     Summer,                  !- Season
@@ -11257,7 +11011,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Simple,
-    SummerBasicPeakCharge,   !- Name
+    SummerBasicPeakCharge,   !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     PeakEnergy,              !- Source Variable
     Summer,                  !- Season
@@ -11265,7 +11019,7 @@
     0.0907;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerBasicOFfPeakCharge,!- Name
+    SummerBasicOFfPeakCharge,!- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     OffPeakEnergy,           !- Source Variable
     Summer,                  !- Season
@@ -11273,7 +11027,7 @@
     0.0323;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterBasicPeakCharge,   !- Name
+    WinterBasicPeakCharge,   !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     PeakEnergy,              !- Source Variable
     Winter,                  !- Season
@@ -11281,7 +11035,7 @@
     0.0601;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterBasicOFfPeakCharge,!- Name
+    WinterBasicOFfPeakCharge,!- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     OffPeakEnergy,           !- Source Variable
     winter,                  !- Season
@@ -11289,7 +11043,7 @@
     0.0341;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DistributionCharge,      !- Name
+    DistributionCharge,      !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -11297,7 +11051,7 @@
     0.0021;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DistributionDemandCharge,!- Name
+    DistributionDemandCharge,!- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -11305,7 +11059,7 @@
     3.0144;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerDistributionDemandCharge,  !- Name
+    SummerDistributionDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     totalDemand,             !- Source Variable
     Summer,                  !- Season
@@ -11313,7 +11067,7 @@
     7.1715;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterDistributionDemandCharge,  !- Name
+    WinterDistributionDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     totalDemand,             !- Source Variable
     Winter,                  !- Season
@@ -11321,7 +11075,7 @@
     0.516;                   !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerGenerationDemandCharge,  !- Name
+    SummerGenerationDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     totalDemand,             !- Source Variable
     Summer,                  !- Season
@@ -11329,7 +11083,7 @@
     1.068;                   !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    TransmissionDemandCharge,!- Name
+    TransmissionDemandCharge,!- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -11337,7 +11091,7 @@
     1.5729;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MaxDemand750kw,          !- Name
+    MaxDemand750kw,          !- Utility Cost Qualify Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -11347,7 +11101,7 @@
     1;                       !- Number of Months
 
   UtilityCost:Qualify,
-    MinDemand150kw,          !- Name
+    MinDemand150kw,          !- Utility Cost Qualify Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -11357,7 +11111,7 @@
     12;                      !- Number of Months
 
   UtilityCost:Charge:Simple,
-    taxofEightPercent,       !- Name
+    taxofEightPercent,       !- Utility Cost Charge Simple Name
     PSEG_LPL_LargePowerLight,!- Tariff Name
     SubTotal,                !- Source Variable
     Summer,                  !- Season
@@ -11383,7 +11137,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Simple,
-    SummerDistributionCharge,!- Name
+    SummerDistributionCharge,!- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalEnergy,             !- Source Variable
     Summer,                  !- Season
@@ -11391,7 +11145,7 @@
     0.0127;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterDistributionCharge,!- Name
+    WinterDistributionCharge,!- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalEnergy,             !- Source Variable
     Winter,                  !- Season
@@ -11399,7 +11153,7 @@
     0.0057;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerGenerationCharge,  !- Name
+    SummerGenerationCharge,  !- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalEnergy,             !- Source Variable
     Summer,                  !- Season
@@ -11407,7 +11161,7 @@
     0.0660;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterGenerationCharge,  !- Name
+    WinterGenerationCharge,  !- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalEnergy,             !- Source Variable
     Winter,                  !- Season
@@ -11415,7 +11169,7 @@
     0.0483;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    WinterGenerationDemandCharge,  !- Name
+    WinterGenerationDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalDemand,             !- Source Variable
     Winter,                  !- Season
@@ -11423,7 +11177,7 @@
     0.5163;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerGenerationDemandCharge,  !- Name
+    SummerGenerationDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalDemand,             !- Source Variable
     Summer,                  !- Season
@@ -11431,7 +11185,7 @@
     1.068;                   !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SummerDistributionDemandCharge,  !- Name
+    SummerDistributionDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalDemand,             !- Source Variable
     Summer,                  !- Season
@@ -11439,7 +11193,7 @@
     6.7542;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    AnnualDistributionDemandCharge,  !- Name
+    AnnualDistributionDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -11447,7 +11201,7 @@
     3.6393;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    AnnualTransmissionDemandCharge,  !- Name
+    AnnualTransmissionDemandCharge,  !- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     totalDemand,             !- Source Variable
     Annual,                  !- Season
@@ -11455,7 +11209,7 @@
     1.5729;                  !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MaxDemand150kw,          !- Name
+    MaxDemand150kw,          !- Utility Cost Qualify Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -11465,7 +11219,7 @@
     1;                       !- Number of Months
 
   UtilityCost:Charge:Simple,
-    taxofEightPercent,       !- Name
+    taxofEightPercent,       !- Utility Cost Charge Simple Name
     PSEG_GLP_GeneralLightPow,!- Tariff Name
     SubTotal,                !- Source Variable
     Summer,                  !- Season
@@ -11491,7 +11245,7 @@
     Comm Gas;                !- Group Name
 
   UtilityCost:Charge:Simple,
-    MonthlyRateGasCharge,    !- Name
+    MonthlyRateGasCharge,    !- Utility Cost Charge Simple Name
     NJ_EIAMonthlyRateGas,    !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -11516,7 +11270,7 @@
     9.12;                    !- December Value
 
   UtilityCost:Charge:Simple,
-    TaxofSixPtTwoFivePercent,!- Name
+    TaxofSixPtTwoFivePercent,!- Utility Cost Charge Simple Name
     NJ_EIAMonthlyRateGas,    !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -11570,7 +11324,7 @@
     !
 
   FuelFactors,
-    FuelOil#1,               !- Existing Fuel Resource Name
+    FuelOilNo1,              !- Existing Fuel Resource Name
     m3,                      !- Units of Measure
     38.656E+09,              !- Energy per Unit Factor
     1.158,                   !- Source Energy Factor {J/J}

@@ -59,7 +59,7 @@
 ! System Equipment Autosize:      Yes
 ! Purchased Cooling:              None
 ! Purchased Heating:              None
-! Coils:                          Coil:Cooling:DX:SingleSpeed, Coil:Heating:Gas
+! Coils:                          Coil:Cooling:DX:SingleSpeed, Coil:Heating:Fuel
 ! Pumps:                          None
 ! Boilers:                        None
 ! Chillers:                       None
@@ -73,13 +73,13 @@
 ! Utility Tariffs:                None
 !
 
-  Version,8.3;
+  Version,9.3;
 
   Building,
     barracks2,               !- Name
     0.000,                   !- North Axis {deg}
     Suburbs,                 !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     MinimalShadowing,        !- Solar Distribution
     21,                      !- Maximum Number of Warmup Days
@@ -99,8 +99,9 @@
   HeatBalanceAlgorithm,ConductionTransferFunction;
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    7;                       !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    7;                       !- Shading Calculation Update Frequency
 
   SimulationControl,
     yes,                     !- Do Zone Sizing Calculation
@@ -110,12 +111,14 @@
     yes;                     !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     1,                       !- End Month
     7,                       !- End Day of Month
-    UseWeatherFile,          !- Day of Week for Start Day
+    ,                        !- End Year
+    ,                        !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
@@ -125,12 +128,14 @@
 !
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 2,            !- Name
     7,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     7,                       !- End Month
     7,                       !- End Day of Month
-    UseWeatherFile,          !- Day of Week for Start Day
+    ,                        !- End Year
+    ,                        !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
@@ -1811,59 +1816,8 @@
 ! **** Interior Constructions  ****
 
   Construction,
-    insul_frame,             !- Name
-    Beige_ptd_st:0.00300,    !- Outside Layer
-    EPS:0.02500,             !- Layer 2
-    Beige_ptd_st:0.00300;    !- Layer 3
-
-  Construction,
     susp_ceil,               !- Name
     Ceiling__min:0.00999;    !- Outside Layer
-
-  Construction,
-    susp_floor_rev,          !- Name
-    Grey_cord_sy:0.00600,    !- Outside Layer
-    Heavy_mix_co:0.10160,    !- Layer 2
-    Steel:0.00300;           !- Layer 3
-
-  Construction,
-    susp_floor,              !- Name
-    Steel:0.00300,           !- Outside Layer
-    Heavy_mix_co:0.10160,    !- Layer 2
-    Grey_cord_sy:0.00600;    !- Layer 3
-
-  Construction,
-    ceiling,                 !- Name
-    Glasswool:0.00200,       !- Outside Layer
-    Ceiling__min:0.00999;    !- Layer 2
-
-  Construction,
-    ceiling_rev,             !- Name
-    Ceiling__min:0.00999,    !- Outside Layer
-    Glasswool:0.00200;       !- Layer 2
-
-  Construction:InternalSource,
-    RadCeilingPanel,         !- Name
-    1,                       !- Source Present After Layer Number
-    1,                       !- Temperature Calculation Requested After Layer Number
-    1,                       !- Dimensions for the CTF Calculation
-    0.0015,                  !- Tube Spacing {m}
-    Glasswool:0.00200,       !- Outside Layer
-    White_ptd_Gy:0.01300;    !- Layer 2
-
-  Construction,
-    gyp_blk_ptn,             !- Name
-    White_ptd_Gy:0.01300,    !- Outside Layer
-    Air-gap:0.17000,         !- Layer 2
-    Block_inner_:0.10000,    !- Layer 3
-    Air-gap:0.17000,         !- Layer 4
-    White_ptd_Gy:0.01300;    !- Layer 5
-
-  Construction,
-    gyp_gyp_ptn,             !- Name
-    White_ptd_Gy:0.01200,    !- Outside Layer
-    Air-gap:0.17000,         !- Layer 2
-    White_ptd_Gy:0.01200;    !- Layer 3
 
   Construction,
     IntWall,                 !- Name
@@ -1876,17 +1830,6 @@
     Std Wood 6inch;          !- Outside Layer
 
 ! **** Envelope Constructions  ****
-
-  Construction,
-    Sloped_Metal_Roof,       !- Name
-    Std Steel_Brown_Regular, !- Outside Layer
-    Std PW05,                !- Layer 2
-    Roof Insulation 3;       !- Layer 3
-
-  Construction,
-    GableWall,               !- Name
-    Std PW05,                !- Outside Layer
-    Roof Insulation 3;       !- Layer 2
 
   Construction,
     ExtWall,                 !- Name
@@ -1905,12 +1848,10 @@
     Window,                  !- Name
     COM_GREEN 6MM;           !- Outside Layer
 
-!
-
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     CounterClockWise,        !- Vertex Entry Direction
-    relative;                !- Coordinate System
+    Relative;                !- Coordinate System
 
   ScheduleTypeLimits,
     Any Number;              !- Name
@@ -2199,7 +2140,6 @@
     south_ext:units_gr_lf,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2231,7 +2171,6 @@
     south_extb:units_gr_lf,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2311,7 +2250,6 @@
     north_extb:units_gr_lf,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2343,7 +2281,6 @@
     north_ext:units_gr_lf,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2419,7 +2356,7 @@
   InternalMass,
     units_gr_lf_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    units_gr_lf,             !- Zone Name
+    units_gr_lf,             !- Zone or ZoneList Name
     499.4097;                !- Surface Area {m2}
 
   ZoneInfiltration:EffectiveLeakageArea,
@@ -2587,7 +2524,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA units_gr_lf,     !- Name
@@ -2614,7 +2556,7 @@
     units_gr_lf Inlet Nodes, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     units_gr_lf Air Node,    !- Zone Air Node Name
-    units_gr_lf Return Air Node Name;  !- Zone Return Air Node Name
+    units_gr_lf Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     units_gr_lf Inlet Nodes, !- Name
@@ -2622,18 +2564,33 @@
 
   ZoneHVAC:EquipmentList,
     units_gr_lf Equipment,   !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    units_gr_lf Direct Air,  !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    units_gr_lf Direct Air ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     units_gr_lf Direct Air,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    units_gr_lf Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    units_gr_lf Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    units_gr_lf Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  SetpointManager:SingleZone:Reheat,
+  ZoneHVAC:AirDistributionUnit,
+    units_gr_lf Direct Air ADU,  !- Name
+    units_gr_lf Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    units_gr_lf Direct Air,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  SetpointManager:SingleZone:Cooling,
     SupAirTemp Mngrunits_gr_lf,  !- Name
     Temperature,             !- Control Variable
     10.0,                    !- Minimum Supply Air Temperature {C}
@@ -2681,7 +2638,6 @@
     south_ext:units_gr_rt,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2713,7 +2669,6 @@
     south_extb:units_gr_rt,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2761,7 +2716,6 @@
     north_ext:units_gr_rt,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2841,7 +2795,6 @@
     south_extc:units_gr_rt,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2873,7 +2826,6 @@
     north_extc:units_gr_rt,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2905,7 +2857,6 @@
     57083E,                  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2949,7 +2900,7 @@
   InternalMass,
     units_gr_rt_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    units_gr_rt,             !- Zone Name
+    units_gr_rt,             !- Zone or ZoneList Name
     749.1145;                !- Surface Area {m2}
 
   ZoneInfiltration:EffectiveLeakageArea,
@@ -3117,7 +3068,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA units_gr_rt,     !- Name
@@ -3144,7 +3100,7 @@
     units_gr_rt Inlet Nodes, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     units_gr_rt Air Node,    !- Zone Air Node Name
-    units_gr_rt Return Air Node Name;  !- Zone Return Air Node Name
+    units_gr_rt Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     units_gr_rt Inlet Nodes, !- Name
@@ -3152,18 +3108,33 @@
 
   ZoneHVAC:EquipmentList,
     units_gr_rt Equipment,   !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    units_gr_rt Direct Air,  !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    units_gr_rt Direct Air ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     units_gr_rt Direct Air,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    units_gr_rt Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    units_gr_rt Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    units_gr_rt Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  SetpointManager:SingleZone:Reheat,
+  ZoneHVAC:AirDistributionUnit,
+    units_gr_rt Direct Air ADU,  !- Name
+    units_gr_rt Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    units_gr_rt Direct Air,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  SetpointManager:SingleZone:Cooling,
     SupAirTemp Mngrunits_gr_rt,  !- Name
     Temperature,             !- Control Variable
     10.0,                    !- Minimum Supply Air Temperature {C}
@@ -3211,7 +3182,6 @@
     south_ext:unit_s_g,      !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3303,7 +3273,7 @@
   InternalMass,
     unit_s_g_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    unit_s_g,                !- Zone Name
+    unit_s_g,                !- Zone or ZoneList Name
     111.8807;                !- Surface Area {m2}
 
   ZoneInfiltration:FlowCoefficient,
@@ -3473,7 +3443,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA unit_s_g,        !- Name
@@ -3500,7 +3475,7 @@
     unit_s_g Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     unit_s_g Air Node,       !- Zone Air Node Name
-    unit_s_g Return Air Node Name;  !- Zone Return Air Node Name
+    unit_s_g Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     unit_s_g Inlet Nodes,    !- Name
@@ -3508,18 +3483,33 @@
 
   ZoneHVAC:EquipmentList,
     unit_s_g Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    unit_s_g Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    unit_s_g Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     unit_s_g Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    unit_s_g Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    unit_s_g Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    unit_s_g Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  SetpointManager:SingleZone:Reheat,
+  ZoneHVAC:AirDistributionUnit,
+    unit_s_g Direct Air ADU, !- Name
+    unit_s_g Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    unit_s_g Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  SetpointManager:SingleZone:Cooling,
     SupAirTemp Mngrunit_s_g, !- Name
     Temperature,             !- Control Variable
     10.0,                    !- Minimum Supply Air Temperature {C}
@@ -3567,7 +3557,6 @@
     south_ext:unit_n_g,      !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -3659,7 +3648,7 @@
   InternalMass,
     unit_n_g_InternalMass_1, !- Name
     InteriorFurnishings,     !- Construction Name
-    unit_n_g,                !- Zone Name
+    unit_n_g,                !- Zone or ZoneList Name
     111.8807;                !- Surface Area {m2}
 
   ZoneInfiltration:FlowCoefficient,
@@ -3829,7 +3818,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA unit_n_g,        !- Name
@@ -3856,7 +3850,7 @@
     unit_n_g Inlet Nodes,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     unit_n_g Air Node,       !- Zone Air Node Name
-    unit_n_g Return Air Node Name;  !- Zone Return Air Node Name
+    unit_n_g Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     unit_n_g Inlet Nodes,    !- Name
@@ -3864,18 +3858,33 @@
 
   ZoneHVAC:EquipmentList,
     unit_n_g Equipment,      !- Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    unit_n_g Direct Air,     !- Zone Equipment 1 Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    unit_n_g Direct Air ADU, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     unit_n_g Direct Air,     !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    unit_n_g Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    unit_n_g Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    unit_n_g Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
 
-  SetpointManager:SingleZone:Reheat,
+  ZoneHVAC:AirDistributionUnit,
+    unit_n_g Direct Air ADU, !- Name
+    unit_n_g Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    unit_n_g Direct Air,     !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
+
+  SetpointManager:SingleZone:Cooling,
     SupAirTemp Mngrunit_n_g, !- Name
     Temperature,             !- Control Variable
     10.0,                    !- Minimum Supply Air Temperature {C}
@@ -3953,18 +3962,15 @@
 
   Branch,
     FURNACE_PACU_CAV:1 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     FURNACE_PACU_CAV:1_OA,   !- Component 1 Name
     FURNACE_PACU_CAV:1 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     FURNACE_PACU_CAV:1_OA-FURNACE_PACU_CAV:1_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     FURNACE_PACU_CAV:1_Unitary_Package,  !- Component 2 Name
     FURNACE_PACU_CAV:1_OA-FURNACE_PACU_CAV:1_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    FURNACE_PACU_CAV:1 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    FURNACE_PACU_CAV:1 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     FURNACE_PACU_CAV:1_OA_Controllers,  !- Name
@@ -4035,19 +4041,19 @@
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
     30.0000,                 !- Recirculating Water Pump Design Power {W}
-    ,                        !- Water Pump Power Sizing Factor
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
     Autosize,                !- Secondary Air Design Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    207.66666666666666,      !- Secondary Air Fan Sizing Specific Power
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    207.66666666666666,      !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     FURNACE_PACU_CAV:1_OAInlet Node,  !- Primary Air Inlet Node Name
     FURNACE_PACU_CAV:1_OAIndRDD Evap Cooler-FURNACE_PACU_CAV:1_OADirect Evap CoolerNode,  !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9000,                  !- Dewpoint Effectiveness Factor
     FURNACE_PACU_CAV:1_OAIndRDD Evap CoolerOA node,  !- Secondary Air Inlet Node Name
-    FURNACE_PACU_CAV:1_OAIndRDD Evap CoolerOA Outlet Node, !- Secondary Air Outlet Node Name
+    FURNACE_PACU_CAV:1_OAIndRDD Evap CoolerOA Outlet Node,  !- Secondary Air Outlet Node Name
     FURNACE_PACU_CAV:1_OADirect Evap Cooler-FURNACE_PACU_CAV:1_OAMixing BoxNode,  !- Sensor Node Name
     ,                        !- Relief Air Inlet Node Name
     ,                        !- Water Supply Storage Tank Name
@@ -4059,8 +4065,9 @@
     ALWAYS_ON,               !- Availability Schedule Name
     0.7,                     !- Cooler Design Effectiveness
     ,                        !- Effectiveness Flow Ratio Modifier Curve Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     30.0,                    !- Recirculating Water Pump Design Power {W}
-    ,                        !- Water Pump Power Sizing Factor
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
     FURNACE_PACU_CAV:1_OAIndRDD Evap Cooler-FURNACE_PACU_CAV:1_OADirect Evap CoolerNode,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:1_OADirect Evap Cooler-FURNACE_PACU_CAV:1_OAMixing BoxNode,  !- Air Outlet Node Name
@@ -4095,7 +4102,7 @@
     Fan:OnOff,               !- Supply Fan Object Type
     FURNACE_PACU_CAV:1_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     FURNACE_PACU_CAV:1_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     FURNACE_PACU_CAV:1_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -4112,10 +4119,11 @@
     FURNACE_PACU_CAV:1_OA-FURNACE_PACU_CAV:1_Unitary_PackageNode,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:1_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     FURNACE_PACU_CAV:1_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     FURNACE_PACU_CAV:1_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:1 Supply Equipment Outlet Node;  !- Air Outlet Node Name
@@ -4205,7 +4213,7 @@
   AirLoopHVAC:ZoneSplitter,
     FURNACE_PACU_CAV:1 Supply Air Splitter,  !- Name
     FURNACE_PACU_CAV:1 Zone Equipment Inlet Node,  !- Inlet Node Name
-    units_gr_lf Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    units_gr_lf Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     FURNACE_PACU_CAV:1 Return Air Path,  !- Name
@@ -4286,18 +4294,15 @@
 
   Branch,
     FURNACE_PACU_CAV:2 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     FURNACE_PACU_CAV:2_OA,   !- Component 1 Name
     FURNACE_PACU_CAV:2 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     FURNACE_PACU_CAV:2_OA-FURNACE_PACU_CAV:2_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     FURNACE_PACU_CAV:2_Unitary_Package,  !- Component 2 Name
     FURNACE_PACU_CAV:2_OA-FURNACE_PACU_CAV:2_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    FURNACE_PACU_CAV:2 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    FURNACE_PACU_CAV:2 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     FURNACE_PACU_CAV:2_OA_Controllers,  !- Name
@@ -4363,8 +4368,9 @@
     ALWAYS_ON,               !- Availability Schedule Name
     0.7,                     !- Cooler Design Effectiveness
     ,                        !- Effectiveness Flow Ratio Modifier Curve Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     30.0,                    !- Recirculating Water Pump Design Power {W}
-    ,                        !- Water Pump Power Sizing Factor
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
     FURNACE_PACU_CAV:2_OAInlet Node,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:2_OADirect Evap Cooler-FURNACE_PACU_CAV:2_OAMixing BoxNode,  !- Air Outlet Node Name
@@ -4399,7 +4405,7 @@
     Fan:OnOff,               !- Supply Fan Object Type
     FURNACE_PACU_CAV:2_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     FURNACE_PACU_CAV:2_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     FURNACE_PACU_CAV:2_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -4416,10 +4422,11 @@
     FURNACE_PACU_CAV:2_OA-FURNACE_PACU_CAV:2_Unitary_PackageNode,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:2_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     FURNACE_PACU_CAV:2_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     FURNACE_PACU_CAV:2_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:2 Supply Equipment Outlet Node;  !- Air Outlet Node Name
@@ -4509,7 +4516,7 @@
   AirLoopHVAC:ZoneSplitter,
     FURNACE_PACU_CAV:2 Supply Air Splitter,  !- Name
     FURNACE_PACU_CAV:2 Zone Equipment Inlet Node,  !- Inlet Node Name
-    units_gr_rt Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    units_gr_rt Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     FURNACE_PACU_CAV:2 Return Air Path,  !- Name
@@ -4590,18 +4597,15 @@
 
   Branch,
     FURNACE_PACU_CAV:3 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     FURNACE_PACU_CAV:3_OA,   !- Component 1 Name
     FURNACE_PACU_CAV:3 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     FURNACE_PACU_CAV:3_OA-FURNACE_PACU_CAV:3_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     FURNACE_PACU_CAV:3_Unitary_Package,  !- Component 2 Name
     FURNACE_PACU_CAV:3_OA-FURNACE_PACU_CAV:3_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    FURNACE_PACU_CAV:3 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    FURNACE_PACU_CAV:3 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     FURNACE_PACU_CAV:3_OA_Controllers,  !- Name
@@ -4672,16 +4676,16 @@
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
     30.0000,                 !- Recirculating Water Pump Design Power {W}
-    ,                        !- Water Pump Power Sizing Factor W /(m3/s)air
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
-    Autosize,                !- Secondary Air Design Air Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    207.66666666666666,      !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    Autosize,                !- Secondary Air Design Flow Rate {m3/s}
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    207.66666666666666,      !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     FURNACE_PACU_CAV:3_OAInlet Node,  !- Primary Air Inlet Node Name
     FURNACE_PACU_CAV:3_OAIndRDD Evap Cooler-FURNACE_PACU_CAV:3_OADirect Evap CoolerNode,  !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9000,                  !- Dewpoint Effectiveness Factor
     FURNACE_PACU_CAV:3_OAIndRDD Evap CoolerOA node,  !- Secondary Air Inlet Node Name
     FURNACE_PACU_CAV:3_OAIndRDD Evap CoolerOA Outlet Node,  !- Secondary Air Outlet Node Name
@@ -4692,8 +4696,9 @@
     ALWAYS_ON,               !- Availability Schedule Name
     0.7,                     !- Cooler Design Effectiveness
     ,                        !- Effectiveness Flow Ratio Modifier Curve Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     30.0,                    !- Recirculating Water Pump Design Power {W}
-    ,                        !- Water Pump Power Sizing Factor
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
     FURNACE_PACU_CAV:3_OAIndRDD Evap Cooler-FURNACE_PACU_CAV:3_OADirect Evap CoolerNode,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:3_OADirect Evap Cooler-FURNACE_PACU_CAV:3_OAMixing BoxNode,  !- Air Outlet Node Name
@@ -4728,7 +4733,7 @@
     Fan:OnOff,               !- Supply Fan Object Type
     FURNACE_PACU_CAV:3_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     FURNACE_PACU_CAV:3_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     FURNACE_PACU_CAV:3_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -4745,10 +4750,11 @@
     FURNACE_PACU_CAV:3_OA-FURNACE_PACU_CAV:3_Unitary_PackageNode,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:3_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     FURNACE_PACU_CAV:3_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     FURNACE_PACU_CAV:3_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:3 Supply Equipment Outlet Node;  !- Air Outlet Node Name
@@ -4838,7 +4844,7 @@
   AirLoopHVAC:ZoneSplitter,
     FURNACE_PACU_CAV:3 Supply Air Splitter,  !- Name
     FURNACE_PACU_CAV:3 Zone Equipment Inlet Node,  !- Inlet Node Name
-    unit_s_g Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    unit_s_g Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     FURNACE_PACU_CAV:3 Return Air Path,  !- Name
@@ -4919,18 +4925,15 @@
 
   Branch,
     FURNACE_PACU_CAV:4 Air Loop Main Branch,  !- Name
-    AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     AirLoopHVAC:OutdoorAirSystem,  !- Component 1 Object Type
     FURNACE_PACU_CAV:4_OA,   !- Component 1 Name
     FURNACE_PACU_CAV:4 Supply Equipment Inlet Node,  !- Component 1 Inlet Node Name
     FURNACE_PACU_CAV:4_OA-FURNACE_PACU_CAV:4_Unitary_PackageNode,  !- Component 1 Outlet Node Name
-    Passive,                 !- Component 1 Branch Control Type
     AirLoopHVAC:UnitaryHeatCool,  !- Component 2 Object Type
     FURNACE_PACU_CAV:4_Unitary_Package,  !- Component 2 Name
     FURNACE_PACU_CAV:4_OA-FURNACE_PACU_CAV:4_Unitary_PackageNode,  !- Component 2 Inlet Node Name
-    FURNACE_PACU_CAV:4 Supply Equipment Outlet Node,  !- Component 2 Outlet Node Name
-    Active;                  !- Component 2 Branch Control Type
+    FURNACE_PACU_CAV:4 Supply Equipment Outlet Node;  !- Component 2 Outlet Node Name
 
   AirLoopHVAC:ControllerList,
     FURNACE_PACU_CAV:4_OA_Controllers,  !- Name
@@ -5001,19 +5004,19 @@
     ,                        !- Cooler Drybulb Design Effectiveness
     ,                        !- Drybulb Effectiveness Flow Ratio Modifier Curve Name
     30.0000,                 !- Recirculating Water Pump Design Power {W}
-    ,                        !- Water Pump Power Sizing Factor 
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
     Autosize,                !- Secondary Air Design Flow Rate {m3/s}
-    1.0,                     !- Secondary Air Flow Sizing Factor
-    autosize,                !- Secondary Air Fan Design Power
-    207.66666666666666,      !- Secondary Air Fan Sizing Specific Power W /(m3/s)
-    ,                        !- Secondary Fan Power Modifier Curve Name
+    1.0,                     !- Secondary Air Flow Scaling Factor {dimensionless}
+    autosize,                !- Secondary Air Fan Design Power {W}
+    207.66666666666666,      !- Secondary Air Fan Sizing Specific Power {W/(m3/s)}
+    ,                        !- Secondary Air Fan Power Modifier Curve Name
     FURNACE_PACU_CAV:4_OAInlet Node,  !- Primary Air Inlet Node Name
     FURNACE_PACU_CAV:4_OAIndRDD Evap Cooler-FURNACE_PACU_CAV:4_OADirect Evap CoolerNode,  !- Primary Air Outlet Node Name
-    autosize,                !- Primary Design Air Flow Rate
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     0.9000,                  !- Dewpoint Effectiveness Factor
     FURNACE_PACU_CAV:4_OAIndRDD Evap CoolerOA node,  !- Secondary Air Inlet Node Name
-    FURNACE_PACU_CAV:4_OAIndRDD Evap CoolerOA Outlet Node,     !- Secondary Air Outlet Node Name
+    FURNACE_PACU_CAV:4_OAIndRDD Evap CoolerOA Outlet Node,  !- Secondary Air Outlet Node Name
     FURNACE_PACU_CAV:4_OADirect Evap Cooler-FURNACE_PACU_CAV:4_OAMixing BoxNode;  !- Sensor Node Name
 
   EvaporativeCooler:Direct:ResearchSpecial,
@@ -5021,8 +5024,9 @@
     ALWAYS_ON,               !- Availability Schedule Name
     0.7,                     !- Cooler Design Effectiveness
     ,                        !- Effectiveness Flow Ratio Modifier Curve Name
+    autosize,                !- Primary Air Design Flow Rate {m3/s}
     30.0,                    !- Recirculating Water Pump Design Power {W}
-    ,                        !- Water Pump Power Sizing Factor
+    ,                        !- Water Pump Power Sizing Factor {W/(m3/s)}
     ,                        !- Water Pump Power Modifier Curve Name
     FURNACE_PACU_CAV:4_OAIndRDD Evap Cooler-FURNACE_PACU_CAV:4_OADirect Evap CoolerNode,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:4_OADirect Evap Cooler-FURNACE_PACU_CAV:4_OAMixing BoxNode,  !- Air Outlet Node Name
@@ -5057,7 +5061,7 @@
     Fan:OnOff,               !- Supply Fan Object Type
     FURNACE_PACU_CAV:4_Unitary_Package_fan,  !- Supply Fan Name
     BlowThrough,             !- Fan Placement
-    Coil:Heating:Gas,        !- Heating Coil Object Type
+    Coil:Heating:Fuel,       !- Heating Coil Object Type
     FURNACE_PACU_CAV:4_Unitary_Package_HeatCoil,  !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     FURNACE_PACU_CAV:4_Unitary_Package_CoolCoil,  !- Cooling Coil Name
@@ -5074,10 +5078,11 @@
     FURNACE_PACU_CAV:4_OA-FURNACE_PACU_CAV:4_Unitary_PackageNode,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:4_Unitary_PackageCoolCoil air inlet;  !- Air Outlet Node Name
 
-  Coil:Heating:Gas,
+  Coil:Heating:Fuel,
     FURNACE_PACU_CAV:4_Unitary_Package_HeatCoil,  !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    0.8,                     !- Gas Burner Efficiency
+    NaturalGas,              !- Fuel Type
+    0.8,                     !- Burner Efficiency
     AUTOSIZE,                !- Nominal Capacity {W}
     FURNACE_PACU_CAV:4_Unitary_PackageHeatCoil air inlet,  !- Air Inlet Node Name
     FURNACE_PACU_CAV:4 Supply Equipment Outlet Node;  !- Air Outlet Node Name
@@ -5167,7 +5172,7 @@
   AirLoopHVAC:ZoneSplitter,
     FURNACE_PACU_CAV:4 Supply Air Splitter,  !- Name
     FURNACE_PACU_CAV:4 Zone Equipment Inlet Node,  !- Inlet Node Name
-    unit_n_g Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    unit_n_g Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     FURNACE_PACU_CAV:4 Return Air Path,  !- Name

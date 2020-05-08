@@ -1,42 +1,38 @@
+# Use ccache if available, has to be before "project()"
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+  # Support both Unix Makefiles and Ninja
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
 Project(EnergyPlus)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5.1)
+
+if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} VERSION_GREATER "3.0")
+  CMAKE_POLICY(SET CMP0054 NEW) # CMake 3.1 added this policy
+endif()
 
 set( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} )
 
-set( CMAKE_VERSION_MAJOR 8 )
-set( CMAKE_VERSION_MINOR 3 )
-set( CMAKE_VERSION_PATCH 0 ) 
+set( CMAKE_POSITION_INDEPENDENT_CODE ON )
 
-set( PREV_RELEASE_SHA "e53a815" )
+include(cmake/Version.cmake)
 
-set( ENERGYPLUS_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}" )
-
-set( CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number" )
-find_package(Git)
-
-if(NOT GIT_FOUND)
-  find_program(GIT_EXECUTABLE git HINTS "$ENV{LOCALAPPDATA}/Programs/git/bin")
-  if (NOT GIT_EXECUTABLE_NOTFOUND)
-    set(GIT_FOUND TRUE)
+set( OPENGL_REQUIRED ON CACHE BOOL "Require OpenGL in order to build" )
+if(OPENGL_REQUIRED)
+  # On Linux specifically, OpenGL is complaining about being able to find OpenGL using both the
+  # exported module target or the library variables.  If it has to choose, and doesn't have a user-preference,
+  # a warning is shown on every configure step.  This next line just sets the preference so the warning won't show up.
+  # See this for more info: https://cmake.org/cmake/help/v3.10/module/FindOpenGL.html#linux-specific
+  set(OpenGL_GL_PREFERENCE GLVND)
+  find_package(OpenGL)
+  if(NOT OPENGL_FOUND)
+    set(CMAKE_VERSION_BUILD "${CMAKE_VERSION_BUILD} (No OpenGL)" CACHE STRING "Build number" FORCE) # git sha
+    message(WARNING "OpenGL libraries were not found. EnergyPlus will be compiled without GPU acceleration capabilities.")
   endif()
-endif()
-
-if(GIT_FOUND)
-  execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
-                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-                  TIMEOUT 10
-                  RESULT_VARIABLE RESULT
-                  OUTPUT_VARIABLE GIT_VERSION
-                  ERROR_QUIET
-                  OUTPUT_STRIP_TRAILING_WHITESPACE)
-  if(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${CMAKE_VERSION_BUILD}")
-    set(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
-  endif()
-
-  get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" PATH)
 else()
-  set(GIT_DIR "")
+  set( OPENGL_FOUND FALSE )
 endif()
 
 find_package(FNCS)
@@ -52,29 +48,38 @@ set(CPACK_PACKAGE_CONTACT "Kyle Benne <Kyle.Benne@nrel.gov>")
 option( BUILD_PACKAGE "Build package" OFF )
 option( BUILD_TESTING "Build testing targets" OFF )
 option( BUILD_FORTRAN "Build Fortran stuff" OFF )
+option( BUILD_DOCS "Build LaTeX-pdf documentation" OFF )
+option( LINK_WITH_PYTHON "Link with Python Library for Python Plugin Builds" OFF )
+
 # Turning ENABLE_GTEST_DEBUG_MODE ON will cause assertions and exceptions to halt the test case and unwind.
 # Turn this option OFF for automated testing.
 option( ENABLE_GTEST_DEBUG_MODE "Enable options to help debug test failures" ON )
+option( ENABLE_GTEST_SHUFFLE "Enable shuffle to eliminate order dependency" ON )
 option( ENABLE_INSTALL_REMOTE "Enable install_remote and install_remote_plist commands to install files from remote resources on the internet" ON )
+
 mark_as_advanced( ENABLE_INSTALL_REMOTE )
 
-# we don't need all devs to have Python installed.  There are 2 cases where we do want it
-# 1. Doing regression testing; which would be: BUILD_TESTING AND ENABLE_REGRESSION_TESTING
-# 2. Doing package building, since Python is going to be our tool for some things; thus: BUILD_PACKAGE
-
-if( ( BUILD_TESTING AND ENABLE_REGRESSION_TESTING ) OR ( BUILD_PACKAGE ) )
-  find_package(PythonInterp 2.7 REQUIRED)
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+    "MinSizeRel" "RelWithDebInfo")
 endif()
+
+# we are making *a Python 3 Interpreter* a required dependency, so find it here
+find_package(PythonInterp 3 REQUIRED)
 
 if( BUILD_TESTING )
   option( ENABLE_REGRESSION_TESTING "Enable Regression Tests" OFF )
+  option( BUILD_WCE_TESTING "Build testing targets for Windows Calculation Engine" OFF )
   if( ENABLE_REGRESSION_TESTING )
     if ( CMAKE_CL_64 )
       set( ARCH_FLAG "-64bit" )
     else()
       set( ARCH_FLAG "" )
     endif()
-
     set( REGRESSION_BASELINE_SHA "" CACHE STRING "SHA of baseline comparison" )
     set( COMMIT_SHA "" CACHE STRING "Commit sha of this build" )
     set( REGRESSION_SCRIPT_PATH "" CACHE PATH "Path to regression scripts" )
@@ -87,10 +92,16 @@ if( ENABLE_REGRESSION_TESTING )
   string(STRIP "${REGRESSION_SCRIPT_PATH}" REG_PATH_STRIPPED)
   string(STRIP "${REGRESSION_BASELINE_PATH}" REG_BASELINE_STRIPPED)
   if (REG_PATH_STRIPPED STREQUAL "" OR REG_BASELINE_STRIPPED STREQUAL "")
-    message( "Regression testing is enabled, but no script or baseline has been provided" )
+    message(AUTHOR_WARNING "Regression testing is enabled, but no script or baseline has been provided, turning it off." )
     set( DO_REGRESSION_TESTING OFF )
   else()
-    set( DO_REGRESSION_TESTING ON )
+    if( BUILD_FORTRAN )
+      # No Problem
+      set( DO_REGRESSION_TESTING ON )
+    else()
+      message(AUTHOR_WARNING "For regression testing, you must enable BUILD_FORTRAN in order to call ReadVarEso, turning it off.")
+      set( DO_REGRESSION_TESTING OFF )
+    endif()
   endif()
 endif()
 
@@ -98,7 +109,7 @@ if( UNIX AND NOT APPLE )
   set(CMAKE_INSTALL_RPATH "$ORIGIN")
 endif()
 
-if (MSVC)
+if ( MSVC AND NOT ( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" ) )
   if (CMAKE_C_COMPILER_VERSION VERSION_LESS "18.00.30723")
     message(FATAL_ERROR "Visual Studio 2013 Update 3 or Greater Required")
   endif()
@@ -109,40 +120,61 @@ if (MINGW)
   set(CMAKE_SHARED_LIBRARY_PREFIX "")
 endif ()
 
-set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Products" )
-set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Products" )
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Products" )
-
-# Advanced, time consuming compiler optimization options
-
-option(ENABLE_LTO "Enable link-time-optimization" FALSE)
-option(PROFILE_GENERATE "Generate profile data" FALSE)
-option(PROFILE_USE "Use profile data" FALSE)
-
-
-if (PROFILE_USE AND PROFILE_GENERATE)
-  message(SEND_ERROR "Cannot enable PROFILE_USE and PROFILE_GENERATE simultaneously")
-endif()
-
+set( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products" )
+set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products" )
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products" )
 
 include(cmake/ProjectMacros.cmake)
 include(cmake/CompilerFlags.cmake)
 
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/third_party )
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/third_party/zlib )
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/third_party/gtest/include/ SYSTEM )
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/third_party/ObjexxFCL/src/ )
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/third_party/SQLite/ SYSTEM )
-INCLUDE_DIRECTORIES( "${CMAKE_SOURCE_DIR}/third_party/Expat" "${CMAKE_SOURCE_DIR}/third_party/Expat/lib" SYSTEM)
-INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/third_party/CLI/ )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/src )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/btwxt/src )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/re2 )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/doj )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/nlohmann )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/valijson )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/ObjexxFCL/src/ )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/SQLite/ SYSTEM )
+INCLUDE_DIRECTORIES( "${PROJECT_SOURCE_DIR}/third_party/Expat" "${PROJECT_SOURCE_DIR}/third_party/Expat/lib" SYSTEM )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/CLI/ )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/eigen/ )
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/Windows-CalcEngine/src/Chromogenics/include)
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/Windows-CalcEngine/src/Common/include)
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/Windows-CalcEngine/src/Gases/include)
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/Windows-CalcEngine/src/MultiLayerOptics/include)
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/Windows-CalcEngine/src/SingleLayerOptics/include)
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/Windows-CalcEngine/src/SpectralAveraging/include)
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/Windows-CalcEngine/src/Tarcog/include)
+INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/Windows-CalcEngine/src/Viewer/include)
+if( OPENGL_FOUND )
+    INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/third_party/penumbra/include )
+endif()
+
+#### Create interface for JSON for Modern C++ so we can include it in targets
+# add_library( ModernJSON INTERFACE )
+# target_include_directories( ModernJSON INTERFACE "${PROJECT_SOURCE_DIR}/third_party/nlohmann" "${PROJECT_SOURCE_DIR}/third_party/doj" )
+
+set(RE2_BUILD_TESTING OFF CACHE BOOL "" FORCE)
+
+
+if( OPENGL_FOUND )
+  set(BUILD_PENUMBRA_TESTING ${BUILD_TESTING} CACHE BOOL "" FORCE)
+endif()
 
 if( BUILD_TESTING )
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  set(BUILD_GTEST ON CACHE BOOL "" FORCE)
+  set(BUILD_GMOCK ON CACHE BOOL "" FORCE)
   option( TEST_ANNUAL_SIMULATION "Use annual simulations for tests instead of only design days" OFF )
   enable_testing()
   include(CTest)
+  ADD_SUBDIRECTORY(third_party/gtest)
 endif()
 
 # E+ required libraries
+ADD_SUBDIRECTORY(idd)
+
 ADD_SUBDIRECTORY(third_party/SQLite)
 ADD_SUBDIRECTORY(third_party/ObjexxFCL)
 ADD_SUBDIRECTORY(third_party/BCVTB)
@@ -150,18 +182,63 @@ ADD_SUBDIRECTORY(third_party/Expat)
 ADD_SUBDIRECTORY(third_party/FMI)
 ADD_SUBDIRECTORY(third_party/zlib)
 ADD_SUBDIRECTORY(third_party/DElight)
-IF(NOT APPLE )
+ADD_SUBDIRECTORY(third_party/re2)
+ADD_SUBDIRECTORY(third_party/fmt-6.1.2 )
+
+ADD_SUBDIRECTORY(scripts/dev/generate_embeddable_epJSON_schema)
+IF( NOT APPLE )
   ADD_SUBDIRECTORY(third_party/FMUParser)
 ENDIF()
+ADD_SUBDIRECTORY(third_party/Windows-CalcEngine)
+
+# Btwxt
+INCLUDE_DIRECTORIES( ${gtest_SOURCE_DIR}/include/ SYSTEM )
+set(BUILD_BTWXT_TESTING ${BUILD_TESTING} CACHE BOOL "" FORCE)
+ADD_SUBDIRECTORY(third_party/btwxt)
+
+# Kiva
+INCLUDE(third_party/cmake/kiva.cmake)
+
+if( OPENGL_FOUND )
+  ADD_SUBDIRECTORY(third_party/penumbra)
+endif()
+
+execute_process( COMMAND ${PYTHON_EXECUTABLE} "${PROJECT_SOURCE_DIR}/scripts/dev/generate_epJSON_schema/generate_epJSON_schema.py" "${PROJECT_SOURCE_DIR}" TIMEOUT 30 RESULT_VARIABLE generate_epJSON_schema_result)
+if( ${generate_epJSON_schema_result} MATCHES ".*timeout.*" )
+  message(FATAL_ERROR "Generating epJSON Schema from IDD failed: ${generate_epJSON_schema_result}")
+endif()
+configure_file( idd/Energy+.idd.in "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Energy+.idd" )
+configure_file( idd/Energy+.schema.epJSON.in "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Energy+.schema.epJSON" )
+configure_file( idd/BasementGHT.idd "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BasementGHT.idd" )
+configure_file( idd/SlabGHT.idd "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SlabGHT.idd" )
+
+# EPLaunch workflow files should be configured
+configure_file( "workflows/app_g_postprocess.py" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/workflows/app_g_postprocess.py" )
+configure_file( "workflows/calc_soil_surface_temp.py" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/workflows/calc_soil_surface_temp.py" )
+configure_file( "workflows/coeff_check.py" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/workflows/coeff_check.py" )
+configure_file( "workflows/coeff_conv.py" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/workflows/coeff_conv.py" )
+configure_file( "workflows/energyplus.py" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/workflows/energyplus.py" )
+configure_file( "workflows/transition.py" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/workflows/transition.py" )
 
 # of course E+ itself
 ADD_SUBDIRECTORY(src/EnergyPlus)
 
 if( BUILD_TESTING )
-  ADD_SUBDIRECTORY(third_party/gtest)
   ADD_SUBDIRECTORY(testfiles)
   ADD_SUBDIRECTORY(tst/EnergyPlus/unit)
+  option( BUILD_PERFORMANCE_TESTS "Build performance testing targets" OFF )
+  if (BUILD_PERFORMANCE_TESTS)
+    if (UNIX AND NOT APPLE)
+      option( VALGRIND_ANALYZE_PERFORMANCE_TESTS "Analyze performance tests via valgrind / callgrind" OFF )
+      if (VALGRIND_ANALYZE_PERFORMANCE_TESTS)
+        find_program(VALGRIND NAMES valgrind PATH /usr/bin /usr/local/bin)
+      endif()
+    endif()
+    ADD_SUBDIRECTORY(performance_tests)
+  endif()
 endif()
+
+ADD_SUBDIRECTORY(src/ConvertInputFormat)
 
 if( BUILD_FORTRAN )
   include(CMakeAddFortranSubdirectory)
@@ -169,157 +246,72 @@ if( BUILD_FORTRAN )
   cmake_add_fortran_subdirectory(src/ReadVars PROJECT ReadVars NO_EXTERNAL_INSTALL )
   set(TRANSITION_EXTRA_FLAGS "-DCMAKE_VERSION_MAJOR:STRING=${CMAKE_VERSION_MAJOR}" "-DCMAKE_VERSION_MINOR:STRING=${CMAKE_VERSION_MINOR}" "-DCMAKE_VERSION_PATCH:STRING=${CMAKE_VERSION_PATCH}")
   cmake_add_fortran_subdirectory(src/Transition PROJECT Transition CMAKE_COMMAND_LINE ${TRANSITION_EXTRA_FLAGS} NO_EXTERNAL_INSTALL )
+  file( COPY "idd/V9-2-0-Energy+.idd" DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
+  configure_file( idd/Energy+.idd.in "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/V9-3-0-Energy+.idd" )
+  file( COPY "src/Transition/SupportFiles/Report Variables 9-2-0 to 9-3-0.csv" DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}" )
   cmake_add_fortran_subdirectory(src/Basement PROJECT Basement NO_EXTERNAL_INSTALL )
   cmake_add_fortran_subdirectory(src/HVAC-Diagram PROJECT HVAC-Diagram NO_EXTERNAL_INSTALL )
   cmake_add_fortran_subdirectory(src/ParametricPreprocessor PROJECT ParametricPreprocessor NO_EXTERNAL_INSTALL )
   cmake_add_fortran_subdirectory(src/Slab PROJECT Slab NO_EXTERNAL_INSTALL )
   cmake_add_fortran_subdirectory(src/ConvertESOMTR PROJECT ConvertESOMTR NO_EXTERNAL_INSTALL )
+  cmake_add_fortran_subdirectory(src/CalcSoilSurfTemp PROJECT CalcSoilSurfTemp NO_EXTERNAL_INSTALL )
+  cmake_add_fortran_subdirectory(src/AppGPostProcess PROJECT AppGPostProcess NO_EXTERNAL_INSTALL )
 endif()
-
-configure_file( idd/Energy+.idd.in "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Energy+.idd" )
 
 if( BUILD_PACKAGE )
-  set(CPACK_INSTALL_CMAKE_PROJECTS
-    "${CMAKE_BINARY_DIR};EnergyPlus;ALL;/"
-  )
-  
-  if( BUILD_FORTRAN )
-    list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/src/ExpandObjects/;ExpandObjects;ALL;/")
-    list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/src/ReadVars/;ReadVars;ALL;/")
-    list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/src/Transition/;Transition;ALL;/")
-    list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/src/Basement/;Basement;ALL;/")
-    list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/src/HVAC-Diagram/;HVAC-Diagram;ALL;/")
-    list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/src/ParametricPreprocessor/;ParametricPreprocessor;ALL;/")
-    list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/src/Slab/;Slab;ALL;/")
-    list(APPEND CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_BINARY_DIR}/src/ConvertESOMTR/;ConvertESOMTR;ALL;/")
-  endif()
-
-  include(cmake/Install.cmake)
+  # We handle everything in a dedicated cmake file
+  include(${PROJECT_SOURCE_DIR}/cmake/Install.cmake)
 endif()
 
-
-set(OPTIMIZABLE_TARGETS
-  sqlite objexx bcvtb epexpat epfmiimport miniziplib DElight energyplus energyplusapi energypluslib energypluslib2 
-    )
-if(NOT APPLE AND NOT MSVC)
-  list(APPEND OPTIMIZABLE_TARGETS parser)
+if (BUILD_DOCS)
+  add_subdirectory(doc)
 endif()
 
-if(NOT MSVC)
-  list(APPEND OPTIMIZABLE_TARGETS objexx_tests energyplus_tests)
-endif()
-
-if(MSVC AND (PROFILE_GENERATE OR PROFILE_USE OR ENABLE_LTO) )
-  get_filename_component(LINKER_DIR "${CMAKE_LINKER}" PATH)
-  get_filename_component(LINKER_DIR_NAME "${LINKER_DIR}" NAME)
-  
-  if (MSVC12)
-    set(PGORTVER "120")
-  elseif(MSVC14)
-    set(PGORTVER "140")
-  endif()
-
-  message("Examining ${LINKER_DIR_NAME} for PGO RT DLL")
-  
-  if ("${LINKER_DIR_NAME}" MATCHES ".*amd64.*")
-    get_filename_component(LINKER_PARENT_DIR "${LINKER_DIR}" PATH)
-    set(PGORTDIR "${LINKER_PARENT_DIR}/amd64")
-    message("Retrieving amd64 PGO dll from: ${PGORTDIR}")
-  else()
-    set(PGORTDIR "${LINKER_DIR}")
-  endif()
-  
-  file(COPY "${PGORTDIR}/pgort${PGORTVER}.dll" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release" )
-
-  foreach(target ${OPTIMIZABLE_TARGETS})
-    get_target_property(targ_link_flags ${target} LINK_FLAGS)
-    get_target_property(targ_static_link_flags ${target} STATIC_LIBRARY_FLAGS)
-    get_target_property(targ_compile_flags ${target} COMPILE_FLAGS)
-
-    # message("${target}: ${targ_link_flags}; ${targ_static_link_flags}; ${targ_compile_flags}")
-    if(targ_link_flags STREQUAL "targ_link_flags-NOTFOUND")
-      set(targ_link_flags "")
-    endif()
-    
-    if(targ_static_link_flags STREQUAL "targ_static_link_flags-NOTFOUND")
-      set(targ_static_link_flags "")
-    endif()
-
-    if(targ_compile_flags STREQUAL "targ_compile_flags-NOTFOUND")
-      set(targ_compile_flags "")
-    endif()
-
-    if (ENABLE_LTO OR PROFILE_GENERATE OR PROFILE_USE)
-      set(targ_compile_flags "${targ_compile_flags} /GL")
-    endif()
-    
-    if(ENABLE_LTO AND NOT PROFILE_GENERATE AND NOT PROFILE_USE)
-      set(targ_link_flags "${targ_link_flags} /LTCG")
-      set(targ_static_link_flags "${targ_static_link_flags} /LTCG")
-    endif()
-
-    if (PROFILE_GENERATE)
-      set(targ_link_flags "${targ_link_flags} /LTCG:PGI")
-      set(targ_static_link_flags "${targ_static_link_flags} /LTCG")
-    endif()
-
-    if (PROFILE_USE)
-      set(targ_link_flags "${targ_link_flags} /LTCG:PGO")
-      set(targ_static_link_flags "${targ_static_link_flags} /LTCG")
-    endif()
-
-    set_target_properties(${target} PROPERTIES LINK_FLAGS "${targ_link_flags}" STATIC_LIBRARY_FLAGS "${targ_static_link_flags}" 
-       COMPILE_FLAGS "${targ_compile_flags}")
-
-  endforeach()
-
-elseif (CMAKE_COMPILER_IS_GNUCXX)
-  if(ENABLE_LTO)
-    set_target_properties(${OPTIMIZABLE_TARGETS}
-      PROPERTIES LINK_FLAGS "-flto=7 -fno-use-linker-plugin" COMPILE_FLAGS "-flto=7 -fno-use-linker-plugin")
-    set_target_properties(energyplus
-      PROPERTIES LINK_FLAGS "-flto=7 -fuse-linker-plugin -fwhole-program" COMPILE_FLAGS "-flto=7 -fuse-linker-plugin -fwhole-program")
-  endif()
-
-  if (PROFILE_GENERATE)
-    set_target_properties(${OPTIMIZABLE_TARGETS} energyplus_tests TestEnergyPlusCallbacks
-      PROPERTIES LINK_FLAGS "-fprofile-generate"  COMPILE_FLAGS "-fprofile-generate")
-  endif()
-
-  if (PROFILE_USE)
-    set_target_properties(${OPTIMIZABLE_TARGETS}
-      PROPERTIES LINK_FLAGS "-fprofile-use"  COMPILE_FLAGS "-fprofile-use")
-  endif()
-
-  if (PROFILE_USE AND ENABLE_LTO)
-    set_target_properties(${OPTIMIZABLE_TARGETS}
-      PROPERTIES LINK_FLAGS "-flto=7 -fno-use-linker-plugin -fprofile-use" COMPILE_FLAGS "-flto=7 -fno-use-linker-plugin -fprofile-use")
-    set_target_properties(energyplus
-      PROPERTIES LINK_FLAGS "-flto=7 -fuse-linker-plugin -fwhole-program -fprofile-use" COMPILE_FLAGS "-flto=7 -fuse-linker-plugin -fwhole-program -fprofile-use")
-  endif()
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" ) # Clang
-  if(ENABLE_LTO)
-    set_target_properties(energyplus
-      PROPERTIES LINK_FLAGS "-flto" COMPILE_FLAGS "-flto")
-  endif()
-
-  if (PROFILE_GENERATE)
-    set_target_properties(${OPTIMIZABLE_TARGETS}
-      PROPERTIES LINK_FLAGS "-fprofile-instr-generate" COMPILE_FLAGS "-fprofile-instr-generate") 
-  endif()
-
-  if (PROFILE_USE)
-    set_target_properties(${OPTIMIZABLE_TARGETS}
-      PROPERTIES LINK_FLAGS "-fprofile-instr-use=${CMAKE_BINARY_DIR}/profdata" COMPILE_FLAGS "-fprofile-instr-use=${CMAKE_BINARY_DIR}/profdata")
-  endif()
-
-  if (PROFILE_USE AND ENABLE_LTO)
-    set_target_properties(${OPTIMIZABLE_TARGETS}
-      PROPERTIES LINK_FLAGS "-flto -fprofile-instr-use=${CMAKE_BINARY_DIR}/profdata" COMPILE_FLAGS "-flto -fprofile-instr-use=${CMAKE_BINARY_DIR}/profdata")
-  endif()
-
- 
-endif()
-
-
-
+# some parameters are simply not needed for everyday building
+mark_as_advanced(CMAKE_INSTALL_PREFIX)
+mark_as_advanced(BUILD_SHARED_LIBS)
+mark_as_advanced(ENABLE_GTEST_DEBUG_MODE)
+mark_as_advanced(ENABLE_GTEST_SHUFFLE)
+mark_as_advanced(ENABLE_MEMORY_SANITIZER)
+mark_as_advanced(ENABLE_OPENMP)
+mark_as_advanced(KIVA_3D)
+mark_as_advanced(KIVA_COVERAGE)
+mark_as_advanced(KIVA_EXE_BUILD)
+mark_as_advanced(KIVA_GROUND_PLOT)
+mark_as_advanced(KIVA_STATIC_LIB)
+mark_as_advanced(KIVA_TESTING)
+mark_as_advanced(BTWXT_COVERAGE)
+mark_as_advanced(BUILD_BTWXT_TESTING)
+mark_as_advanced(BTWXT_STATIC_LIB)
+mark_as_advanced(RE2_BUILD_TESTING)
+mark_as_advanced(USEPCRE)
+mark_as_advanced(CCACHE_PROGRAM)
+mark_as_advanced(CMAKE_VERSION_BUILD)
+mark_as_advanced(ENABLE_REGRESSION_TESTING)
+mark_as_advanced(TEST_ANNUAL_SIMULATION)
+mark_as_advanced(gtest_build_samples)
+mark_as_advanced(gtest_build_tests)
+mark_as_advanced(gtest_disable_pthreads)
+mark_as_advanced(gtest_force_shared_crt)
+mark_as_advanced(gtest_hide_internal_symbols)
+mark_as_advanced(FMT_CUDA_TEST)
+mark_as_advanced(FMT_DOC)
+mark_as_advanced(FMT_FUZZ)
+mark_as_advanced(FMT_INSTALL)
+mark_as_advanced(FMT_PEDANTIC)
+mark_as_advanced(FMT_TEST)
+mark_as_advanced(FMT_WERROR)
+mark_as_advanced(GLFW_BUILD_DOCS)
+mark_as_advanced(GLFW_BUILD_EXAMPLES)
+mark_as_advanced(GLFW_BUILD_TESTS)
+mark_as_advanced(GLFW_INSTALL)
+mark_as_advanced(GLFW_USE_OSMESA)
+mark_as_advanced(GLFW_USE_WAYLAND)
+mark_as_advanced(GLFW_VULKAN_STATIC)
+mark_as_advanced(BUILD_PENUMBRA_TESTING)
+mark_as_advanced(PENUMBRA_COVERAGE)
+mark_as_advanced(PENUMBRA_STATIC_LIB)
+mark_as_advanced(BUILD_GMOCK)
+mark_as_advanced(BUILD_GTEST)
+mark_as_advanced(gmock_build_tests)
+mark_as_advanced(BUILD_WCE_TESTING)

@@ -1,12 +1,12 @@
 // ObjexxFCL::Optional Unit Tests
 //
-// Project: Objexx Fortran Compatibility Library (ObjexxFCL)
+// Project: Objexx Fortran-C++ Library (ObjexxFCL)
 //
-// Version: 4.0.0
+// Version: 4.2.0
 //
 // Language: C++
 //
-// Copyright (c) 2000-2014 Objexx Engineering, Inc. All Rights Reserved.
+// Copyright (c) 2000-2017 Objexx Engineering, Inc. All Rights Reserved.
 // Use of this source code or any derivative of it is restricted by license.
 // Licensing is available from Objexx Engineering, Inc.:  http://objexx.com
 
@@ -15,8 +15,11 @@
 
 // ObjexxFCL Headers
 #include <ObjexxFCL/Optional.hh>
-#include <ObjexxFCL/Fstring.hh>
+#include <ObjexxFCL/string.functions.hh> // For concatenation operators
 #include "ObjexxFCL.unit.hh"
+
+// C++ Headers
+#include <string>
 
 using namespace ObjexxFCL;
 
@@ -91,26 +94,34 @@ TEST( OptionalTest, AssignmentOmit )
 	EXPECT_NE( -3, o );
 }
 
-TEST( OptionalTest, FstringFromLiteral )
+TEST( OptionalTest, StringFromLiteral )
 {
-	Optional_Fstring_const o( "A literal string" );
-	EXPECT_EQ( Fstring( "A literal string" ), o );
+	Optional_string_const o( "A literal string" );
+	EXPECT_EQ( std::string( "A literal string" ), o );
 	EXPECT_EQ( "A literal string", o() ); // Need the () on o() when types don't match exactly
 	EXPECT_TRUE( o.present() );
-	EXPECT_NE( Fstring( "Some other string" ), o );
+	EXPECT_NE( std::string( "Some other string" ), o );
 }
 
-TEST( OptionalTest, FstringAssignment )
+TEST( OptionalTest, StringAssignment )
 {
-	Fstring s( "A literal string" );
-	Optional_Fstring o( s );
-	EXPECT_EQ( Fstring( "A literal string" ), o );
+	std::string s( "A literal string" );
+	Optional_string o( s );
+	EXPECT_EQ( std::string( "A literal string" ), o );
 	EXPECT_EQ( "A literal string", o() ); // Need the () on o() when types don't match exactly
 	EXPECT_TRUE( o.present() );
-	EXPECT_NE( Fstring( "Some other string" ), o );
+	EXPECT_NE( std::string( "Some other string" ), o );
 	o = "New string";
 	EXPECT_EQ( "New string", o() ); // Need the () on o() when types don't match exactly
 	EXPECT_EQ( "New string", s );
+}
+
+TEST( OptionalTest, StringConversion )
+{
+	std::string const s( "Dog" );
+	Optional_string_const o( s );
+	EXPECT_EQ( std::string( "Dog Run" ), o + " Run" );
+	EXPECT_EQ( std::string( "Fast Dog" ), "Fast " + o );
 }
 
 TEST( OptionalTest, ConstReference )

@@ -10,10 +10,10 @@
 !                          1zoneuncontrolled
 !
 ! Simulation Location/Run: Denver Centennial Golden CO USA WMO=724666, 2 design days, 1 run period,
-!                          
 !
-! Design Days:             Denver Centennial  Golden CO USA Annual Heating 99%, MaxDB=-15.5캜
-!                          Denver Centennial  Golden CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32캜 MWB=15.5캜
+!
+! Design Days:             Denver Centennial  Golden CO USA Annual Heating 99%, MaxDB=-15.5째C
+!                          Denver Centennial  Golden CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32째C MWB=15.5째C
 !
 !
 ! Run Period (Weather File): Full Annual Simulation, DENVER_STAPLETON_CO_USA_WMO_724690
@@ -26,7 +26,7 @@
 ! Floor Area:              232.25 m2
 ! Number of Stories:       1
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,6;
 
@@ -34,7 +34,7 @@
     Bldg,                    !- Name
     0.0,                     !- North Axis {deg}
     Suburbs,                 !- Terrain
-    0.05,                    !- Loads Convergence Tolerance Value
+    0.05,                    !- Loads Convergence Tolerance Value {W}
     0.05,                    !- Temperature Convergence Tolerance Value {deltaC}
     MinimalShadowing,        !- Solar Distribution
     30,                      !- Maximum Number of Warmup Days
@@ -50,15 +50,17 @@
     No,                      !- Do Zone Sizing Calculation
     No,                      !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
-    Yes,                      !- Run Simulation for Sizing Periods
-    No;                     !- Run Simulation for Weather File Run Periods
+    Yes,                     !- Run Simulation for Sizing Periods
+    No;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    Jan,                  !- Name
+    Jan,                     !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
-    1,                      !- End Month
+    ,                        !- Begin Year
+    1,                       !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -67,11 +69,13 @@
     Yes;                     !- Use Weather File Snow Indicators
 
   RunPeriod,
-    Jul,                  !- Name
+    Jul,                     !- Name
     7,                       !- Begin Month
     1,                       !- Begin Day of Month
-    7,                      !- End Month
+    ,                        !- Begin Year
+    7,                       !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -81,8 +85,8 @@
 
   Site:Location,
     Denver Centennial CO USA WMO=724666,  !- Name
-    39.57,                   !- Latitude {deg}
-    -104.85,                 !- Longitude {deg}
+    39.74,                   !- Latitude {deg}
+    -105.18,                 !- Longitude {deg}
     -7.00,                   !- Time Zone {hr}
     1793.00;                 !- Elevation {m}
 
@@ -90,10 +94,10 @@
  !  Data Source=ASHRAE 2009 Annual Design Conditions
  ! Using Design Conditions from "Climate Design Data 2009 ASHRAE Handbook"
  ! Denver Centennial CO USA Extreme Annual Wind Speeds, 1%=11.1m/s, 2.5%=9.5m/s, 5%=8.4m/s
- ! Denver Centennial CO USA Extreme Annual Temperatures, Max Drybulb=-22.9캜 Min Drybulb=36.1캜
+ ! Denver Centennial CO USA Extreme Annual Temperatures, Max Drybulb=-22.9째C Min Drybulb=36.1째C
  ! Denver Centennial CO USA Annual Heating Design Conditions Wind Speed=3m/s Wind Dir=340
  ! Coldest Month=December
- ! Denver Centennial CO USA Annual Heating 99.6%, MaxDB=-18.8캜
+ ! Denver Centennial CO USA Annual Heating 99.6%, MaxDB=-18.8째C
 
   SizingPeriod:DesignDay,
     Denver Centennial Ann Htg 99.6% Condns DB,  !- Name
@@ -125,7 +129,7 @@
 
  ! Denver Centennial Annual Cooling Design Conditions Wind Speed=4.9m/s Wind Dir=0
  ! Hottest Month=July
- ! Denver Centennial CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32캜 MWB=15.5캜
+ ! Denver Centennial CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32째C MWB=15.5째C
 
   SizingPeriod:DesignDay,
     Denver Centennial Ann Clg 1% Condns DB=>MWB,  !- Name
@@ -351,18 +355,15 @@
 
   Branch,
     Air Loop Main Branch,    !- Name
-    8.5,                     !- Maximum Flow Rate {m3/s}
     ,                        !- Pressure Drop Curve Name
     CoilSystem:Cooling:DX,   !- Component 1 Object Type
     DX Cooling Coil System 1,!- Component 1 Name
     Supply Inlet Node,       !- Component 1 Inlet Node Name
     Main Cooling Coil 1 Outlet Node,  !- Component 1 Outlet Node Name
-    PASSIVE,                 !- Component 1 Branch Control Type
     Fan:VariableVolume,      !- Component 2 Object Type
     EC Plug Fan 1,           !- Component 2 Name
     Main Cooling Coil 1 Outlet Node,  !- Component 2 Inlet Node Name
-    Supply Outlet Node,      !- Component 2 Outlet Node Name
-    ACTIVE;                  !- Component 2 Branch Control Type
+    Supply Outlet Node;      !- Component 2 Outlet Node Name
 
   CoilSystem:Cooling:DX,
     DX Cooling Coil System 1,!- Name
@@ -377,7 +378,7 @@
     Main Cooling Coil 1,     !- Name
     System Availability Schedule,  !- Availability Schedule Name
     148300,                  !- Gross Rated Total Cooling Capacity {W}
-    0.85,                    !- Gross Rated Sensible Heat Ratio
+    0.83,                    !- Gross Rated Sensible Heat Ratio
     4.5669,                  !- Gross Rated Cooling COP {W/W}
     8.5,                     !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
@@ -388,159 +389,119 @@
     Liebert Econophase EIR Func T,  !- Energy Input Ratio Function of Temperature Curve Name
     HPACCOOLEIRFFF,          !- Energy Input Ratio Function of Flow Fraction Curve Name
     HPACCOOLPLFFPLR,         !- Part Load Fraction Correlation Curve Name
+    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     ,                        !- Nominal Time for Condensate Removal to Begin {s}
     ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
     ,                        !- Maximum Cycling Rate {cycles/hr}
     ,                        !- Latent Capacity Time Constant {s}
     ,                        !- Condenser Air Inlet Node Name
     ,                        !- Condenser Type
-    ,                        !- Evaporative Condenser Effectiveness
-    ,                        !- Evaporative Condenser Air Flow Rate
-    ,                        !- Evaporative Condenser Pump Rated Power Consumption
-    ,                        !- Crankcase Heater Capacity
-    ,                        !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+    ,                        !- Evaporative Condenser Effectiveness {dimensionless}
+    ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
+    ,                        !- Evaporative Condenser Pump Rated Power Consumption {W}
+    ,                        !- Crankcase Heater Capacity {W}
+    ,                        !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
-    ,                        !- Basin Heater Capacity
-    ,                        !- Basin Heater Setpoint Temperature
+    ,                        !- Basin Heater Capacity {W/K}
+    ,                        !- Basin Heater Setpoint Temperature {C}
     ,                        !- Basin Heater Operating Schedule Name
     ,                        !- Sensible Heat Ratio Function of Temperature Curve Name
     ,                        !- Sensible Heat Ratio Function of Flow Fraction Curve Name
     Yes;                     !- Report ASHRAE Standard 127 Performance Ratings
 
-  Table:TwoIndependentVariables,
+  Table:IndependentVariable,
+    Cool Cap Mod func of Temperature_IndependentVariable1,  !- Name
+    Linear,                  !- Interpolation Method
+    Constant,                !- Extrapolation Method
+    13.0,                    !- Minimum Value
+    23.89,                   !- Maximum Value
+    ,                        !- Normalization Reference Value
+    Temperature,             !- Unit Type
+    ,                        !- External File Name
+    ,                        !- External File Column Number
+    ,                        !- External File Starting Row Number
+    13.00000,                !- Value 1
+    17.00000,                !- Value 2
+    19.44440,                !- <none>
+    21.00000,                !- <none>
+    23.90000;                !- <none>
+
+  Table:IndependentVariable,
+    Cool Cap Mod func of Temperature_IndependentVariable2,  !- Name
+    Linear,                  !- Interpolation Method
+    Constant,                !- Extrapolation Method
+    -10.0,                   !- Minimum Value
+    46.0,                    !- Maximum Value
+    ,                        !- Normalization Reference Value
+    Temperature,             !- Unit Type
+    ,                        !- External File Name
+    ,                        !- External File Column Number
+    ,                        !- External File Starting Row Number
+    -10.00000,               !- Value 1
+    15.00000,                !- Value 2
+    18.00000,                !- <none>
+    24.00000,                !- <none>
+    30.00000,                !- <none>
+    35.00000,                !- <none>
+    38.00000,                !- <none>
+    46.00000;                !- <none>
+
+  Table:IndependentVariableList,
+    Cool Cap Mod func of Temperature_IndependentVariableList,  !- Name
+    Cool Cap Mod func of Temperature_IndependentVariable1,  !- Independent Variable 1 Name
+    Cool Cap Mod func of Temperature_IndependentVariable2;  !- Independent Variable 2 Name
+
+  Table:Lookup,
     Cool Cap Mod func of Temperature,  !- Name
-    Biquadratic,             !- Curve Type
-    LinearInterpolationOfTable,  !- Interpolation Method
-    13.0,                    !- Minimum Value of X
-    23.89,                   !- Maximum Value of X
-    -10.0,                   !- Minimum Value of Y
-    46.11,                   !- Maximum Value of Y
-    ,                        !- Minimum Table Output
-    ,                        !- Maximum Table Output
-    Temperature,             !- Input Unit Type for X
-    Temperature,             !- Input Unit Type for Y
+    Cool Cap Mod func of Temperature_IndependentVariableList,  !- Independent Variable List Name
+    ,                        !- Normalization Method
+    ,                        !- Normalization Divisor
+    ,                        !- Minimum Output
+    ,                        !- Maximum Output
     Dimensionless,           !- Output Unit Type
-    ,                        !- Normalization Reference
-    13.0,                    !- X Value #1
-    -10.0,                   !- Y Value #1
-    1.00,                    !- Output Value #1
-    13.0,                    !- X Value #2
-    15.0,                    !- Y Value #2
-    1.00,                    !- Output Value #2
-    13.0,                    !- X Value #3
-    18.0,                    !- Y Value #3
-    1.00,                    !- Output Value #3
-    13.0,                    !- X Value #4
-    24.0,                    !- Y Value #4
-    0.924738271,             !- Output Value #4
-    13.0,                    !- <none>
-    30.0,                    !- <none>
+    ,                        !- External File Name
+    ,                        !- External File Column Number
+    ,                        !- External File Starting Row Number
+    1.00,                    !- Output Value 1
+    1.00,                    !- Output Value 2
+    1.00,                    !- <none>
+    0.924738271,             !- <none>
     0.883909339,             !- <none>
-    13.0,                    !- <none>
-    35.0,                    !- <none>
     0.835522309,             !- <none>
-    13.0,                    !- <none>
-    38.0,                    !- <none>
     0.800222635,             !- <none>
-    13.0,                    !- <none>
-    46.0,                    !- <none>
     0.683109499,             !- <none>
-    17.0,                    !- <none>
-    -10.0,                   !- <none>
     1.00,                    !- <none>
-    17.0,                    !- <none>
-    15.0,                    !- <none>
     1.00,                    !- <none>
-    17.0,                    !- <none>
-    18.0,                    !- <none>
     1.00,                    !- <none>
-    17.0,                    !- <none>
-    24.0,                    !- <none>
     1.00,                    !- <none>
-    17.0,                    !- <none>
-    30.0,                    !- <none>
     0.976933863,             !- <none>
-    17.0,                    !- <none>
-    35.0,                    !- <none>
     0.937696593,             !- <none>
-    17.0,                    !- <none>
-    38.0,                    !- <none>
     0.907886775,             !- <none>
-    17.0,                    !- <none>
-    46.0,                    !- <none>
     0.805413255,             !- <none>
-    19.4444,                 !- <none>
-    -10.0,                   !- <none>
     1.00,                    !- <none>
-    19.4444,                 !- <none>
-    15.0,                    !- <none>
     1.00,                    !- <none>
-    19.4444,                 !- <none>
-    18.0,                    !- <none>
     1.00,                    !- <none>
-    19.4444,                 !- <none>
-    24.0,                    !- <none>
     1.00,                    !- <none>
-    19.4444,                 !- <none>
-    30.0,                    !- <none>
     1.00,                    !- <none>
-    19.4444,                 !- <none>
-    35.0,                    !- <none>
     1.00,                    !- <none>
-    19.4444,                 !- <none>
-    38.0,                    !- <none>
     0.9718,                  !- <none>
-    19.4444,                 !- <none>
-    46.0,                    !- <none>
     0.8782,                  !- <none>
-    21.0,                    !- <none>
-    -10.0,                   !- <none>
     1.00,                    !- <none>
-    21.0,                    !- <none>
-    15.0,                    !- <none>
     1.00,                    !- <none>
-    21.0,                    !- <none>
-    18.0,                    !- <none>
     1.00,                    !- <none>
-    21.0,                    !- <none>
-    24.0,                    !- <none>
     1.00,                    !- <none>
-    21.0,                    !- <none>
-    30.0,                    !- <none>
     1.00,                    !- <none>
-    21.0,                    !- <none>
-    35.0,                    !- <none>
     1.0385,                  !- <none>
-    21.0,                    !- <none>
-    38.0,                    !- <none>
     1.0142,                  !- <none>
-    21.0,                    !- <none>
-    46.0,                    !- <none>
     0.9264,                  !- <none>
-    23.9,                    !- <none>
-    -10.0,                   !- <none>
     1.00,                    !- <none>
-    23.9,                    !- <none>
-    15.0,                    !- <none>
     1.00,                    !- <none>
-    23.9,                    !- <none>
-    18.0,                    !- <none>
     1.00,                    !- <none>
-    23.9,                    !- <none>
-    24.0,                    !- <none>
     1.00,                    !- <none>
-    23.9,                    !- <none>
-    30.0,                    !- <none>
     1.00,                    !- <none>
-    23.9,                    !- <none>
-    35.0,                    !- <none>
     1.110828252,             !- <none>
-    23.9,                    !- <none>
-    38.0,                    !- <none>
     1.090488436,             !- <none>
-    23.9,                    !- <none>
-    46.0,                    !- <none>
     1.013268253;             !- <none>
 
   Curve:Quadratic,
@@ -569,121 +530,98 @@
     Temperature,             !- Input Unit Type for Y
     Dimensionless;           !- Output Unit Type
 
-  Table:TwoIndependentVariables,
+  Table:IndependentVariable,
+    Liebert Econophase EIR Func T_IndependentVariable1,  !- Name
+    Linear,                  !- Interpolation Method
+    Constant,                !- Extrapolation Method
+    12.7,                    !- Minimum Value
+    23.8,                    !- Maximum Value
+    ,                        !- Normalization Reference Value
+    Temperature,             !- Unit Type
+    ,                        !- External File Name
+    ,                        !- External File Column Number
+    ,                        !- External File Starting Row Number
+    12.70000,                !- Value 1
+    23.80000;                !- Value 2
+
+  Table:IndependentVariable,
+    Liebert Econophase EIR Func T_IndependentVariable2,  !- Name
+    Linear,                  !- Interpolation Method
+    Constant,                !- Extrapolation Method
+    -50,                     !- Minimum Value
+    50,                      !- Maximum Value
+    ,                        !- Normalization Reference Value
+    Temperature,             !- Unit Type
+    ,                        !- External File Name
+    ,                        !- External File Column Number
+    ,                        !- External File Starting Row Number
+    -50.00000,               !- Value 1
+    -4.00000,                !- Value 2
+    -1.22220,                !- <none>
+    1.55550,                 !- <none>
+    4.33330,                 !- <none>
+    7.11110,                 !- <none>
+    9.88880,                 !- <none>
+    12.66670,                !- <none>
+    15.44440,                !- <none>
+    18.22200,                !- <none>
+    21.00000,                !- <none>
+    23.77778,                !- <none>
+    26.55556,                !- <none>
+    29.33333,                !- <none>
+    32.11111,                !- <none>
+    34.88889,                !- Extended Field
+    50.00000;                !- Extended Field
+
+  Table:IndependentVariableList,
+    Liebert Econophase EIR Func T_IndependentVariableList,  !- Name
+    Liebert Econophase EIR Func T_IndependentVariable1,  !- Independent Variable 1 Name
+    Liebert Econophase EIR Func T_IndependentVariable2;  !- Independent Variable 2 Name
+
+  Table:Lookup,
     Liebert Econophase EIR Func T,  !- Name
-    Biquadratic,             !- Curve Type
-    LinearInterpolationOfTable,  !- Interpolation Method
-    12.7,                    !- Minimum Value of X
-    23.8,                    !- Maximum Value of X
-    -50,                     !- Minimum Value of Y
-    50,                      !- Maximum Value of Y
-    0.03,                    !- Minimum Table Output
-    1.5,                     !- Maximum Table Output
-    Temperature,             !- Input Unit Type for X
-    Temperature,             !- Input Unit Type for Y
+    Liebert Econophase EIR Func T_IndependentVariableList,  !- Independent Variable List Name
+    ,                        !- Normalization Method
+    ,                        !- Normalization Divisor
+    0.03,                    !- Minimum Output
+    1.5,                     !- Maximum Output
     Dimensionless,           !- Output Unit Type
-    ,                        !- Normalization Reference
-    12.7,                    !- X Value #1
-    -50,                     !- Y Value #1
-    0.042,                   !- Output Value #1
-    12.7,                    !- X Value #2
-    -4.0,                    !- Y Value #2
-    0.042,                   !- Output Value #2
-    12.7,                    !- X Value #3
-    -1.2222,                 !- Y Value #3
-    0.084,                   !- Output Value #3
-    12.7,                    !- X Value #4
-    1.5555,                  !- Y Value #4
-    0.084,                   !- Output Value #4
-    12.7,                    !- <none>
-    4.3333,                  !- <none>
+    ,                        !- External File Name
+    ,                        !- External File Column Number
+    ,                        !- External File Starting Row Number
+    0.042,                   !- Output Value 1
+    0.042,                   !- Output Value 2
+    0.084,                   !- <none>
+    0.084,                   !- <none>
     0.2269,                  !- <none>
-    12.7,                    !- <none>
-    7.1111,                  !- <none>
     0.2395,                  !- <none>
-    12.7,                    !- <none>
-    9.8888,                  !- <none>
     0.311,                   !- <none>
-    12.7,                    !- <none>
-    12.6667,                 !- <none>
     0.3697,                  !- <none>
-    12.7,                    !- <none>
-    15.4444,                 !- <none>
     0.4454,                  !- <none>
-    12.7,                    !- <none>
-    18.222,                  !- <none>
     0.5462,                  !- <none>
-    12.7,                    !- <none>
-    21.0,                    !- <none>
     0.6723,                  !- <none>
-    12.7,                    !- <none>
-    23.777778,               !- <none>
     0.7227,                  !- <none>
-    12.7,                    !- <none>
-    26.55556,                !- <none>
     0.7773,                  !- <none>
-    12.7,                    !- <none>
-    29.33333,                !- <none>
     0.8193,                  !- <none>
-    12.7,                    !- <none>
-    32.11111,                !- <none>
     0.895,                   !- <none>
-    12.7,                    !- <none>
-    34.88889,                !- <none>
     1.0,                     !- <none>
-    12.7,                    !- <none>
-    50.0,                    !- <none>
     1.5,                     !- <none>
-    23.8,                    !- <none>
-    -50,                     !- <none>
     0.042,                   !- <none>
-    23.8,                    !- <none>
-    -4.0,                    !- <none>
     0.042,                   !- <none>
-    23.8,                    !- <none>
-    -1.2222,                 !- <none>
     0.084,                   !- <none>
-    23.8,                    !- <none>
-    1.5555,                  !- <none>
     0.084,                   !- <none>
-    23.8,                    !- <none>
-    4.3333,                  !- <none>
     0.2269,                  !- <none>
-    23.8,                    !- <none>
-    7.1111,                  !- <none>
     0.2395,                  !- <none>
-    23.8,                    !- <none>
-    9.8888,                  !- <none>
     0.311,                   !- <none>
-    23.8,                    !- <none>
-    12.6667,                 !- <none>
     0.3697,                  !- <none>
-    23.8,                    !- <none>
-    15.4444,                 !- <none>
     0.4454,                  !- <none>
-    23.8,                    !- <none>
-    18.222,                  !- <none>
     0.5462,                  !- <none>
-    23.8,                    !- <none>
-    21.0,                    !- <none>
     0.6723,                  !- <none>
-    23.8,                    !- <none>
-    23.777778,               !- <none>
     0.7227,                  !- <none>
-    23.8,                    !- <none>
-    26.55556,                !- <none>
     0.7773,                  !- <none>
-    23.8,                    !- <none>
-    29.33333,                !- <none>
     0.8193,                  !- <none>
-    23.8,                    !- <none>
-    32.11111,                !- <none>
     0.895,                   !- <none>
-    23.8,                    !- <none>
-    34.88889,                !- <none>
     1.0,                     !- <none>
-    23.8,                    !- <none>
-    50.0,                    !- <none>
     1.5;                     !- <none>
 
   Curve:Quadratic,
@@ -766,18 +704,23 @@
     Main Zone Inlet Node,    !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Main Zone Node,          !- Zone Air Node Name
-    Main Zone Outlet Node;   !- Zone Return Air Node Name
+    Main Zone Outlet Node;   !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     Main Zone Equipment,     !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Main Zone ATU,           !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     2,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
     ZoneHVAC:Baseboard:Convective:Electric,  !- Zone Equipment 2 Object Type
     Main Zone Baseboard,     !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
-    1;                       !- Zone Equipment 2 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 2 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 2 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     Main Zone ATU,           !- Name
@@ -798,9 +741,9 @@
     Main Zone Baseboard,     !- Name
     System Availability Schedule,  !- Availability Schedule Name
     HeatingDesignCapacity,   !- Heating Design Capacity Method
-    8000,                    !- Heating Design Capacity{ W }
-    ,                        !- Heating Design Capacity Per Floor Area{ W / m2 }
-    ,                        !- Fraction of Autosized Heating Design Capacity{ -}
+    8000,                    !- Heating Design Capacity {W}
+    ,                        !- Heating Design Capacity Per Floor Area {W/m2}
+    ,                        !- Fraction of Autosized Heating Design Capacity
     0.97;                    !- Efficiency
 
   ZoneControl:Thermostat,
@@ -843,9 +786,10 @@
     For: AllDays,            !- Field 2
     Until: 24:00,29.3;       !- Field 3
 
-ElectricEquipment:ITE:AirCooled,
+  ElectricEquipment:ITE:AirCooled,
     Data Center Servers,     !- Name
     Main Zone,               !- Zone Name
+    FlowFromSystem,          !- Air Flow Calculation Method
     Watts/Unit,              !- Design Power Input Calculation Method
     500,                     !- Watts per Unit {W}
     100,                     !- Number of Units
@@ -873,20 +817,20 @@ ElectricEquipment:ITE:AirCooled,
     ITE-UPS;                 !- Electric Power Supply End-Use Subcategory
 
   Curve:Quadratic,
-    ECM FanPower fFlow,          !- Name
+    ECM FanPower fFlow,      !- Name
     0.0,                     !- Coefficient1 Constant
     1.0,                     !- Coefficient2 x
     0.0,                     !- Coefficient3 x**2
     0.0,                     !- Minimum Value of x
-    99.0;                     !- Maximum Value of x
+    99.0;                    !- Maximum Value of x
 
   Curve:Quadratic,
-    UPS Efficiency fPLR,          !- Name
+    UPS Efficiency fPLR,     !- Name
     1.0,                     !- Coefficient1 Constant
     0.0,                     !- Coefficient2 x
     0.0,                     !- Coefficient3 x**2
     0.0,                     !- Minimum Value of x
-    99.0;                     !- Maximum Value of x
+    99.0;                    !- Maximum Value of x
 
   Curve:Biquadratic,
     Data Center Servers Power fLoadTemp,  !- Name
@@ -902,7 +846,7 @@ ElectricEquipment:ITE:AirCooled,
     99.0,                    !- Maximum Value of y
     0.0,                     !- Minimum Curve Output
     99.0,                    !- Maximum Curve Output
-    Dimensionless,             !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Temperature,             !- Input Unit Type for Y
     Dimensionless;           !- Output Unit Type
 
@@ -920,7 +864,7 @@ ElectricEquipment:ITE:AirCooled,
     99.0,                    !- Maximum Value of y
     0.0,                     !- Minimum Curve Output
     99.0,                    !- Maximum Curve Output
-    Dimensionless,             !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Temperature,             !- Input Unit Type for Y
     Dimensionless;           !- Output Unit Type
 
@@ -938,18 +882,18 @@ ElectricEquipment:ITE:AirCooled,
     99.0,                    !- Maximum Value of y
     0.0,                     !- Minimum Curve Output
     99.0,                    !- Maximum Curve Output
-    Dimensionless,             !- Input Unit Type for X
+    Dimensionless,           !- Input Unit Type for X
     Temperature,             !- Input Unit Type for Y
     Dimensionless;           !- Output Unit Type
 
-  Schedule:Constant, Data Center Operation Schedule, Any Number, 1.0;
+  Schedule:Constant,Data Center Operation Schedule,Any Number,1.0;
 
   Schedule:Compact,
     Data Center CPU Loading Schedule,  !- Name
     Any Number,              !- Schedule Type Limits Name
     Through: 1/31,           !- Field 1
     For: AllDays,            !- Field 2
-    Until: 24:00,1.0,       !- Field 3
+    Until: 24:00,1.0,        !- Field 3
     Through: 2/29,           !- Field 5
     For: AllDays,            !- Field 6
     Until: 24:00,0.50,       !- Field 7
@@ -1063,8 +1007,6 @@ ElectricEquipment:ITE:AirCooled,
 
   Output:Variable,*,Facility Total Electric Demand Power,Hourly;
 
-  Output:Variable,*,Zone Electric Equipment Total Heating Rate,Hourly;
-
   Output:Variable,*,Site Outdoor Air Drybulb Temperature,Hourly;
 
   Output:Variable,*,Site Outdoor Air Dewpoint Temperature,Hourly;
@@ -1077,41 +1019,75 @@ ElectricEquipment:ITE:AirCooled,
 
   Output:Variable,*,Schedule Value,Hourly;
 
-Output:Variable,*,ITE CPU Electric Power,Hourly; !- Zone Average [W]
-Output:Variable,*,ITE Fan Electric Power,Hourly; !- Zone Average [W]
-Output:Variable,*,ITE UPS Electric Power,Hourly; !- Zone Average [W]
-Output:Variable,*,ITE CPU Electric Power at Design Inlet Conditions,Hourly; !- Zone Average [W]
-Output:Variable,*,ITE Fan Electric Power at Design Inlet Conditions,Hourly; !- Zone Average [W]
-Output:Variable,*,ITE UPS Heat Gain to Zone Rate,Hourly; !- Zone Average [W]
-Output:Variable,*,ITE Total Heat Gain to Zone Rate,Hourly; !- Zone Average [W]
-Output:Variable,*,ITE Standard Density Air Volume Flow Rate,Hourly; !- Zone Average [m3/s]
-Output:Variable,*,ITE Air Mass Flow Rate,Hourly; !- Zone Average [kg/s]
-Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature,Hourly; !- Zone Average [C]
-Output:Variable,*,ITE Air Inlet Dewpoint Temperature,Hourly; !- Zone Average [C]
-Output:Variable,*,ITE Air Inlet Relative Humidity,Hourly; !- Zone Average [%]
-Output:Variable,*,ITE Air Outlet Dry-Bulb Temperature,Hourly; !- Zone Average [C]
-Output:Variable,*,ITE Supply Heat Index,Hourly; !- Zone Average []
-Output:Variable,*,ITE Air Inlet Operating Range Exceeded Time,Hourly; !- Zone Sum [hr]
-Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature Above Operating Range Time,Hourly; !- Zone Sum [hr]
-Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature Below Operating Range Time,Hourly; !- Zone Sum [hr]
-Output:Variable,*,ITE Air Inlet Dewpoint Temperature Above Operating Range Time,Hourly; !- Zone Sum [hr]
-Output:Variable,*,ITE Air Inlet Dewpoint Temperature Below Operating Range Time,Hourly; !- Zone Sum [hr]
-Output:Variable,*,ITE Air Inlet Relative Humidity Above Operating Range Time,Hourly; !- Zone Sum [hr]
-Output:Variable,*,ITE Air Inlet Relative Humidity Below Operating Range Time,Hourly; !- Zone Sum [hr]
-Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature Difference Above Operating Range,Hourly; !- Zone Average [deltaC]
-Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature Difference Below Operating Range,Hourly; !- Zone Average [deltaC]
-Output:Variable,*,ITE Air Inlet Dewpoint Temperature Difference Above Operating Range,Hourly; !- Zone Average [deltaC]
-Output:Variable,*,ITE Air Inlet Dewpoint Temperature Difference Below Operating Range,Hourly; !- Zone Average [deltaC]
-Output:Variable,*,ITE Air Inlet Relative Humidity Difference Above Operating Range,Hourly; !- Zone Average [%]
-Output:Variable,*,ITE Air Inlet Relative Humidity Difference Below Operating Range,Hourly; !- Zone Average [%]
-Output:Variable,*,Zone Air Temperature,Hourly; !- HVAC Average [C]
-Output:Variable,*,Zone Air Heat Balance Internal Convective Heat Gain Rate,Hourly; !- HVAC Average [W]
-Output:Variable,*,Zone Air Heat Balance Surface Convection Rate,Hourly; !- HVAC Average [W]
-Output:Variable,*,Zone Air Heat Balance Interzone Air Transfer Rate,Hourly; !- HVAC Average [W]
-Output:Variable,*,Zone Air Heat Balance Outdoor Air Transfer Rate,Hourly; !- HVAC Average [W]
-Output:Variable,*,Zone Air Heat Balance System Air Transfer Rate,Hourly; !- HVAC Average [W]
-Output:Variable,*,Zone Air Heat Balance System Convective Heat Gain Rate,Hourly; !- HVAC Average [W]
-Output:Variable,*,Zone Air Heat Balance Air Energy Storage Rate,Hourly; !- HVAC Average [W]
+  Output:Variable,*,ITE CPU Electric Power,Hourly;
+
+  Output:Variable,*,ITE Fan Electric Power,Hourly;
+
+  Output:Variable,*,ITE UPS Electric Power,Hourly;
+
+  Output:Variable,*,ITE CPU Electric Power at Design Inlet Conditions,Hourly;
+
+  Output:Variable,*,ITE Fan Electric Power at Design Inlet Conditions,Hourly;
+
+  Output:Variable,*,ITE UPS Heat Gain to Zone Rate,Hourly;
+
+  Output:Variable,*,ITE Total Heat Gain to Zone Rate,Hourly;
+
+  Output:Variable,*,ITE Standard Density Air Volume Flow Rate,Hourly;
+
+  Output:Variable,*,ITE Air Mass Flow Rate,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dewpoint Temperature,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Relative Humidity,Hourly;
+
+  Output:Variable,*,ITE Air Outlet Dry-Bulb Temperature,Hourly;
+
+  Output:Variable,*,ITE Supply Heat Index,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Operating Range Exceeded Time,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature Above Operating Range Time,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature Below Operating Range Time,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dewpoint Temperature Above Operating Range Time,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dewpoint Temperature Below Operating Range Time,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Relative Humidity Above Operating Range Time,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Relative Humidity Below Operating Range Time,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature Difference Above Operating Range,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dry-Bulb Temperature Difference Below Operating Range,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dewpoint Temperature Difference Above Operating Range,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Dewpoint Temperature Difference Below Operating Range,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Relative Humidity Difference Above Operating Range,Hourly;
+
+  Output:Variable,*,ITE Air Inlet Relative Humidity Difference Below Operating Range,Hourly;
+
+  Output:Variable,*,Zone Air Temperature,Hourly;
+
+  Output:Variable,*,Zone Air Heat Balance Internal Convective Heat Gain Rate,Hourly;
+
+  Output:Variable,*,Zone Air Heat Balance Surface Convection Rate,Hourly;
+
+  Output:Variable,*,Zone Air Heat Balance Interzone Air Transfer Rate,Hourly;
+
+  Output:Variable,*,Zone Air Heat Balance Outdoor Air Transfer Rate,Hourly;
+
+  Output:Variable,*,Zone Air Heat Balance System Air Transfer Rate,Hourly;
+
+  Output:Variable,*,Zone Air Heat Balance System Convective Heat Gain Rate,Hourly;
+
+  Output:Variable,*,Zone Air Heat Balance Air Energy Storage Rate,Hourly;
 
 ! custom EMS output variables
 ! SCOP
@@ -1188,7 +1164,7 @@ Output:Variable,*,Zone Air Heat Balance Air Energy Storage Rate,Hourly; !- HVAC 
 
   EnergyManagementSystem:Program,
     CalcSCOP,                !- Name
-    set cpair = @CpAirFnWTdb Wout_SupplyFan  Tout_SupplyFan,  !- Program Line 1
+    set cpair = @CpAirFnW Wout_SupplyFan,  !- Program Line 1
     set FanSensHeat = (Mdot_SupplyFan * cpair ) * DeltaT_SupplyFan,  !- Program Line 2
     set numerator = Qdot_DXCoil_Sens - FanSensHeat,  !- <none>
     set denominator = Power_DX_Coil_Elec + Power_SupplyFan_Elec,  !- <none>
@@ -1233,6 +1209,10 @@ Output:Variable,*,Zone Air Heat Balance Air Energy Storage Rate,Hourly; !- HVAC 
 
   EnergyManagementSystem:Program,
     CalcPUE,                 !- Name
-    set PUE = whole_building_power / IT_Equip_power;  !- Program Line 1
+    IF IT_Equip_power > 0.0, !- Program Line 1
+    set PUE = whole_building_power / IT_Equip_power,  !- Program Line 2
+    ELSE,                    !- <none>
+    set PUE = 0.0,           !- <none>
+    ENDIF;                   !- <none>
 
   Output:Variable,*,PUE,Hourly;

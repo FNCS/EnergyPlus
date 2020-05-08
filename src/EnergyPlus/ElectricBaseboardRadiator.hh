@@ -1,259 +1,187 @@
+// EnergyPlus, Copyright (c) 1996-2020, The Board of Trustees of the University of Illinois,
+// The Regents of the University of California, through Lawrence Berkeley National Laboratory
+// (subject to receipt of any required approvals from the U.S. Dept. of Energy), Oak Ridge
+// National Laboratory, managed by UT-Battelle, Alliance for Sustainable Energy, LLC, and other
+// contributors. All rights reserved.
+//
+// NOTICE: This Software was developed under funding from the U.S. Department of Energy and the
+// U.S. Government consequently retains certain rights. As such, the U.S. Government has been
+// granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable,
+// worldwide license in the Software to reproduce, distribute copies to the public, prepare
+// derivative works, and perform publicly and display publicly, and to permit others to do so.
+//
+// Redistribution and use in source and binary forms, with or without modification, are permitted
+// provided that the following conditions are met:
+//
+// (1) Redistributions of source code must retain the above copyright notice, this list of
+//     conditions and the following disclaimer.
+//
+// (2) Redistributions in binary form must reproduce the above copyright notice, this list of
+//     conditions and the following disclaimer in the documentation and/or other materials
+//     provided with the distribution.
+//
+// (3) Neither the name of the University of California, Lawrence Berkeley National Laboratory,
+//     the University of Illinois, U.S. Dept. of Energy nor the names of its contributors may be
+//     used to endorse or promote products derived from this software without specific prior
+//     written permission.
+//
+// (4) Use of EnergyPlus(TM) Name. If Licensee (i) distributes the software in stand-alone form
+//     without changes from the version obtained under this License, or (ii) Licensee makes a
+//     reference solely to the software portion of its product, Licensee must refer to the
+//     software as "EnergyPlus version X" software, where "X" is the version number Licensee
+//     obtained under this License and may not use a different name for the software. Except as
+//     specifically required in this Section (4), Licensee shall not use in a company name, a
+//     product name, in advertising, publicity, or other promotional activities any name, trade
+//     name, trademark, logo, or other designation of "EnergyPlus", "E+", "e+" or confusingly
+//     similar designation, without the U.S. Department of Energy's prior written consent.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+// AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 #ifndef ElectricBaseboardRadiator_hh_INCLUDED
 #define ElectricBaseboardRadiator_hh_INCLUDED
 
 // ObjexxFCL Headers
-#include <ObjexxFCL/FArray1D.hh>
+#include <ObjexxFCL/Array1D.hh>
 
 // EnergyPlus Headers
-#include <EnergyPlus.hh>
-#include <DataGlobals.hh>
+#include <EnergyPlus/DataGlobals.hh>
+#include <EnergyPlus/EnergyPlus.hh>
+#include <EnergyPlus/Data/EnergyPlusData.hh>
 
 namespace EnergyPlus {
 
 namespace ElectricBaseboardRadiator {
 
-	// Using/Aliasing
+    // Using/Aliasing
 
-	// Data
-	//MODULE PARAMETER DEFINITIONS
-	extern int const BaseboardRadiator_Electric;
-	extern std::string const cCMO_BBRadiator_Electric;
+    // Data
+    // MODULE PARAMETER DEFINITIONS
+    extern int const BaseboardRadiator_Electric;
+    extern std::string const cCMO_BBRadiator_Electric;
 
-	// DERIVED TYPE DEFINITIONS
+    // DERIVED TYPE DEFINITIONS
 
-	//MODULE VARIABLE DECLARATIONS:
-	extern int NumElecBaseboards;
-	extern FArray1D< Real64 > QBBElecRadSource; // Need to keep the last value in case we are still iterating
-	extern FArray1D< Real64 > QBBElecRadSrcAvg; // Need to keep the last value in case we are still iterating
-	extern FArray1D< Real64 > ZeroSourceSumHATsurf; // Equal to the SumHATsurf for all the walls in a zone with no source
-	// Record keeping variables used to calculate QBBRadSrcAvg locally
-	extern FArray1D< Real64 > LastQBBElecRadSrc; // Need to keep the last value in case we are still iterating
-	extern FArray1D< Real64 > LastSysTimeElapsed; // Need to keep the last value in case we are still iterating
-	extern FArray1D< Real64 > LastTimeStepSys; // Need to keep the last value in case we are still iterating
-	extern FArray1D_bool MySizeFlag;
-	extern FArray1D_bool CheckEquipName;
-	//SUBROUTINE SPECIFICATIONS FOR MODULE BaseboardRadiator
+    // MODULE VARIABLE DECLARATIONS:
+    extern int NumElecBaseboards;
+    extern Array1D<Real64> QBBElecRadSource;     // Need to keep the last value in case we are still iterating
+    extern Array1D<Real64> QBBElecRadSrcAvg;     // Need to keep the last value in case we are still iterating
+    extern Array1D<Real64> ZeroSourceSumHATsurf; // Equal to the SumHATsurf for all the walls in a zone with no source
+    // Record keeping variables used to calculate QBBRadSrcAvg locally
+    extern Array1D<Real64> LastQBBElecRadSrc;  // Need to keep the last value in case we are still iterating
+    extern Array1D<Real64> LastSysTimeElapsed; // Need to keep the last value in case we are still iterating
+    extern Array1D<Real64> LastTimeStepSys;    // Need to keep the last value in case we are still iterating
+    extern Array1D_bool MySizeFlag;
+    extern Array1D_bool CheckEquipName;
+    // SUBROUTINE SPECIFICATIONS FOR MODULE BaseboardRadiator
 
-	// Types
+    // Types
 
-	struct ElecBaseboardParams
-	{
-		// Members
-		std::string EquipName;
-		int EquipType;
-		std::string Schedule;
-		FArray1D_string SurfaceName;
-		FArray1D_int SurfacePtr;
-		int ZonePtr;
-		int SchedPtr;
-		int TotSurfToDistrib;
-		Real64 NominalCapacity;
-		Real64 BaseboardEfficiency;
-		Real64 AirInletTemp;
-		Real64 AirInletHumRat;
-		Real64 AirOutletTemp;
-		Real64 ElecUseLoad;
-		Real64 ElecUseRate;
-		Real64 FracRadiant;
-		Real64 FracConvect;
-		Real64 FracDistribPerson;
-		Real64 TotPower;
-		Real64 Power;
-		Real64 ConvPower;
-		Real64 RadPower;
-		Real64 TotEnergy;
-		Real64 Energy;
-		Real64 ConvEnergy;
-		Real64 RadEnergy;
-		FArray1D< Real64 > FracDistribToSurf;
-		int HeatingCapMethod; // - Method for electric baseboard heating capacity scalable sizing calculation
-		Real64 ScaledHeatingCapacity; // - electric baseboard scaled maximum heating capacity {W} or scalable variable for sizing in {-}, or {W/m2}
+    struct ElecBaseboardParams
+    {
+        // Members
+        std::string EquipName;
+        int EquipType;
+        std::string Schedule;
+        Array1D_string SurfaceName;
+        Array1D_int SurfacePtr;
+        int ZonePtr;
+        int SchedPtr;
+        int TotSurfToDistrib;
+        Real64 NominalCapacity;
+        Real64 BaseboardEfficiency;
+        Real64 AirInletTemp;
+        Real64 AirInletHumRat;
+        Real64 AirOutletTemp;
+        Real64 ElecUseLoad;
+        Real64 ElecUseRate;
+        Real64 FracRadiant;
+        Real64 FracConvect;
+        Real64 FracDistribPerson;
+        Real64 TotPower;
+        Real64 Power;
+        Real64 ConvPower;
+        Real64 RadPower;
+        Real64 TotEnergy;
+        Real64 Energy;
+        Real64 ConvEnergy;
+        Real64 RadEnergy;
+        Array1D<Real64> FracDistribToSurf;
+        int HeatingCapMethod;         // - Method for electric baseboard heating capacity scalable sizing calculation
+        Real64 ScaledHeatingCapacity; // - electric baseboard scaled maximum heating capacity {W} or scalable variable for sizing in {-}, or {W/m2}
 
-		// Default Constructor
-		ElecBaseboardParams() :
-			EquipType( 0 ),
-			ZonePtr( 0 ),
-			SchedPtr( 0 ),
-			TotSurfToDistrib( 0 ),
-			NominalCapacity( 0.0 ),
-			BaseboardEfficiency( 0.0 ),
-			AirInletTemp( 0.0 ),
-			AirInletHumRat( 0.0 ),
-			AirOutletTemp( 0.0 ),
-			ElecUseLoad( 0.0 ),
-			ElecUseRate( 0.0 ),
-			FracRadiant( 0.0 ),
-			FracConvect( 0.0 ),
-			FracDistribPerson( 0.0 ),
-			TotPower( 0.0 ),
-			Power( 0.0 ),
-			ConvPower( 0.0 ),
-			RadPower( 0.0 ),
-			TotEnergy( 0.0 ),
-			Energy( 0.0 ),
-			ConvEnergy( 0.0 ),
-			RadEnergy( 0.0 ),
-			HeatingCapMethod( 0 ),
-			ScaledHeatingCapacity( 0.0 )
-		{}
+        // Default Constructor
+        ElecBaseboardParams()
+            : EquipType(0), ZonePtr(0), SchedPtr(0), TotSurfToDistrib(0), NominalCapacity(0.0), BaseboardEfficiency(0.0), AirInletTemp(0.0),
+              AirInletHumRat(0.0), AirOutletTemp(0.0), ElecUseLoad(0.0), ElecUseRate(0.0), FracRadiant(0.0), FracConvect(0.0), FracDistribPerson(0.0),
+              TotPower(0.0), Power(0.0), ConvPower(0.0), RadPower(0.0), TotEnergy(0.0), Energy(0.0), ConvEnergy(0.0), RadEnergy(0.0),
+              HeatingCapMethod(0), ScaledHeatingCapacity(0.0)
+        {
+        }
+    };
 
-		// Member Constructor
-		ElecBaseboardParams(
-			std::string const & EquipName,
-			int const EquipType,
-			std::string const & Schedule,
-			FArray1_string const & SurfaceName,
-			FArray1_int const & SurfacePtr,
-			int const ZonePtr,
-			int const SchedPtr,
-			int const TotSurfToDistrib,
-			Real64 const NominalCapacity,
-			Real64 const BaseboardEfficiency,
-			Real64 const AirInletTemp,
-			Real64 const AirInletHumRat,
-			Real64 const AirOutletTemp,
-			Real64 const ElecUseLoad,
-			Real64 const ElecUseRate,
-			Real64 const FracRadiant,
-			Real64 const FracConvect,
-			Real64 const FracDistribPerson,
-			Real64 const TotPower,
-			Real64 const Power,
-			Real64 const ConvPower,
-			Real64 const RadPower,
-			Real64 const TotEnergy,
-			Real64 const Energy,
-			Real64 const ConvEnergy,
-			Real64 const RadEnergy,
-			FArray1< Real64 > const & FracDistribToSurf,
-			int const HeatingCapMethod,
-			Real64 const ScaledHeatingCapacity
-		) :
-			EquipName( EquipName ),
-			EquipType( EquipType ),
-			Schedule( Schedule ),
-			SurfaceName( SurfaceName ),
-			SurfacePtr( SurfacePtr ),
-			ZonePtr( ZonePtr ),
-			SchedPtr( SchedPtr ),
-			TotSurfToDistrib( TotSurfToDistrib ),
-			NominalCapacity( NominalCapacity ),
-			BaseboardEfficiency( BaseboardEfficiency ),
-			AirInletTemp( AirInletTemp ),
-			AirInletHumRat( AirInletHumRat ),
-			AirOutletTemp( AirOutletTemp ),
-			ElecUseLoad( ElecUseLoad ),
-			ElecUseRate( ElecUseRate ),
-			FracRadiant( FracRadiant ),
-			FracConvect( FracConvect ),
-			FracDistribPerson( FracDistribPerson ),
-			TotPower( TotPower ),
-			Power( Power ),
-			ConvPower( ConvPower ),
-			RadPower( RadPower ),
-			TotEnergy( TotEnergy ),
-			Energy( Energy ),
-			ConvEnergy( ConvEnergy ),
-			RadEnergy( RadEnergy ),
-			FracDistribToSurf( FracDistribToSurf ),
-			HeatingCapMethod( HeatingCapMethod ),
-			ScaledHeatingCapacity( ScaledHeatingCapacity )
-		{}
+    struct ElecBaseboardNumericFieldData
+    {
+        // Members
+        Array1D_string FieldNames;
 
-	};
+        // Default Constructor
+        ElecBaseboardNumericFieldData()
+        {
+        }
+    };
 
-	struct ElecBaseboardNumericFieldData
-	{
-		// Members
-		FArray1D_string FieldNames;
+    // Object Data
+    extern Array1D<ElecBaseboardParams> ElecBaseboard;
+    extern Array1D<ElecBaseboardNumericFieldData> ElecBaseboardNumericFields;
 
-		// Default Constructor
-		ElecBaseboardNumericFieldData()
-		{}
+    // Functions
 
-		// Member Constructor
-		ElecBaseboardNumericFieldData(
-			FArray1_string const & FieldNames // Name of the HeatingCoil numeric field descriptions
-			) :
-			FieldNames(FieldNames)
-		{}
-	};
+    void SimElecBaseboard(EnergyPlusData &state, std::string const &EquipName,
+                          int const ActualZoneNum,
+                          int const ControlledZoneNum,
+                          bool const FirstHVACIteration,
+                          Real64 &PowerMet,
+                          int &CompIndex);
 
-	// Object Data
-	extern FArray1D< ElecBaseboardParams > ElecBaseboard;
-	extern FArray1D< ElecBaseboardNumericFieldData > ElecBaseboardNumericFields;
+    void GetElectricBaseboardInput();
 
-	// Functions
+    void InitElectricBaseboard(EnergyPlusData &state, int const BaseboardNum, int const ControlledZoneNumSub, bool const FirstHVACIteration);
 
-	void
-	SimElecBaseboard(
-		std::string const & EquipName,
-		int const ActualZoneNum,
-		int const ControlledZoneNum,
-		bool const FirstHVACIteration,
-		Real64 & PowerMet,
-		int & CompIndex
-	);
+    void SizeElectricBaseboard(EnergyPlusData &state, int const BaseboardNum);
 
-	void
-	GetElectricBaseboardInput();
+    void CalcElectricBaseboard(int const BaseboardNum, int const ControlledZoneNum);
 
-	void
-	InitElectricBaseboard(
-		int const BaseboardNum,
-		int const ControlledZoneNumSub,
-		bool const FirstHVACIteration
-	);
+    void UpdateElectricBaseboardOff(Real64 &LoadMet,
+                                    Real64 &QBBCap,
+                                    Real64 &RadHeat,
+                                    Real64 &QBBElecRadSrc,
+                                    Real64 &ElecUseRate,
+                                    Real64 &AirOutletTemp,
+                                    Real64 const AirInletTemp);
 
-	void
-	SizeElectricBaseboard( int const BaseboardNum );
+    void UpdateElectricBaseboardOn(
+        Real64 &AirOutletTemp, Real64 &ElecUseRate, Real64 const AirInletTemp, Real64 const QBBCap, Real64 const CapacitanceAir, Real64 const Effic);
 
-	void
-	CalcElectricBaseboard(
-		int const BaseboardNum,
-		int const ControlledZoneNum
-	);
+    void UpdateElectricBaseboard(int const BaseboardNum);
 
-	void
-	UpdateElectricBaseboard( int const BaseboardNum );
+    void UpdateBBElecRadSourceValAvg(bool &ElecBaseboardSysOn); // .TRUE. if the radiant system has run this zone time step
 
-	void
-	UpdateBBElecRadSourceValAvg( bool & ElecBaseboardSysOn ); // .TRUE. if the radiant system has run this zone time step
+    void DistributeBBElecRadGains();
 
-	void
-	DistributeBBElecRadGains();
+    void ReportElectricBaseboard(int const BaseboardNum);
 
-	void
-	ReportElectricBaseboard( int const BaseboardNum );
+    Real64 SumHATsurf(int const ZoneNum); // Zone number
 
-	Real64
-	SumHATsurf( int const ZoneNum ); // Zone number
+} // namespace ElectricBaseboardRadiator
 
-	//     NOTICE
-
-	//     Copyright © 1996-2014 The Board of Trustees of the University of Illinois
-	//     and The Regents of the University of California through Ernest Orlando Lawrence
-	//     Berkeley National Laboratory.  All rights reserved.
-
-	//     Portions of the EnergyPlus software package have been developed and copyrighted
-	//     by other individuals, companies and institutions.  These portions have been
-	//     incorporated into the EnergyPlus software package under license.   For a complete
-	//     list of contributors, see "Notice" located in main.cc.
-
-	//     NOTICE: The U.S. Government is granted for itself and others acting on its
-	//     behalf a paid-up, nonexclusive, irrevocable, worldwide license in this data to
-	//     reproduce, prepare derivative works, and perform publicly and display publicly.
-	//     Beginning five (5) years after permission to assert copyright is granted,
-	//     subject to two possible five year renewals, the U.S. Government is granted for
-	//     itself and others acting on its behalf a paid-up, non-exclusive, irrevocable
-	//     worldwide license in this data to reproduce, prepare derivative works,
-	//     distribute copies to the public, perform publicly and display publicly, and to
-	//     permit others to do so.
-
-	//     TRADEMARKS: EnergyPlus is a trademark of the US Department of Energy.
-
-} // ElectricBaseboardRadiator
-
-} // EnergyPlus
+} // namespace EnergyPlus
 
 #endif

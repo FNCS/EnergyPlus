@@ -19,7 +19,7 @@
 ! Location:                Atlanta, GA
 !
 ! Design Days:             Atlanta Hartsfield Intl Ap_GA_USA Extreme Annual Wind Speeds, 1%=9.8m/s, 2.5%=8.6m/s, 5%=7.7m/s
-!                          Atlanta Hartsfield Intl Ap_GA_USA Extreme Annual Temperatures, Max Drybulb=-11.2°C Min Drybulb=35.9°C
+!                          Atlanta Hartsfield Intl Ap_GA_USA Extreme Annual Temperatures, Max Drybulb=-11.2Â°C Min Drybulb=35.9Â°C
 !
 ! Run Period (Weather File): Design Days Simulation, LOCATION,Atlanta Hartsfield Intl Ap,GA,USA,TMY3,722190
 !
@@ -92,7 +92,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,4;
 
@@ -100,7 +100,7 @@
     Simple One Zone w Windows,  !- Name
     0,                       !- North Axis {deg}
     Suburbs,                 !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.004,                   !- Temperature Convergence Tolerance Value {deltaC}
     FullExterior,            !- Solar Distribution
     30,                      !- Maximum Number of Warmup Days
@@ -120,11 +120,13 @@
     No;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -315,7 +317,7 @@
   InternalMass,
     ZONE ONE IM,             !- Name
     InternalMass,            !- Construction Name
-    ZONE ONE,                !- Zone Name
+    ZONE ONE,                !- Zone or ZoneList Name
     42.36;                   !- Surface Area {m2}
 
   Construction,
@@ -380,7 +382,6 @@
     Zn001:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -396,7 +397,6 @@
     Zn001:Wall001,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -428,7 +428,6 @@
     Zn001:Wall002,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000000,               !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -523,7 +522,12 @@
     ,                        !- Heating Design Air Flow Rate {m3/s}
     ,                        !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     ,                        !- Heating Maximum Air Flow {m3/s}
-    ;                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ ZONE ONE,             !- Name
@@ -652,20 +656,24 @@
     ZONE ONE INLET,          !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     ZONE ONE NODE,           !- Zone Air Node Name
-    ZONE ONE OUTLET;         !- Zone Return Air Node Name
+    ZONE ONE OUTLET;         !- Zone Return Air Node or NodeList Name
 
   ZoneHVAC:EquipmentList,
     ZONE ONE EQ,             !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZONE ONE Ideal Loads,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE ONE Ideal Loads,    !- Name
     ,                        !- Availability Schedule Name
     ZONE ONE INLET,          !- Zone Supply Air Node Name
     ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}

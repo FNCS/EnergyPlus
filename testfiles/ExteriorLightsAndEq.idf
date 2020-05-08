@@ -12,8 +12,8 @@
 !
 ! Location:                Denver, CO
 !
-! Design Days:             Denver Stapleton Intl Arpt CO USA Annual Heating 99%, MaxDB=-16캜
-!                          Denver Stapleton Intl Arpt CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32.6캜 MWB=15.6캜
+! Design Days:             Denver Stapleton Intl Arpt CO USA Annual Heating 99%, MaxDB=-16째C
+!                          Denver Stapleton Intl Arpt CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32.6째C MWB=15.6째C
 !
 ! Run Period (Weather File): Full Annual Simulation, DENVER_STAPLETON_CO_USA_WMO_724690
 !
@@ -61,7 +61,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.3;
+  Version,9.3;
 
   Timestep,2;
 
@@ -69,7 +69,7 @@
     None,                    !- Name
     0.0000000E+00,           !- North Axis {deg}
     Suburbs,                 !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.40,                    !- Temperature Convergence Tolerance Value {deltaC}
     MinimalShadowing,        !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -96,7 +96,7 @@
 
  ! Denver Stapleton Intl Arpt CO USA Annual Heating Design Conditions Wind Speed=2.3m/s Wind Dir=180
  ! Coldest Month=December
- ! Denver Stapleton Intl Arpt CO USA Annual Heating 99%, MaxDB=-16캜
+ ! Denver Stapleton Intl Arpt CO USA Annual Heating 99%, MaxDB=-16째C
 
   SizingPeriod:DesignDay,
     Denver Stapleton Intl Arpt Ann Htg 99% Condns DB,  !- Name
@@ -128,7 +128,7 @@
 
  ! Denver Stapleton Intl Arpt Annual Cooling Design Conditions Wind Speed=4m/s Wind Dir=120
  ! Hottest Month=July
- ! Denver Stapleton Intl Arpt CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32.6캜 MWB=15.6캜
+ ! Denver Stapleton Intl Arpt CO USA Annual Cooling (DB=>MWB) 1%, MaxDB=32.6째C MWB=15.6째C
 
   SizingPeriod:DesignDay,
     Denver Stapleton Intl Arpt Ann Clg 1% Condns DB=>MWB,  !- Name
@@ -159,11 +159,13 @@
     1.00;                    !- Sky Clearness
 
   RunPeriod,
-    ,                        !- Name
+    Run Period 1,            !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
@@ -210,19 +212,19 @@
 
   Exterior:FuelEquipment,
     OutsideFuelOil1Eq,       !- Name
-    FuelOil#1,               !- Fuel Use Type
+    FuelOilNo1,              !- Fuel Use Type
     ON,                      !- Schedule Name
     1000;                    !- Design Level {W}
 
   Exterior:FuelEquipment,
     OutsideFuelOil2Eq,       !- Name
-    FuelOil#2,               !- Fuel Use Type
+    FuelOilNo2,              !- Fuel Use Type
     ON,                      !- Schedule Name
     1000;                    !- Design Level {W}
 
   Exterior:FuelEquipment,
     OutsideLPGEq,            !- Name
-    PropaneGas,              !- Fuel Use Type
+    Propane,                 !- Fuel Use Type
     ON,                      !- Schedule Name
     1000;                    !- Design Level {W}
 
