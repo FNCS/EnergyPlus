@@ -21,7 +21,6 @@ elseif(UNIX)
    set(STATIC_EXE TRUE)
   endif()
 else()
-  set(STATIC_EXE TRUE)
   if(CMAKE_Fortran_COMPILER MATCHES "ifort")
     # Set release flags to be empty
     set(CMAKE_Fortran_FLAGS_RELEASE "")
