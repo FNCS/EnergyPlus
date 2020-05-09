@@ -51,12 +51,6 @@ if (APPLE OR UNIX)
 else()  # windows
   add_executable( ExpandObjects ${SRC} "${CMAKE_CURRENT_BINARY_DIR}/ExpandObjects.rc" )
 endif()
-set(SKIP_BUILD_RPATH TRUE)
-if (APPLE OR UNIX)
-  add_executable( ExpandObjects ${SRC} )
-else()  # windows
-  add_executable( ExpandObjects ${SRC} "${CMAKE_CURRENT_BINARY_DIR}/ExpandObjects.rc" )
-endif()
 
 install( TARGETS ExpandObjects DESTINATION "./" )
 if(NOT ${STATIC_EXE})
