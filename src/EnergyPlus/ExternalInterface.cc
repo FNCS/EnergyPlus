@@ -267,10 +267,6 @@ namespace EnergyPlus {
             // Uses InputProcessor "Get" routines to obtain data.
 
             // Using/Aliasing
-            using InputProcessor::GetNumObjectsFound;
-            using InputProcessor::GetObjectItem;
-            using InputProcessor::VerifyName;
-            using InputProcessor::SameString;
             using DataIPShortCuts::cAlphaArgs;
             using DataIPShortCuts::cAlphaFieldNames;
             using DataIPShortCuts::cCurrentModuleObject;
@@ -294,7 +290,7 @@ namespace EnergyPlus {
                 if (UtilityRoutines::SameString(cAlphaArgs(1), "PtolemyServer")) { // The BCVTB interface is activated.
                     ++NumExternalInterfacesBCVTB;
                 }
-                else if (SameString(cAlphaArgs(1), "FNCS")) { // The FNCS interface is activated.
+                else if (UtilityRoutines::SameString(cAlphaArgs(1), "FNCS")) { // The FNCS interface is activated.
                     ++NumExternalInterfacesFNCS;
                 }
                 else if (UtilityRoutines::SameString(cAlphaArgs(1), "FunctionalMockupUnitImport")) { // The functional mock up unit import interface is activated.
@@ -817,8 +813,6 @@ namespace EnergyPlus {
             using DataOutputs::NumConsideredOutputVariables;
             using DataOutputs::OutputVariablesForSimulation;
             using InputProcessor::MakeUPPERCase;
-            using InputProcessor::GetNumObjectsFound;
-            using InputProcessor::GetObjectItem;
             using DataIPShortCuts::cCurrentModuleObject;
             using DataIPShortCuts::cAlphaArgs;
             using DataIPShortCuts::rNumericArgs;
@@ -903,12 +897,12 @@ namespace EnergyPlus {
                 }
 
                 cCurrentModuleObject = "ExternalInterface:Actuator";
-                NumObjects = GetNumObjectsFound(cCurrentModuleObject);
+                NumObjects = inputProcessor->getNumObjectsFound(cCurrentModuleObject);
                 if (NumObjects > 0) {
                     DisplayString("FNCS: ExternalInterface:Actuator");
                 }
                 for (i = 1; i <= NumObjects; ++i) {
-                    GetObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
+                    inputProcessor->getObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
                     DisplayString("FNCS: Actuator: " + cAlphaArgs(1));
                     nInpVar++;
                     inpVarNames(nInpVar) = cAlphaArgs(1);
@@ -916,12 +910,12 @@ namespace EnergyPlus {
                 }
 
                 cCurrentModuleObject = "ExternalInterface:Schedule";
-                NumObjects = GetNumObjectsFound(cCurrentModuleObject);
+                NumObjects = inputProcessor->getNumObjectsFound(cCurrentModuleObject);
                 if (NumObjects > 0) {
                     DisplayString("FNCS: ExternalInterface:Schedule");
                 }
                 for (i = 1; i <= NumObjects; ++i) {
-                    GetObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
+                    inputProcessor->getObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
                     DisplayString("FNCS: Schedule: " + cAlphaArgs(1));
                     nInpVar++;
                     inpVarNames(nInpVar) = cAlphaArgs(1);
@@ -929,12 +923,12 @@ namespace EnergyPlus {
                 }
 
                 cCurrentModuleObject = "ExternalInterface:Variable";
-                NumObjects = GetNumObjectsFound(cCurrentModuleObject);
+                NumObjects = inputProcessor->getNumObjectsFound(cCurrentModuleObject);
                 if (NumObjects > 0) {
                     DisplayString("FNCS: ExternalInterface:Variable");
                 }
                 for (i = 1; i <= NumObjects; ++i) {
-                    GetObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
+                    inputProcessor->getObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
                     DisplayString("FNCS: Variable: " + cAlphaArgs(1));
                     nInpVar++;
                     inpVarNames(nInpVar) = cAlphaArgs(1);
@@ -1427,10 +1421,6 @@ namespace EnergyPlus {
             using RuntimeLanguageProcessor::FindEMSVariable;
             using RuntimeLanguageProcessor::isExternalInterfaceErlVariable;
             using ScheduleManager::GetDayScheduleIndex;
-            using InputProcessor::GetNumObjectsFound;
-            using InputProcessor::GetObjectItem;
-            using InputProcessor::VerifyName;
-            using InputProcessor::SameString;
             using InputProcessor::FindItem;
 
             // Locals
@@ -2340,10 +2330,6 @@ namespace EnergyPlus {
             using RuntimeLanguageProcessor::isExternalInterfaceErlVariable;
             using ScheduleManager::ExternalInterfaceSetSchedule;
             using ScheduleManager::GetDayScheduleIndex;
-            using InputProcessor::GetNumObjectsFound;
-            using InputProcessor::GetObjectItem;
-            using InputProcessor::VerifyName;
-            using InputProcessor::SameString;
 
             // SUBROUTINE PARAMETER DEFINITIONS:
             int const IntegerVar(1); // Integer variable
