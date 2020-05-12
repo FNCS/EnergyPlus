@@ -278,8 +278,6 @@ namespace EnergyPlus {
             int NumNumbers; // Number of Numbers for each GetObjectItem call
             int IOStatus;   // Used in GetObjectItem
             int Loop;       // Loop counter
-            bool IsNotOK;   // Flag to verify name
-            bool IsBlank;   // Flag for blank name
 
             cCurrentModuleObject = "ExternalInterface";
             NumExternalInterfaces = inputProcessor->getNumObjectsFound(cCurrentModuleObject);
@@ -564,7 +562,6 @@ namespace EnergyPlus {
             using RuntimeLanguageProcessor::FindEMSVariable;
             using RuntimeLanguageProcessor::isExternalInterfaceErlVariable;
             using ScheduleManager::GetDayScheduleIndex;
-            using DataGlobals::WeathSimReq;
 
             // SUBROUTINE PARAMETER DEFINITIONS:
 
@@ -573,7 +570,7 @@ namespace EnergyPlus {
             std::string const xmlStrInKey("schedule,variable,actuator\0"); // xml values in string, separated by ','
 
             // SUBROUTINE LOCAL VARIABLE DECLARATIONS:
-            int i, j;                    // loop counters
+            int i;                    // loop counters
             std::string xmlStrOut;    // xml values in string, separated by ';'
             std::string xmlStrOutTyp; // xml values in string, separated by ';'
             std::string xmlStrIn;     // xml values in string, separated by ';'
@@ -581,11 +578,8 @@ namespace EnergyPlus {
             static int nOutVal;       // Number of output values (E+ -> ExternalInterface)
             static int nInpVar;       // Number of input values (ExternalInterface -> E+)
             int retVal;               // Return value of function call, used for error handling
-            int counter(0);           // Counter for ErlVariables
             int mainVersion;          // The version number
-            int curNumInpVal; // current number of input values for the InputValType
             std::string validateErrMsg; // error returned when xml Schema validate failed
-            int errMsgLen; // the length of the error message
             bool socFileExist;        // Set to true if socket configuration
             // file exists
             bool simFileExist; // Set to true if simulation configuration
@@ -1063,12 +1057,10 @@ namespace EnergyPlus {
             using ScheduleManager::ExternalInterfaceSetSchedule;
 
             // SUBROUTINE PARAMETER DEFINITIONS:
-            int const IntegerVar(1); // Integer variable
-            int const RealVar(2); // Real variable
             static bool FirstCallGetSetDoStep(true); // Flag to check when External Interface is called first time
 
             // SUBROUTINE LOCAL VARIABLE DECLARATIONS:
-            int i, j, k; // Loop counters
+            int i, j; // Loop counters
 
             for (i = 1; i <= NumFMUObjects; ++i) {
                 for (j = 1; j <= FMU(i).NumInstances; ++j) {
@@ -1435,7 +1427,6 @@ namespace EnergyPlus {
             Array1D_int keyIndexes(1);     // Array index for
             Array1D_int varTypes(1);       // Array index for
             Array1D_string NamesOfKeys(1); // Specific key name
-            int retValue;
             int retValfmiVersion;
             int retValfmiPathLib;
             Array1D_string NameListInstances(5);
@@ -2870,7 +2861,8 @@ namespace EnergyPlus {
 
             // If we have Erl variables, we need to call ManageEMS so that they get updated in the Erl data structure
             if (useEMS) {
-                ManageEMS(emsCallFromExternalInterface);
+                bool anyRan;
+                ManageEMS(emsCallFromExternalInterface, anyRan);
             }
 
             firstCall = false; // bug fix causing external interface to send zero at the beginning of sim, Thierry Nouidui
