@@ -1060,7 +1060,7 @@ namespace EnergyPlus {
             static bool FirstCallGetSetDoStep(true); // Flag to check when External Interface is called first time
 
             // SUBROUTINE LOCAL VARIABLE DECLARATIONS:
-            int i, j; // Loop counters
+            int i, j, k; // Loop counters
 
             for (i = 1; i <= NumFMUObjects; ++i) {
                 for (j = 1; j <= FMU(i).NumInstances; ++j) {
@@ -1366,7 +1366,7 @@ namespace EnergyPlus {
             // This routine terminates the FMUs instances
 
             // SUBROUTINE LOCAL VARIABLE DECLARATIONS:
-            int i, j, k; // Loop counter
+            int i, j; // Loop counter
 
             //----Needs to have function that allows to terminates FMU. Was not defined in version 1.0 -- fixme
             for (i = 1; i <= NumFMUObjects; ++i) {
