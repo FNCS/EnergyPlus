@@ -203,7 +203,6 @@ namespace EnergyPlus {
             using DataGlobals::KindOfSim;
             using DataGlobals::ksRunPeriodWeather;
             using DataGlobals::WarmupFlag;
-            using DataGlobals::ZoneTSReporting;
 
             // SUBROUTINE LOCAL VARIABLE DECLARATIONS:
             static bool GetInputFlag(true); // First time, input is "gotten"

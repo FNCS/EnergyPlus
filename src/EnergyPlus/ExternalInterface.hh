@@ -60,7 +60,7 @@ extern "C" {
 #include <EnergyPlus/DataPrecisionGlobals.hh>
 #include <EnergyPlus/DataStringGlobals.hh>
 #include <EnergyPlus/General.hh>
-#include <EnergyPlus/InputProcessor.hh>
+#include <EnergyPlus/InputProcessing/InputProcessor.hh>
 #include <EnergyPlus/UtilityRoutines.hh>
 
 // C++ Standard Library Headers
