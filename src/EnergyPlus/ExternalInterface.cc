@@ -832,7 +832,7 @@ namespace EnergyPlus {
             std::string varUnits; // Units sting, may be blank
             Array1D_int keyIndexes;      // Array index for
             Array1D_string NamesOfKeys; // Specific key name
-            int Loop, iKey; // Loop counters
+            int iKey; // Loop counters
             std::string fncs_config_str;
             std::string tab("    ");
 
@@ -850,9 +850,9 @@ namespace EnergyPlus {
                 nOutVal = 0;
                 nInpVar = 0;
 
-                for (Loop = 1; Loop <= NumConsideredOutputVariables; ++Loop) {
-                    std::string VarName = OutputVariablesForSimulation(Loop).VarName;
-                    std::string Key = OutputVariablesForSimulation(Loop).Key;
+                for (auto Loop = OutputVariablesForSimulationi.begin(); Loop != OutputVariablesForSimulationi.end(); ++Loop) {
+                    std::string VarName = Loop.second;
+                    std::string Key = Loop.first;
                     DisplayString("FNCS: " + Key + " (" + VarName + ")");
                     if (Key == "*") {
                         GetVariableKeyCountandType(VarName, numKeys, varType, varAvgSum, varStepType, varUnits);
