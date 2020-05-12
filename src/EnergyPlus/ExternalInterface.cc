@@ -1428,10 +1428,6 @@ namespace EnergyPlus {
             int NumNumbers(0);           // Number of Numbers for each GetObjectItem call
             int IOStatus(0);             // Used in GetObjectItem
             int NumFMUInputVariables(0); // Number of FMU input variables
-            int varType(0); // 0=not found, 1=integer, 2=real, 3=meter
-            int numKey(0); // Number of keys found
-            int varAvgSum(0); // Variable  is Averaged=1 or Summed=2
-            int varStepType(0); // Variable time step is Zone=1 or HVAC=2
             std::string varUnit; // Units sting, may be blank
             std::string Name_NEW;        // Units sting, may be blank
             std::string Name_OLD;        // Units sting, may be blank
@@ -1443,8 +1439,6 @@ namespace EnergyPlus {
             int retValfmiVersion;
             int retValfmiPathLib;
             Array1D_string NameListInstances(5);
-            bool IsNotOK;
-            bool IsBlank;
             static bool FirstCallIni(true); // First time, input has been read
             bool fileExist;
             std::string tempFullFileName;
@@ -2330,8 +2324,6 @@ namespace EnergyPlus {
             using ScheduleManager::GetDayScheduleIndex;
 
             // SUBROUTINE PARAMETER DEFINITIONS:
-            int const IntegerVar(1); // Integer variable
-            int const RealVar(2); // Real variable
 
             // SUBROUTINE LOCAL VARIABLE DECLARATIONS:
             int i, j, k; // Loop counter
