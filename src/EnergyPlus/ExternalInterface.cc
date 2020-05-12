@@ -850,41 +850,40 @@ namespace EnergyPlus {
                 nInpVar = 0;
 
                 for (auto Loop = OutputVariablesForSimulation.begin(); Loop != OutputVariablesForSimulation.end(); ++Loop) {
-                    std::string VarName = ((Loop->second).second).variableName;
-                    std::string Key = ((Loop->second).second).key;
-                    DisplayString("FNCS: " + Key + " (" + VarName + ")");
-                    if (Key == "*") {
-                        GetVariableKeyCountandType(VarName, numKeys, varType, varAvgSum, varStepType, varUnits);
-                        if (varType != 0) {
-                            if (numKeys > 0) {
-                                NamesOfKeys.allocate(numKeys);
-                                keyIndexes.allocate(numKeys);
-                                GetVariableKeys(VarName, varType, NamesOfKeys, keyIndexes);
-                                for (iKey = 1; iKey <= numKeys; ++iKey) {
-                                    DisplayString("    : " + NamesOfKeys(iKey));
+                    for (auto Loop2 = (Loop->second).begin(); Loop2 != (Loop->second).end(); ++Loop2) {
+                        std::string VarName = (Loop2->second).variableName;
+                        std::string Key = (Loop2->second).key;
+                        DisplayString("FNCS: " + Key + " (" + VarName + ")");
+                        if (Key == "*") {
+                            GetVariableKeyCountandType(VarName, numKeys, varType, varAvgSum, varStepType, varUnits);
+                            if (varType != 0) {
+                                if (numKeys > 0) {
+                                    NamesOfKeys.allocate(numKeys);
+                                    keyIndexes.allocate(numKeys);
+                                    GetVariableKeys(VarName, varType, NamesOfKeys, keyIndexes);
+                                    for (iKey = 1; iKey <= numKeys; ++iKey) {
+                                        DisplayString("    : " + NamesOfKeys(iKey));
+                                        nOutVal++;
+                                        varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(NamesOfKeys(iKey));
+                                        varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
+                                    }
+                                    keyIndexes.deallocate();
+                                    NamesOfKeys.deallocate();
+                                } else {
+                                    // Assume this is an EMS output variable.
                                     nOutVal++;
-                                    varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(NamesOfKeys(iKey));
+                                    varKeys(nOutVal) = "EMS";
                                     varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
                                 }
-                                keyIndexes.deallocate();
-                                NamesOfKeys.deallocate();
+                            } else {
+                                ShowWarningError("ExternalInterface: FNCS can't lookup keys for \"" + VarName + "\".");
+                                DisplayString("    : (failed key lookup)");
                             }
-                            else {
-                                // Assume this is an EMS output variable.
-                                nOutVal++;
-                                varKeys(nOutVal) = "EMS";
-                                varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
-                            }
+                        } else {
+                            nOutVal++;
+                            varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(Key);
+                            varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
                         }
-                        else {
-                            ShowWarningError("ExternalInterface: FNCS can't lookup keys for \"" + VarName + "\".");
-                            DisplayString("    : (failed key lookup)");
-                        }
-                    }
-                    else {
-                        nOutVal++;
-                        varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(Key);
-                        varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
                     }
                 }
 
