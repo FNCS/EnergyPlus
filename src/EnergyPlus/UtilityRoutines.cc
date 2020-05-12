@@ -123,23 +123,6 @@ namespace UtilityRoutines {
         // This function processes a string that should be numeric and
         // returns the real value of the string.
 
-	// Using/Aliasing
-	using namespace DataPrecisionGlobals;
-	using namespace DataSystemVariables;
-	using namespace DataTimings;
-	using namespace DataErrorTracking;
-	using General::RoundSigDigits;
-	using NodeInputManager::SetupNodeVarsForReporting;
-	using NodeInputManager::CheckMarkedNodes;
-	using BranchInputManager::TestBranchIntegrity;
-	using BranchNodeConnections::CheckNodeConnections;
-	using BranchNodeConnections::TestCompSetInletOutletNodes;
-	using SimulationManager::ReportLoopConnections;
-	using SystemReports::ReportAirLoopConnections;
-	using SolarShading::ReportSurfaceErrors;
-	using PlantManager::CheckPlantOnAbort;
-	using ExternalInterface::NumExternalInterfaces;
-	using ExternalInterface::CloseExternalInterface;
         // METHODOLOGY EMPLOYED:
         // FUNCTION ProcessNumber translates the argument (a string)
         // into a real number.  The string should consist of all
@@ -232,15 +215,6 @@ namespace UtilityRoutines {
     int FindItemInSortedList(std::string const &String, Array1S_string const ListOfItems, int const NumItems)
     {
 
-	gio::close( tempfl );
-#ifdef EP_Detailed_Timings
-	epSummaryTimes( Time_Finish - Time_Start );
-#endif
-	CloseOutOpenFiles();
-	// Close the socket used by ExternalInterface. This call also sends the flag "-1" to the ExternalInterface,
-	// indicating that E+ terminated with an error.
-	if ( NumExternalInterfaces > 0 ) CloseExternalInterface( -1 );
-	std::cerr << "Program terminated: " << "EnergyPlus Terminated--Error(s) Detected." << std::endl; std::exit( EXIT_FAILURE );
         // FUNCTION INFORMATION:
         //       AUTHOR         Linda K. Lawrie
         //       DATE WRITTEN   September 1997
@@ -445,15 +419,6 @@ namespace UtilityRoutines {
         return false;
     }
 
-	// Using/Aliasing
-	using namespace DataPrecisionGlobals;
-	using namespace DataSystemVariables;
-	using namespace DataTimings;
-	using namespace DataErrorTracking;
-	using General::RoundSigDigits;
-	using SolarShading::ReportSurfaceErrors;
-	using ExternalInterface::NumExternalInterfaces;
-	using ExternalInterface::CloseExternalInterface;
     std::string IPTrimSigDigits(int const IntegerValue)
     {
 
@@ -500,25 +465,6 @@ namespace UtilityRoutines {
         appendPerfLog_headerRow = appendPerfLog_headerRow + colHeader + ",";
         appendPerfLog_valuesRow = appendPerfLog_valuesRow + colValue + ",";
 
-	ShowMessage( "EnergyPlus Warmup Error Summary. During Warmup: " + NumWarningsDuringWarmup + " Warning; " + NumSevereDuringWarmup + " Severe Errors." );
-	ShowMessage( "EnergyPlus Sizing Error Summary. During Sizing: " + NumWarningsDuringSizing + " Warning; " + NumSevereDuringSizing + " Severe Errors." );
-	ShowMessage( "EnergyPlus Completed Successfully-- " + NumWarnings + " Warning; " + NumSevere + " Severe Errors; Elapsed Time=" + Elapsed );
-	DisplayString( "EnergyPlus Run Time=" + Elapsed );
-	tempfl = GetNewUnitNumber();
-	{ IOFlags flags; flags.ACTION( "write" ); gio::open( tempfl, DataStringGlobals::outputEndFileName, flags ); write_stat = flags.ios(); }
-	if ( write_stat != 0 ) {
-		DisplayString( "EndEnergyPlus: Could not open file " + DataStringGlobals::outputEndFileName + " for output (write)." );
-	}
-	gio::write( tempfl, fmtA ) << "EnergyPlus Completed Successfully-- " + NumWarnings + " Warning; " + NumSevere + " Severe Errors; Elapsed Time=" + Elapsed;
-	gio::close( tempfl );
-#ifdef EP_Detailed_Timings
-	epSummaryTimes( Time_Finish - Time_Start );
-#endif
-	CloseOutOpenFiles();
-	// Close the ExternalInterface socket. This call also sends the flag "1" to the ExternalInterface,
-	// indicating that E+ finished its simulation
-	if ( NumExternalInterfaces > 0 ) CloseExternalInterface( 1 );
-	std::cerr << "EnergyPlus Completed Successfully." << std::endl; std::exit( EXIT_SUCCESS );
         if (finalColumn) {
             std::fstream fsPerfLog;
             if (!exists(DataStringGlobals::outputPerfLogFileName)) {
@@ -573,7 +519,7 @@ int AbortEnergyPlus(EnergyPlusData &state)
     using BranchInputManager::TestBranchIntegrity;
     using BranchNodeConnections::CheckNodeConnections;
     using BranchNodeConnections::TestCompSetInletOutletNodes;
-    using ExternalInterface::CloseSocket;
+    using ExternalInterface::CloseExternalInterface;
     using ExternalInterface::NumExternalInterfaces;
     using General::RoundSigDigits;
     using NodeInputManager::CheckMarkedNodes;
@@ -730,7 +676,7 @@ int AbortEnergyPlus(EnergyPlusData &state)
     CloseOutOpenFiles();
     // Close the socket used by ExternalInterface. This call also sends the flag "-1" to the ExternalInterface,
     // indicating that E+ terminated with an error.
-    if (NumExternalInterfaces > 0) CloseSocket(-1);
+    if (NumExternalInterfaces > 0) CloseExternalInterface(-1);
     return EXIT_FAILURE;
 }
 
@@ -874,7 +820,7 @@ int EndEnergyPlus()
     using namespace DataSystemVariables;
     using namespace DataTimings;
     using namespace DataErrorTracking;
-    using ExternalInterface::CloseSocket;
+    using ExternalInterface::CloseExternalInterface;
     using ExternalInterface::haveExternalInterfaceBCVTB;
     using ExternalInterface::NumExternalInterfaces;
     using General::RoundSigDigits;
@@ -993,7 +939,7 @@ int EndEnergyPlus()
     CloseOutOpenFiles();
     // Close the ExternalInterface socket. This call also sends the flag "1" to the ExternalInterface,
     // indicating that E+ finished its simulation
-    if ((NumExternalInterfaces > 0) && haveExternalInterfaceBCVTB) CloseSocket(1);
+    if ((NumExternalInterfaces > 0) && haveExternalInterfaceBCVTB) CloseExternalInterface(1);
     return EXIT_SUCCESS;
 }
 
