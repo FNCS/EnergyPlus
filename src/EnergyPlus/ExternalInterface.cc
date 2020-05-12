@@ -850,8 +850,8 @@ namespace EnergyPlus {
                 nInpVar = 0;
 
                 for (auto Loop = OutputVariablesForSimulation.begin(); Loop != OutputVariablesForSimulation.end(); ++Loop) {
-                    std::string VarName = (Loop->second).VarName;
-                    std::string Key = (Loop->second).Key;
+                    std::string VarName = (Loop->second).variableName;
+                    std::string Key = (Loop->second).key;
                     DisplayString("FNCS: " + Key + " (" + VarName + ")");
                     if (Key == "*") {
                         GetVariableKeyCountandType(VarName, numKeys, varType, varAvgSum, varStepType, varUnits);
