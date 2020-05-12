@@ -811,7 +811,6 @@ namespace EnergyPlus {
             using DataGlobals::MinutesPerTimeStep;
             using DataOutputs::NumConsideredOutputVariables;
             using DataOutputs::OutputVariablesForSimulation;
-            using InputProcessor::MakeUPPERCase;
             using DataIPShortCuts::cCurrentModuleObject;
             using DataIPShortCuts::cAlphaArgs;
             using DataIPShortCuts::rNumericArgs;
@@ -836,8 +835,8 @@ namespace EnergyPlus {
             int varAvgSum(0); // Variable  is Averaged=1 or Summed=2
             int varStepType(0); // Variable time step is Zone=1 or HVAC=2
             std::string varUnits; // Units sting, may be blank
-            FArray1D_int keyIndexes; // Array index for
-            FArray1D_string NamesOfKeys; // Specific key name
+            Array1D_int keyIndexes;      // Array index for
+            Array1D_string NamesOfKeys; // Specific key name
             int Loop, iKey; // Loop counters
             std::string fncs_config_str;
             std::string tab("    ");
@@ -870,8 +869,8 @@ namespace EnergyPlus {
                                 for (iKey = 1; iKey <= numKeys; ++iKey) {
                                     DisplayString("    : " + NamesOfKeys(iKey));
                                     nOutVal++;
-                                    varKeys(nOutVal) = MakeUPPERCase(NamesOfKeys(iKey));
-                                    varNames(nOutVal) = MakeUPPERCase(VarName);
+                                    varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(NamesOfKeys(iKey));
+                                    varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
                                 }
                                 keyIndexes.deallocate();
                                 NamesOfKeys.deallocate();
@@ -880,7 +879,7 @@ namespace EnergyPlus {
                                 // Assume this is an EMS output variable.
                                 nOutVal++;
                                 varKeys(nOutVal) = "EMS";
-                                varNames(nOutVal) = MakeUPPERCase(VarName);
+                                varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
                             }
                         }
                         else {
@@ -890,8 +889,8 @@ namespace EnergyPlus {
                     }
                     else {
                         nOutVal++;
-                        varKeys(nOutVal) = MakeUPPERCase(Key);
-                        varNames(nOutVal) = MakeUPPERCase(VarName);
+                        varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(Key);
+                        varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
                     }
                 }
 
@@ -1420,7 +1419,6 @@ namespace EnergyPlus {
             using RuntimeLanguageProcessor::FindEMSVariable;
             using RuntimeLanguageProcessor::isExternalInterfaceErlVariable;
             using ScheduleManager::GetDayScheduleIndex;
-            using InputProcessor::FindItem;
 
             // Locals
             int i, j, k, l, Loop;        // Loop counters
