@@ -53,7 +53,7 @@ extern "C" {
 }
 
 #ifdef FNCS
-#include "fncs.hpp"
+#include <fncs.hpp>
 
 #include <algorithm>
 static inline std::string& fncs_encode(std::string& name) {
@@ -71,6 +71,7 @@ static inline std::string& fncs_decode(std::string& name) {
 #include <sstream>
 #include <string>
 #include <vector>
+#include <memory>
 
 // ObjexxFCL Headers
 #include <ObjexxFCL/Array.functions.hh>
@@ -787,6 +788,7 @@ namespace EnergyPlus {
 
         void InitExternalInterfaceFNCS()
         {
+        	//std::cout << "inside InitExternalInterfaceFNCS in externalinterface.cc" << std::endl;
 #ifdef FNCS
             // SUBROUTINE INFORMATION:
             //       AUTHOR         Jeff Daily
@@ -853,6 +855,8 @@ namespace EnergyPlus {
                     for (auto Loop2 = (Loop->second).begin(); Loop2 != (Loop->second).end(); ++Loop2) {
                         std::string VarName = (Loop2->second).variableName;
                         std::string Key = (Loop2->second).key;
+                    	//std::cout << "varName: " << VarName << std::endl;
+                    	//std::cout << "varKey: " << Key << std::endl;
                         DisplayString("FNCS: " + Key + " (" + VarName + ")");
                         if (Key == "*") {
                             GetVariableKeyCountandType(VarName, numKeys, varType, varAvgSum, varStepType, varUnits);
@@ -861,7 +865,9 @@ namespace EnergyPlus {
                                     NamesOfKeys.allocate(numKeys);
                                     keyIndexes.allocate(numKeys);
                                     GetVariableKeys(VarName, varType, NamesOfKeys, keyIndexes);
+                                	std::cout << "Number Of Keys: " << numKeys << std::endl;
                                     for (iKey = 1; iKey <= numKeys; ++iKey) {
+                                    	//std::cout << iKey << " : " << NamesOfKeys(iKey) << std::endl;
                                         DisplayString("    : " + NamesOfKeys(iKey));
                                         nOutVal++;
                                         varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(NamesOfKeys(iKey));
@@ -946,10 +952,17 @@ namespace EnergyPlus {
                     fncsInitialized = true;
                     /* if FNCS configuration file was in ZPL format, the
                      * spaces in the key names were translated to '+' */
-                    std::vector<string> keys = fncs::get_keys();
-                    fncsKeys.insert(keys.begin(), keys.end());
+                   // auto
+                    std::vector<std::string> keys;
+                    keys.clear();
+                    auto nkeys = fncs::get_keys_size();
+                    for(int index = 0; index < 2; index++){
+                    	keys.push_back(fncs::get_key_by_index(index));
+                    }
+                    //fncsKeys.insert(keys.begin(), keys.end());
                     for (std::vector<std::string>::iterator it = keys.begin();
                         it != keys.end(); ++it) {
+                    	std::cout << *it << std::endl;
                         if (it->find('+') != string::npos) {
                             fncsEncode = true;
                             break;
@@ -2757,6 +2770,7 @@ namespace EnergyPlus {
 
         void CalcExternalInterfaceFNCS()
         {
+        	std::cout << "inside CalcExternalInterfaceFNCS in externalinterface.cc" << std::endl;
 #ifdef FNCS
             // SUBROUTINE INFORMATION:
             //       AUTHOR         Jeff Daily
@@ -2878,6 +2892,7 @@ namespace EnergyPlus {
             Array1D_int& varTypes           // Types of variables in keyVarIndexes
         )
         {
+        	std::cout << "inside GetReportVariableKey in externalinterface.cc" << std::endl;
             // SUBROUTINE INFORMATION:
             //       AUTHOR         Michael Wetter
             //       DATE WRITTEN   2Dec2007
@@ -2897,8 +2912,11 @@ namespace EnergyPlus {
             Array1D_string NamesOfKeys;                                                 // Specific key name
             int Loop, iKey;                                                             // Loop counters
 
+        	std::cout << "number Of Keys: " << numberOfKeys << std::endl;
             // Get pointers for variables to be sent to Ptolemy
             for (Loop = 1; Loop <= numberOfKeys; ++Loop) {
+            	std::cout << "varName: " << varNames(Loop) << std::endl;
+            	std::cout << "varKey: " << varKeys(Loop) << std::endl;
                 GetVariableKeyCountandType(varNames(Loop), numKeys, varType, varAvgSum, varStepType, varUnits);
                 if (varType != 0) {
                     NamesOfKeys.allocate(numKeys);
@@ -2906,7 +2924,9 @@ namespace EnergyPlus {
                     GetVariableKeys(varNames(Loop), varType, NamesOfKeys, keyIndexes);
                     // Find key index whose keyName is equal to keyNames(Loop)
                     int max(NamesOfKeys.size());
+                	std::cout << "Number Of Keys: " << max << std::endl;
                     for (iKey = 1; iKey <= max; ++iKey) {
+                    	std::cout << "GetVariableKeys returned NamesOfKeys:" << NamesOfKeys(iKey) << std::endl;
                         if (NamesOfKeys(iKey) == varKeys(Loop)) {
                             keyVarIndexes(Loop) = keyIndexes(iKey);
                             varTypes(Loop) = varType;
@@ -2921,6 +2941,7 @@ namespace EnergyPlus {
                     ErrorsFound = true;
                 }
             }
+        	std::cout << "exiting GetReportVariableKey in externalinterface.cc" << std::endl;
         }
 
         void WarnIfExternalInterfaceObjectsAreUsed(std::string const& ObjectWord)
