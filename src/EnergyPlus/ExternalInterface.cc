@@ -954,12 +954,13 @@ namespace EnergyPlus {
                      * spaces in the key names were translated to '+' */
                    // auto
                     std::vector<std::string> keys;
-                    keys.clear();
+                    //keys = fncs::get_keys();
+                    //keys.clear();
                     auto nkeys = fncs::get_keys_size();
                     for(int index = 0; index < 2; index++){
                     	keys.push_back(fncs::get_key_by_index(index));
                     }
-                    //fncsKeys.insert(keys.begin(), keys.end());
+                    fncsKeys.insert(keys.begin(), keys.end());
                     for (std::vector<std::string>::iterator it = keys.begin();
                         it != keys.end(); ++it) {
                     	std::cout << *it << std::endl;
@@ -2770,7 +2771,7 @@ namespace EnergyPlus {
 
         void CalcExternalInterfaceFNCS()
         {
-        	std::cout << "inside CalcExternalInterfaceFNCS in externalinterface.cc" << std::endl;
+        	//std::cout << "inside CalcExternalInterfaceFNCS in externalinterface.cc" << std::endl;
 #ifdef FNCS
             // SUBROUTINE INFORMATION:
             //       AUTHOR         Jeff Daily
@@ -2912,11 +2913,11 @@ namespace EnergyPlus {
             Array1D_string NamesOfKeys;                                                 // Specific key name
             int Loop, iKey;                                                             // Loop counters
 
-        	std::cout << "number Of Keys: " << numberOfKeys << std::endl;
+        	//std::cout << "number Of Keys: " << numberOfKeys << std::endl;
             // Get pointers for variables to be sent to Ptolemy
             for (Loop = 1; Loop <= numberOfKeys; ++Loop) {
-            	std::cout << "varName: " << varNames(Loop) << std::endl;
-            	std::cout << "varKey: " << varKeys(Loop) << std::endl;
+            	//std::cout << "varName: " << varNames(Loop) << std::endl;
+            	//std::cout << "varKey: " << varKeys(Loop) << std::endl;
                 GetVariableKeyCountandType(varNames(Loop), numKeys, varType, varAvgSum, varStepType, varUnits);
                 if (varType != 0) {
                     NamesOfKeys.allocate(numKeys);
@@ -2924,9 +2925,9 @@ namespace EnergyPlus {
                     GetVariableKeys(varNames(Loop), varType, NamesOfKeys, keyIndexes);
                     // Find key index whose keyName is equal to keyNames(Loop)
                     int max(NamesOfKeys.size());
-                	std::cout << "Number Of Keys: " << max << std::endl;
+                	//std::cout << "Number Of Keys: " << max << std::endl;
                     for (iKey = 1; iKey <= max; ++iKey) {
-                    	std::cout << "GetVariableKeys returned NamesOfKeys:" << NamesOfKeys(iKey) << std::endl;
+                    	//std::cout << "GetVariableKeys returned NamesOfKeys:" << NamesOfKeys(iKey) << std::endl;
                         if (NamesOfKeys(iKey) == varKeys(Loop)) {
                             keyVarIndexes(Loop) = keyIndexes(iKey);
                             varTypes(Loop) = varType;
