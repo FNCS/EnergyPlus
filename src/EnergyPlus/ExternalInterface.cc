@@ -805,7 +805,7 @@ namespace EnergyPlus {
             using RuntimeLanguageProcessor::FindEMSVariable;
             using General::TrimSigDigits;
             using DataGlobals::MinutesPerTimeStep;
-            using DataOutputs::NumConsideredOutputVariables;
+            //using DataOutputs::NumConsideredOutputVariables;
             using DataOutputs::OutputVariablesForSimulation;
             using DataIPShortCuts::cCurrentModuleObject;
             using DataIPShortCuts::cAlphaArgs;
@@ -956,7 +956,7 @@ namespace EnergyPlus {
                     std::vector<std::string> keys;
                     //keys = fncs::get_keys();
                     //keys.clear();
-                    auto nkeys = fncs::get_keys_size();
+                    //auto nkeys = fncs::get_keys_size();
                     for(int index = 0; index < 2; index++){
                     	keys.push_back(fncs::get_key_by_index(index));
                     }
