@@ -890,7 +890,7 @@ namespace EnergyPlus {
             using RuntimeLanguageProcessor::FindEMSVariable;
             using General::TrimSigDigits;
             using DataGlobals::MinutesPerTimeStep;
-            using DataOutputs::NumConsideredOutputVariables;
+            //using DataOutputs::NumConsideredOutputVariables;
             using DataOutputs::OutputVariablesForSimulation;
             using DataIPShortCuts::cCurrentModuleObject;
             using DataIPShortCuts::cAlphaArgs;
