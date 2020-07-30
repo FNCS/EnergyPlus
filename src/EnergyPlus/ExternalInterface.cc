@@ -66,6 +66,11 @@ static inline std::string& fncs_decode(std::string& name) {
 }
 #endif
 
+#ifdef HELICS
+#include <helics/cpp98/ValueFederate.hpp>
+#include <helics/cpp98/helics.hpp>
+#endif
+
 // C++ Headers
 #include <set>
 #include <sstream>
@@ -146,12 +151,14 @@ namespace EnergyPlus {
         int NumExternalInterfaces(0);               // Number of ExternalInterface objects
         int NumExternalInterfacesBCVTB(0);          // Number of BCVTB ExternalInterface objects
         int NumExternalInterfacesFNCS(0);           // Number of FNCS ExternalInterface objects
+        int NumExternalInterfacesHELICS(0);         // Number of HELICS ExternalInterface objects
         int NumExternalInterfacesFMUImport(0);      // Number of FMU ExternalInterface objects
         int NumExternalInterfacesFMUExport(0);      // Number of FMU ExternalInterface objects
         int NumFMUObjects(0);                       // Number of FMU objects
         int FMUExportActivate(0);                   // FMU Export flag
         bool haveExternalInterfaceBCVTB(false);     // Flag for BCVTB interface
         bool haveExternalInterfaceFNCS(false);      // Flag for FNCS interface
+        bool haveExternalInterfaceHELICS(false);    // Flag for HELICS interface
         bool haveExternalInterfaceFMUImport(false); // Flag for FMU-Import interface
         bool haveExternalInterfaceFMUExport(false); // Flag for FMU-Export interface
         int simulationStatus(1);                    // Status flag. Used to report during
@@ -166,6 +173,18 @@ namespace EnergyPlus {
         bool fncsEncode(false);     // Set to true if subscriptions can't use spaces
         std::set< std::string > fncsKeys;
         std::set< std::string > fncsKeysWarned;
+        static helicscpp::ValueFederate *pHelicsFederate(nullptr);
+        helicscpp::Publication pub;
+        helicscpp::Input sub;
+        helicscpp::FederateInfo fi("zmq");
+        double deltat = 0.01;
+        Array1D<helicscpp::Publication> pubs;
+        Array1D<helicscpp::Input> subs;
+        std::vector<helicscpp::Publication> vpubs;
+        std::vector<helicscpp::Input> vsubs;
+        std::unordered_map<std::string, helicscpp::Publication> mpubs;
+        std::unordered_map<std::string, helicscpp::Input> msubs;
+        std::set< std::string > helicsKeysWarned;
         bool ErrorsFound(false);   // Set to true if errors are found
         bool noMoreValues(false);  // Flag, true if no more values
         // will be sent by the server
@@ -234,6 +253,16 @@ namespace EnergyPlus {
                     CalcExternalInterfaceFNCS();
                 }
             }
+
+            if (haveExternalInterfaceHELICS) {
+                InitExternalInterfaceHELICS();
+                // Exchange data only after sizing and after warm-up.
+                // Note that checking for ZoneSizingCalc SysSizingCalc does not work here, hence we
+                // use the KindOfSim flag
+                if (!WarmupFlag && (KindOfSim == ksRunPeriodWeather)) {
+                    CalcExternalInterfaceHELICS();
+                }
+            }
             
             if (haveExternalInterfaceFMUImport) {
                 char* errorMessagePtr(&errorMessage[0]);
@@ -291,6 +320,9 @@ namespace EnergyPlus {
                 else if (UtilityRoutines::SameString(cAlphaArgs(1), "FNCS")) { // The FNCS interface is activated.
                     ++NumExternalInterfacesFNCS;
                 }
+                else if (UtilityRoutines::SameString(cAlphaArgs(1), "HELICS")) { // The HELICS interface is activated.
+                    ++NumExternalInterfacesHELICS;
+                }
                 else if (UtilityRoutines::SameString(cAlphaArgs(1), "FunctionalMockupUnitImport")) { // The functional mock up unit import interface is activated.
                     ++NumExternalInterfacesFMUImport;
                 }
@@ -300,7 +332,7 @@ namespace EnergyPlus {
             }
 
             // Check if objects are used although BCVTB interface object is not defined
-            if (NumExternalInterfacesBCVTB == 0 && NumExternalInterfacesFNCS == 0) {
+            if (NumExternalInterfacesBCVTB == 0 && NumExternalInterfacesFNCS == 0 && NumExternalInterfacesHELICS == 0) {
                 WarnIfExternalInterfaceObjectsAreUsed("ExternalInterface:Schedule");
                 WarnIfExternalInterfaceObjectsAreUsed("ExternalInterface:Variable");
                 WarnIfExternalInterfaceObjectsAreUsed("ExternalInterface:Actuator");
@@ -320,7 +352,7 @@ namespace EnergyPlus {
                 WarnIfExternalInterfaceObjectsAreUsed("ExternalInterface:FunctionalMockupUnitImport:To:Actuator");
             }
 
-            if ((NumExternalInterfacesBCVTB == 1) && (NumExternalInterfacesFNCS == 0) && (NumExternalInterfacesFMUExport == 0)) {
+            if ((NumExternalInterfacesBCVTB == 1) && (NumExternalInterfacesFNCS == 0) && (NumExternalInterfacesHELICS == 0) && (NumExternalInterfacesFMUExport == 0)) {
                 haveExternalInterfaceBCVTB = true;
                 DisplayString("Instantiating Building Controls Virtual Test Bed");
                 varKeys.allocate(maxVar); // Keys of report variables used for data exchange
@@ -329,7 +361,7 @@ namespace EnergyPlus {
                 inpVarNames.allocate(maxVar); // Names of report variables used for data exchange
                 VerifyExternalInterfaceObject();
             }
-            else if ((NumExternalInterfacesBCVTB == 0) && (NumExternalInterfacesFNCS == 1) && (NumExternalInterfacesFMUExport == 0)) {
+            else if ((NumExternalInterfacesBCVTB == 0) && (NumExternalInterfacesFNCS == 1) && (NumExternalInterfacesHELICS == 0) && (NumExternalInterfacesFMUExport == 0)) {
                 haveExternalInterfaceFNCS = true;
                 DisplayString("Instantiating Framework for Network Co-Simulation");
                 varKeys.allocate(maxVar); // Keys of report variables used for data exchange
@@ -338,7 +370,16 @@ namespace EnergyPlus {
                 inpVarNames.allocate(maxVar); // Names of report variables used for data exchange
                 VerifyExternalInterfaceObject();
             }
-            else if ((NumExternalInterfacesBCVTB == 0) && (NumExternalInterfacesFNCS == 0) && (NumExternalInterfacesFMUExport == 1)) {
+            else if ((NumExternalInterfacesBCVTB == 0) && (NumExternalInterfacesFNCS == 0) && (NumExternalInterfacesHELICS == 1) && (NumExternalInterfacesFMUExport == 0)) {
+                haveExternalInterfaceHELICS = true;
+                DisplayString("Instantiating Framework for Network Co-Simulation");
+                varKeys.allocate(maxVar); // Keys of report variables used for data exchange
+                varNames.allocate(maxVar); // Names of report variables used for data exchange
+                inpVarTypes.dimension(maxVar, 0); // Names of report variables used for data exchange
+                inpVarNames.allocate(maxVar); // Names of report variables used for data exchange
+                VerifyExternalInterfaceObject();
+            }
+            else if ((NumExternalInterfacesBCVTB == 0) && (NumExternalInterfacesFNCS == 0) && (NumExternalInterfacesHELICS == 0) && (NumExternalInterfacesFMUExport == 1)) {
                 haveExternalInterfaceFMUExport = true;
                 FMUExportActivate = 1;
                 DisplayString("Instantiating FunctionalMockupUnitExport interface");
@@ -356,8 +397,20 @@ namespace EnergyPlus {
                 ShowSevereError("GetExternalInterfaceInput: Cannot have Ptolemy and FNCS interface simultaneously.");
                 ErrorsFound = true;
             }
+            else if ((NumExternalInterfacesBCVTB == 1) && (NumExternalInterfacesHELICS != 0)) {
+                ShowSevereError("GetExternalInterfaceInput: Cannot have Ptolemy and HELICS interface simultaneously.");
+                ErrorsFound = true;
+            }
             else if ((NumExternalInterfacesFNCS == 1) && (NumExternalInterfacesFMUExport != 0)) {
                 ShowSevereError("GetExternalInterfaceInput: Cannot have FNCS and FMU-Export interface simultaneously.");
+                ErrorsFound = true;
+            }
+            else if ((NumExternalInterfacesFNCS == 1) && (NumExternalInterfacesHELICS != 0)) {
+                ShowSevereError("GetExternalInterfaceInput: Cannot have FNCS and HELICS interface simultaneously.");
+                ErrorsFound = true;
+            }
+            else if ((NumExternalInterfacesHELICS == 1) && (NumExternalInterfacesFMUExport != 0)) {
+                ShowSevereError("GetExternalInterfaceInput: Cannot have HELICS and FMU-Export interface simultaneously.");
                 ErrorsFound = true;
             }
 
@@ -381,6 +434,12 @@ namespace EnergyPlus {
 
             if (NumExternalInterfacesFNCS > 1) {
                 ShowSevereError("GetExternalInterfaceInput: Cannot have more than one FNCS interface.");
+                ShowContinueError("GetExternalInterfaceInput: Errors found in input.");
+                ErrorsFound = true;
+            }
+
+            if (NumExternalInterfacesHELICS > 1) {
+                ShowSevereError("GetExternalInterfaceInput: Cannot have more than one HELICS interface.");
                 ShowContinueError("GetExternalInterfaceInput: Errors found in input.");
                 ErrorsFound = true;
             }
@@ -438,6 +497,18 @@ namespace EnergyPlus {
                     if (fncsInitialized) {
                         ShowSevereError("Error in ExternalInterface: Check EnergyPlus *.err file.");
                         fncs::die();
+                    }
+                    else {
+                        ShowFatalError("Error in ExternalInterface: Check EnergyPlus *.err file.");
+                    }
+#else
+                    ShowFatalError("Error in ExternalInterface: Check EnergyPlus *.err file.");
+#endif
+#ifdef HELICS
+                    if (pHelicsFederate) {
+                        ShowSevereError("Error in ExternalInterface: Check EnergyPlus *.err file.");
+                        pHelicsFederate->finalize();
+                        helicscpp::cleanupHelicsLibrary();
                     }
                     else {
                         ShowFatalError("Error in ExternalInterface: Check EnergyPlus *.err file.");
@@ -505,6 +576,20 @@ namespace EnergyPlus {
                 fncs::finalize();
 #else
                 ShowSevereError("ExternalInterface: Error, FNCS desired but not linked.");
+#endif
+            }
+            if (haveExternalInterfaceHELICS){
+#ifdef HELICS
+                    if (pHelicsFederate) {
+                        pHelicsFederate->finalize();
+                        //helicscpp::cleanupHelicsLibrary();
+                        helicsCloseLibrary();
+                    }
+                    else {
+                        ShowFatalError("Error in ExternalInterface: HELICS federate not initialized. Check EnergyPlus *.err file.");
+                    }
+#else
+                    ShowFatalError("ExternalInterface: Error, HELICS desired but not linked.");
 #endif
             }
         }
@@ -957,7 +1042,7 @@ namespace EnergyPlus {
                     //keys = fncs::get_keys();
                     //keys.clear();
                     auto nkeys = fncs::get_keys_size();
-                    for(int index = 0; index < 2; index++){
+                    for(int index = 0; index < nkeys; index++){
                     	keys.push_back(fncs::get_key_by_index(index));
                     }
                     fncsKeys.insert(keys.begin(), keys.end());
@@ -976,6 +1061,7 @@ namespace EnergyPlus {
                 }
 
                 fncs::time delta = fncs::get_time_delta();
+                std::cout << "fncs::time delta: " << delta << std::endl;
                 // FNCS time delta is already in minutes, not nanoseconds
                 //delta = delta / (60ULL * 1000000000ULL);
                 if (delta != (unsigned long long)MinutesPerTimeStep) {
@@ -991,6 +1077,348 @@ namespace EnergyPlus {
                 firstCall = false;
 
                 // Establish connection to FNCS broker.
+
+            }
+            else if (!configuredControlPoints) {
+                keyVarIndexes.allocate(nOutVal);
+                varTypes.allocate(nOutVal);
+                GetReportVariableKey(varKeys, nOutVal, varNames, keyVarIndexes, varTypes);
+                varInd.allocate(nInpVar);
+                for (i = 1; i <= nInpVar; ++i) {
+                	std::cout << "inpVarTypes(i): " << inpVarTypes(i) << std::endl;
+                    if (inpVarTypes(i) == indexSchedule) {
+                    	std::cout << "inpVarTypes(i) == indexSchedule" << std::endl;
+                        varInd(i) = GetDayScheduleIndex(inpVarNames(i));
+                    	std::cout << "varInd(i): " << varInd(i) << std::endl;
+                    }
+                    else if (inpVarTypes(i) == indexVariable) {
+                    	std::cout << "inpVarTypes(i) == indexVariable" << std::endl;
+                        varInd(i) = FindEMSVariable(inpVarNames(i), 0);
+                    	std::cout << "varInd(i): " << varInd(i) << std::endl;
+                    }
+                    else if (inpVarTypes(i) == indexActuator) {
+                    	std::cout << "inpVarTypes(i) == indexActuator" << std::endl;
+                        varInd(i) = FindEMSVariable(inpVarNames(i), 0);
+                    	std::cout << "varInd(i): " << varInd(i) << std::endl;
+                    }
+                    if (varInd(i) <= 0) {
+                        ShowSevereError("ExternalInterface: Error, variable \"" + inpVarNames(i) + "\" ");
+                        ShowContinueError("was not found in idf file.");
+                        ErrorsFound = true;
+                    }
+                }
+                StopExternalInterfaceIfError();
+                // Configure Erl variables
+                for (i = 1; i <= nInpVar; ++i) {
+                    if (inpVarTypes(i) == indexVariable) { // ems-globalvariable
+                        useEMS = true;
+                        if (!isExternalInterfaceErlVariable(varInd(i))) {
+                            ShowSevereError("ExternalInterface: Error, variable \"" + inpVarNames(i) + "\" ");
+                            ShowContinueError("is an ordinary Erl variable, not an ExternalInterface variable.");
+                            ShowContinueError("You must specify a variable of type \"ExternalInterface:Variable\".");
+                            ErrorsFound = true;
+                        }
+                    }
+                    else if (inpVarTypes(i) == indexActuator) { // ems-actuator
+                        useEMS = true;
+                        if (!isExternalInterfaceErlVariable(varInd(i))) {
+                            ShowSevereError("ExternalInterface: Error, variable \"" + inpVarNames(i) + "\" ");
+                            ShowContinueError("is an ordinary Erl actuator, not an ExternalInterface actuator.");
+                            ShowContinueError("You must specify a variable of type \"ExternalInterface:Actuator\".");
+                            ErrorsFound = true;
+                        }
+                    }
+                }
+                configuredControlPoints = true;
+            }
+#else
+            ShowSevereError("ExternalInterface: Error, FNCS desired but not linked.");
+#endif
+            StopExternalInterfaceIfError();
+
+        }
+        void InitExternalInterfaceHELICS(){
+        	//std::cout << "inside InitExternalInterfaceHELICS in externalinterface.cc" << std::endl;
+#ifdef HELICS
+            // SUBROUTINE INFORMATION:
+            //       AUTHOR         Jeff Daily
+            //       DATE WRITTEN   4Jun2015
+            //       MODIFIED       na
+            //       RE-ENGINEERED  na
+
+            // PURPOSE OF THIS SUBROUTINE:
+            // This subroutine is for initializations of the ExternalInterface for FNCS
+
+            // Using/Aliasing
+            using ScheduleManager::GetDayScheduleIndex;
+            using RuntimeLanguageProcessor::isExternalInterfaceErlVariable;
+            using RuntimeLanguageProcessor::FindEMSVariable;
+            using General::TrimSigDigits;
+            using DataGlobals::MinutesPerTimeStep;
+            using DataOutputs::NumConsideredOutputVariables;
+            using DataOutputs::OutputVariablesForSimulation;
+            using DataIPShortCuts::cCurrentModuleObject;
+            using DataIPShortCuts::cAlphaArgs;
+            using DataIPShortCuts::rNumericArgs;
+            using DataIPShortCuts::cAlphaFieldNames;
+            using DataIPShortCuts::cNumericFieldNames;
+
+            // SUBROUTINE PARAMETER DEFINITIONS:
+
+            static bool firstCall(true); // First time, input has been read
+
+            // SUBROUTINE LOCAL VARIABLE DECLARATIONS:
+            int i; // loop counters
+            static int nOutVal; // Number of output values (E+ -> ExternalInterface)
+            static int nInpVar; // Number of input values (ExternalInterface -> E+)
+            std::string validateErrMsg; // error returned when xml Schema validate failed
+            int NumAlphas(0); // Number of Alphas for each GetObjectItem call
+            int NumNumbers(0); // Number of Numbers for each GetObjectItem call
+            int IOStatus(0); // Used in GetObjectItem
+            int NumObjects;
+            int varType(0); // 0=not found, 1=integer, 2=real, 3=meter
+            int numKeys(0); // Number of keys found
+            OutputProcessor::StoreType varAvgSum(OutputProcessor::StoreType::Averaged); // Variable  is Averaged=1 or Summed=2
+            OutputProcessor::TimeStepType varStepType(OutputProcessor::TimeStepType::TimeStepZone); // Variable time step is Zone=1 or HVAC=2
+            OutputProcessor::Unit varUnits(OutputProcessor::Unit::None);                            // Units sting, may be blank
+            Array1D_int keyIndexes;      // Array index for
+            Array1D_string NamesOfKeys; // Specific key name
+            int iKey; // Loop counters
+            std::string fncs_config_str;
+            std::string tab("    ");
+
+            if (firstCall) {
+
+                DisplayString("ExternalInterface initializes. (HELICS)");
+                // do one time initializations
+
+                // Make sure that idf file specified a run period other than
+                // design day and system sizing.
+                ValidateRunControl();
+
+                StopExternalInterfaceIfError();
+
+                nOutVal = 0;
+                nInpVar = 0;
+
+                for (auto Loop = OutputVariablesForSimulation.begin(); Loop != OutputVariablesForSimulation.end(); ++Loop) {
+                    for (auto Loop2 = (Loop->second).begin(); Loop2 != (Loop->second).end(); ++Loop2) {
+                        std::string VarName = (Loop2->second).variableName;
+                        std::string Key = (Loop2->second).key;
+                    	//std::cout << "varName: " << VarName << std::endl;
+                    	//std::cout << "varKey: " << Key << std::endl;
+                        DisplayString("HELICS: " + Key + " (" + VarName + ")");
+                        if (Key == "*") {
+                            GetVariableKeyCountandType(VarName, numKeys, varType, varAvgSum, varStepType, varUnits);
+                            if (varType != 0) {
+                                if (numKeys > 0) {
+                                    NamesOfKeys.allocate(numKeys);
+                                    keyIndexes.allocate(numKeys);
+                                    GetVariableKeys(VarName, varType, NamesOfKeys, keyIndexes);
+                                	//std::cout << "Number Of Keys: " << numKeys << std::endl;
+                                    for (iKey = 1; iKey <= numKeys; ++iKey) {
+                                    	//std::cout << iKey << " : " << NamesOfKeys(iKey) << std::endl;
+                                        DisplayString("    : " + NamesOfKeys(iKey));
+                                        nOutVal++;
+                                        varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(NamesOfKeys(iKey));
+                                        varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
+                                    }
+                                    keyIndexes.deallocate();
+                                    NamesOfKeys.deallocate();
+                                } else {
+                                    // Assume this is an EMS output variable.
+                                    nOutVal++;
+                                    varKeys(nOutVal) = "EMS";
+                                    varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
+                                }
+                            } else {
+                                ShowWarningError("ExternalInterface: HELICS can't lookup keys for \"" + VarName + "\".");
+                                DisplayString("    : (failed key lookup)");
+                            }
+                        } else {
+                            nOutVal++;
+                            varKeys(nOutVal) = UtilityRoutines::MakeUPPERCase(Key);
+                            varNames(nOutVal) = UtilityRoutines::MakeUPPERCase(VarName);
+                        }
+                    }
+                }
+
+                cCurrentModuleObject = "ExternalInterface:Actuator";
+                NumObjects = inputProcessor->getNumObjectsFound(cCurrentModuleObject);
+                if (NumObjects > 0) {
+                    DisplayString("HELICS: ExternalInterface:Actuator");
+                }
+                for (i = 1; i <= NumObjects; ++i) {
+                    inputProcessor->getObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
+                    DisplayString("HELICS: Actuator: " + cAlphaArgs(1));
+                    nInpVar++;
+                    inpVarNames(nInpVar) = cAlphaArgs(1);
+                    inpVarTypes(nInpVar) = indexActuator;
+                }
+
+                cCurrentModuleObject = "ExternalInterface:Schedule";
+                NumObjects = inputProcessor->getNumObjectsFound(cCurrentModuleObject);
+                if (NumObjects > 0) {
+                    DisplayString("HELICS: ExternalInterface:Schedule");
+                }
+                for (i = 1; i <= NumObjects; ++i) {
+                    inputProcessor->getObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
+                    DisplayString("HELICS: Schedule: " + cAlphaArgs(1));
+                    nInpVar++;
+                    inpVarNames(nInpVar) = cAlphaArgs(1);
+                    inpVarTypes(nInpVar) = indexSchedule;
+                }
+
+                cCurrentModuleObject = "ExternalInterface:Variable";
+                NumObjects = inputProcessor->getNumObjectsFound(cCurrentModuleObject);
+                if (NumObjects > 0) {
+                    DisplayString("HELICS: ExternalInterface:Variable");
+                }
+                for (i = 1; i <= NumObjects; ++i) {
+                    inputProcessor->getObjectItem(cCurrentModuleObject, i, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
+                    DisplayString("HELICS: Variable: " + cAlphaArgs(1));
+                    nInpVar++;
+                    inpVarNames(nInpVar) = cAlphaArgs(1);
+                    inpVarTypes(nInpVar) = indexVariable;
+                }
+
+                StopExternalInterfaceIfError();
+
+                if (nOutVal + nInpVar > maxVar) {
+                    ShowSevereError("ExternalInterface: Too many variables to be exchanged.");
+                    ShowContinueError("Attempted to exchange " + TrimSigDigits(nOutVal) + " outputs");
+                    ShowContinueError("plus " + TrimSigDigits(nOutVal) + " inputs.");
+                    ShowContinueError("Maximum allowed is sum is " + TrimSigDigits(maxVar) + '.');
+                    ShowContinueError("To fix, increase maxVar in ExternalInterface.cc");
+                    ErrorsFound = true;
+                }
+                StopExternalInterfaceIfError();
+
+                DisplayString("Number of outputs in ExternalInterface = " + TrimSigDigits(nOutVal));
+                DisplayString("Number of inputs  in ExternalInterface = " + TrimSigDigits(nInpVar));
+
+                // launch the HELICS federate
+                fi.setProperty(helics_property_time_delta, deltat);
+                fi.setProperty(helics_property_int_max_iterations, 100);
+                // read config file here.
+                std::string configFile;
+                char const* temp = getenv("HELICS_CONFIG_FILE");
+                if(temp){
+                	configFile = std::string(temp);
+                }
+                pHelicsFederate = new helicscpp::ValueFederate(configFile);
+                pHelicsFederate->setFlagOption(helics_flag_terminate_on_error, true);
+                int pub_count = pHelicsFederate->getPublicationCount();
+                int sub_count = pHelicsFederate->getInputCount();
+                pubs.allocate(pub_count);
+                subs.allocate(sub_count);
+                //pHelicsFederate = new helicscpp::ValueFederate("energyPlus", fi);
+                if (pHelicsFederate) {
+                    /* if FNCS configuration file was in ZPL format, the
+                     * spaces in the key names were translated to '+' */
+                    for (int i = 0; i < pub_count; i++) {
+                      helicscpp::Publication thispub = pHelicsFederate->getPublication(i);
+                      if (thispub.isValid() ) {
+                    	auto pubkey = std::string(thispub.getKey());
+                        //std::cout << " pub " << i << ":" << thispub.getInfo() << ":" << pubkey << ":" << thispub.getType() << ":" << thispub.getUnits() << std::endl;
+                        vpubs.push_back(thispub);
+                        pubs(i+1)=thispub;
+                        pubkey = ParseHELICSKey(pubkey);
+                        mpubs[pubkey] = thispub;
+                      }
+                    }
+                    for (int i = 0; i < sub_count; i++) {
+                      helicscpp::Input thissub = pHelicsFederate->getSubscription(i);
+                      if (thissub.isValid() ) {
+                    	std::string thisKey = std::string(thissub.getTarget());
+                        //char const* temp = thissub.getKey();
+                        //std::cout << " sub " << i << ":" << thissub.getInfo() << ":" << thisKey << ":" << thissub.getType() << ":" << thissub.getUnits() << std::endl;
+                        vsubs.push_back(thissub);
+                        subs(i+1)=thissub;
+                        thisKey = ParseHELICSKey(thisKey);
+                        msubs[thisKey] = thissub;
+                      }
+                    }
+/*                	std::cout << "register HELICS pub and sub here." << std::endl;
+                	int typeCount = size(varTypes);
+                	std::cout << "typeCount: " << typeCount << std::endl;
+//                	for (auto count = 1; count <= nOutVal; count++){
+//                    	std::cout << "varTypes: " << varTypes(count) << std::endl;
+//                	}
+                	int keyVarIndexesCount = size(keyVarIndexes);
+                	std::cout << "keyVarIndexesCount: " << keyVarIndexesCount << std::endl;
+//                	for (auto count = 1; count <= nOutVal; count++){
+//                    	std::cout << "keyVarIndexes: " << keyVarIndexes(count) << std::endl;
+//                	}
+                	int varIndCount = size(varInd);
+                	std::cout << "varIndCount: " << varIndCount << std::endl;
+//                	for (auto count = 1; count <= nOutVal; count++){
+//                    	std::cout << "varInd: " << varInd(count) << std::endl;
+//                	}
+                	int varKeysCount = size(varKeys);
+                	std::cout << "varKeysCount: " << varKeysCount << std::endl;
+                	for (auto count = 1; count <= nOutVal; count++){
+                    	std::cout << "varKeys: " << varKeys(count) << std::endl;
+                	}
+                	int varNamesCount = size(varNames);
+                	std::cout << "varNamesCount: " << varNamesCount << std::endl;
+                	for (auto count = 1; count <= nOutVal; count++){
+                    	std::cout << "varNames: " << varNames(count) << std::endl;
+                	}
+                	int inpVarTypesCount = size(inpVarTypes);
+                	std::cout << "inpVarTypesCount: " << inpVarTypesCount << std::endl;
+                	for (auto count = 1; count <= nInpVar; count++){
+                    	std::cout << "inpVarTypes: " << inpVarTypes(count) << std::endl;
+                	}
+                	int inpVarNamesCount = size(inpVarNames);
+                	std::cout << "inpVarNamesCount: " << inpVarNamesCount << std::endl;
+                	for (auto count = 1; count <= nInpVar; count++){
+                    	std::cout << "inpVarNames: " << inpVarNames(count) << std::endl;
+                	}*/
+//                    std::vector<std::string> keys;
+//                    auto nkeys = fncs::get_keys_size();
+//                    for(int index = 0; index < nkeys; index++){
+//                    	keys.push_back(fncs::get_key_by_index(index));
+//                    }
+//                    fncsKeys.insert(keys.begin(), keys.end());
+//                    for (std::vector<std::string>::iterator it = keys.begin();
+//                        it != keys.end(); ++it) {
+//                    	std::cout << *it << std::endl;
+//                        if (it->find('+') != string::npos) {
+//                            fncsEncode = true;
+//                            break;
+//                        }
+//                    }
+                }
+                else {
+                    ShowSevereError("ExternalInterface: HELICS failed to initialize.");
+                    ErrorsFound = true;
+                }
+                if (pHelicsFederate) {
+                  std::cout << "HELICS enter intializing mode" << std::endl;
+                  pHelicsFederate->enterInitializingMode();
+//                  std::cout << "HELICS enter executing mode" << std::endl;
+//                  pHelicsFederate->enterExecutingMode();
+                }
+
+                helics_time delta = pHelicsFederate->getTimeProperty(helics_property_time_period);
+                // FNCS time delta is already in minutes, not nanoseconds
+                //delta = delta / (60ULL * 1000000000ULL);
+                //helics time is in seconds
+                delta = delta / 60;
+                if (delta != (unsigned long long)MinutesPerTimeStep) {
+                    std::ostringstream str;
+                    str << "delta " << delta << " != " << MinutesPerTimeStep << " MinutesPerTimeStep";
+                    ShowSevereError("ExternalInterface: HELICS time delta does not match MinutesPerTimeStep");
+                    ShowContinueError(str.str());
+                    ErrorsFound = true;
+                }
+
+                StopExternalInterfaceIfError();
+
+                firstCall = false;
+
+                // Establish connection to HELICS broker.
 
             }
             else if (!configuredControlPoints) {
@@ -1044,7 +1472,6 @@ namespace EnergyPlus {
             StopExternalInterfaceIfError();
 
         }
-        
         void GetSetVariablesAndDoStepFMUImport()
         {
             // SUBROUTINE INFORMATION:
@@ -2806,6 +3233,7 @@ namespace EnergyPlus {
             }
             else {
                 preSimTim = SimTimeSteps * MinutesPerTimeStep;
+                //std::cout << "preSimTim: " << preSimTim << ", SimTimeSteps: " << SimTimeSteps << ", MinutesPerTimeStep: " << MinutesPerTimeStep << std::endl;
             }
 
             //DisplayString( "preSimTim=" + TrimSigDigits( preSimTim ) );
@@ -2827,6 +3255,7 @@ namespace EnergyPlus {
                     for (i = 1; i <= nDblWri; ++i) {
                         Real64 value = GetInternalVariableValue(varTypes(i), keyVarIndexes(i));
                         std::string key = varKeys(i) + " " + varNames(i);
+                        std::cout << "first call -- varTypes(i): " << varTypes(i) << ", keyVarIndexes(i): " << keyVarIndexes(i) << ", value: " << value << ", key: " << key << std::endl;
                         fncs::publish(key, TrimSigDigits(value, 10));
                         fncs::publish(fncs_encode(key), TrimSigDigits(value, 10));
                     }
@@ -2835,6 +3264,7 @@ namespace EnergyPlus {
                     for (i = 1; i <= nDblWri; ++i) {
                         Real64 value = GetInternalVariableValueExternalInterface(varTypes(i), keyVarIndexes(i));
                         std::string key = varKeys(i) + " " + varNames(i);
+                        //std::cout << "varTypes(i): " << varTypes(i) << ", keyVarIndexes(i): " << keyVarIndexes(i) << ", value: " << value << ", key: " << key << std::endl;
                         fncs::publish(key, TrimSigDigits(value, 10));
                         fncs::publish(fncs_encode(key), TrimSigDigits(value, 10));
                     }
@@ -2843,6 +3273,7 @@ namespace EnergyPlus {
                 // Read and assign inputs.
                 for (i = 1; i <= isize(varInd); ++i) {
                     std::string value;
+                    //std::cout << "inpVarNames(i): " << inpVarNames(i) << std::endl;
                     if (0 == fncsKeys.count(inpVarNames(i))) {
                         // The model has an input but is missing a subscription.
                         if (0 == fncsKeysWarned.count(inpVarNames(i))) {
@@ -2854,16 +3285,20 @@ namespace EnergyPlus {
                     }
                     if (fncsEncode) {
                         value = fncs::get_value(fncs_encode(inpVarNames(i)));
+                        //std::cout << "fncsEncode is true, value: " << value << std::endl;
                     }
                     else {
                         value = fncs::get_value(inpVarNames(i));
+                        //std::cout << "fncsEncode is false, value: " << value << std::endl;
                     }
                     Real64 dblVal = std::stod(value);
                     if (inpVarTypes(i) == indexSchedule) {
                         ExternalInterfaceSetSchedule(varInd(i), dblVal);
+                        std::cout << "ExternalInterfaceSetSchedule varInd(i): " << varInd(i) << dblVal << std::endl;
                     }
                     else if ((inpVarTypes(i) == indexVariable) || (inpVarTypes(i) == indexActuator)) {
                         ExternalInterfaceSetErlVariable(varInd(i), dblVal);
+                        std::cout << "ExternalInterfaceSetErlVariable varInd(i): " << varInd(i) << dblVal << std::endl;
                     }
                     else {
                         ShowContinueError("ExternalInterface: Error in finding the type of the input variable for EnergyPlus");
@@ -2885,6 +3320,158 @@ namespace EnergyPlus {
 #endif
             StopExternalInterfaceIfError();
         }
+        void CalcExternalInterfaceHELICS(){
+        	//std::cout << "inside CalcExternalInterfaceHELICS in externalinterface.cc" << std::endl;
+#ifdef HELICS
+
+            // Using/Aliasing
+            using DataGlobals::SimTimeSteps;
+            using DataGlobals::MinutesPerTimeStep;
+            using DataGlobals::emsCallFromExternalInterface;
+            using ScheduleManager::ExternalInterfaceSetSchedule;
+            using RuntimeLanguageProcessor::ExternalInterfaceSetErlVariable;
+            using EMSManager::ManageEMS;
+            using General::TrimSigDigits;
+            //using DataPrecisionGlobals;
+
+            // SUBROUTINE PARAMETER DEFINITIONS:
+
+            // SUBROUTINE LOCAL VARIABLE DECLARATIONS:
+            int i; // Loop counter
+
+            int nDblWri; // number of doubles to write to socket
+            helics_time preSimTim; // previous time step's simulation time
+
+            static bool firstCall(true);
+
+            if (firstCall) {
+                std::cout << "HELICS enter executing mode" << std::endl;
+                pHelicsFederate->enterExecutingMode();
+                DisplayString("ExternalInterface starts first data exchange. (HELICS)");
+                simulationStatus = 2;
+                preSimTim = 0; // In the first call, E+ did not reset SimTimeSteps to zero
+                //helics_time cTime = pHelicsFederate->helicsFederateGetCurrentTime(vfp, nullptr);
+                helics_time cTime = pHelicsFederate->getCurrentTime();
+                //std::cout << "current time is: " << cTime << std::endl;
+                if (preSimTim != cTime) {
+                    ShowFatalError("helics::getCurrentTime() was interrupted with earlier time");
+                    ErrorsFound = true;
+                    StopExternalInterfaceIfError();
+                }
+            }
+            else {
+                preSimTim = SimTimeSteps * MinutesPerTimeStep;
+                //std::cout << "preSimTim: " << preSimTim << ", SimTimeSteps: " << SimTimeSteps << ", MinutesPerTimeStep: " << MinutesPerTimeStep << std::endl;
+                preSimTim = preSimTim * 60;
+                helics_time time_returned = pHelicsFederate->requestTime(preSimTim);
+                //std::cout << "requested time: " << preSimTim << ", returned time: " << time_returned << std::endl;
+                if (preSimTim != time_returned) {
+                    ShowFatalError("helics::requestTime() was interrupted with earlier time");
+                    ErrorsFound = true;
+                    StopExternalInterfaceIfError();
+                }
+            }
+
+            //DisplayString( "preSimTim=" + TrimSigDigits( preSimTim ) );
+
+//            helics_time time_returned = pHelicsFederate->requestTime(preSimTim);
+//            std::cout << "requested time: " << preSimTim << ", returned time: " << time_returned << std::endl;
+//            if (preSimTim != time_returned) {
+//                ShowFatalError("helics::requestTime() was interrupted with earlier time");
+//                ErrorsFound = true;
+//                StopExternalInterfaceIfError();
+//            }
+
+            // Usual branch, control is configured and simulation should continue
+            if (configuredControlPoints) {
+                // Data to be exchanged
+                nDblWri = size(varTypes);
+
+                // Publish EnergyPlus variables.
+                if (firstCall) { // bug fix causing external interface to send zero at the beginning of sim, Thierry Nouidui
+                    for (i = 1; i <= nDblWri; ++i) {
+                        Real64 value = GetInternalVariableValue(varTypes(i), keyVarIndexes(i));
+                        std::string key = varKeys(i) + " " + varNames(i);
+                        //std::cout << "first call -- varTypes(i): " << varTypes(i) << ", keyVarIndexes(i): " << keyVarIndexes(i) << ", value: " << value << ", key: " << key << std::endl;
+                        //std::cout << "first call -- varKeys(i): " << varKeys(i) << ", varNames(i): " << varNames(i) << ", value: " << value << std::endl;
+                        auto foundpub = mpubs.find(key);
+                        if (foundpub != mpubs.end()){
+                            auto thispub = mpubs[key];
+                            thispub.publish(TrimSigDigits(value, 10));
+                            thispub.publish(TrimSigDigits(value, 10));
+                        }
+                    }
+                }
+                else {
+                    for (i = 1; i <= nDblWri; ++i) {
+                        Real64 value = GetInternalVariableValueExternalInterface(varTypes(i), keyVarIndexes(i));
+                        std::string key = varKeys(i) + " " + varNames(i);
+                        //std::cout << "varTypes(i): " << varTypes(i) << ", keyVarIndexes(i): " << keyVarIndexes(i) << ", value: " << value << ", key: " << key << std::endl;
+                        //std::cout << "first call -- varKeys(i): " << varKeys(i) << ", varNames(i): " << varNames(i) << ", value: " << value << std::endl;
+                        auto foundpub = mpubs.find(key);
+                        if (foundpub != mpubs.end()){
+                            auto thispub = mpubs[key];
+                            thispub.publish(TrimSigDigits(value, 10));
+                            thispub.publish(TrimSigDigits(value, 10));
+                        }
+                    }
+                }
+
+                // Read and assign inputs.
+                for (i = 1; i <= isize(varInd); ++i) {
+                    //std::cout << "inpVarNames(i): " << inpVarNames(i) << std::endl;
+                    auto foundsub = msubs.find(inpVarNames(i));
+                    if (foundsub == msubs.end()) {
+                        // The model has an input but is missing a subscription.
+                        if (0 == helicsKeysWarned.count(inpVarNames(i))) {
+                        	helicsKeysWarned.insert(inpVarNames(i));
+                            ShowWarningError("IDF file contains object \"" + inpVarNames(i) + "\",");
+                            ShowContinueError("but HELICS config file does not contain a subscription for it.");
+                        }
+                        continue;
+                    }
+//                    if (fncsEncode) {
+//                        value = fncs::get_value(fncs_encode(inpVarNames(i)));
+//                        value = msubs[inpVarNames(i)].getValue<double>();
+//                        std::cout << "fncsEncode is true, value: " << value << std::endl;
+//                    }
+//                    else {
+                        //value = (foundsub->second).getDouble();
+                        //std::cout << "fncsEncode is false, value: " << value << std::endl;
+                        auto thissub = msubs[inpVarNames(i)];
+                    	Real64 dblVal = thissub.getDouble();
+                        //std::cout << "fncsEncode is false again, value: " << value << std::endl;
+//                    }
+                    //Real64 dblVal = value;
+                    if (inpVarTypes(i) == indexSchedule) {
+                        ExternalInterfaceSetSchedule(varInd(i), dblVal);
+                        //std::cout << "ExternalInterfaceSetSchedule varInd(i): " << varInd(i) << dblVal << std::endl;
+                    }
+                    else if ((inpVarTypes(i) == indexVariable) || (inpVarTypes(i) == indexActuator)) {
+                        ExternalInterfaceSetErlVariable(varInd(i), dblVal);
+                        //std::cout << "ExternalInterfaceSetErlVariable varInd(i): " << varInd(i) << dblVal << std::endl;
+                    }
+                    else {
+                        ShowContinueError("ExternalInterface: Error in finding the type of the input variable for EnergyPlus");
+                        ShowContinueError("variable index: " + std::to_string(i) + ". Variable will not be updated.");
+                    }
+                }
+            }
+
+            // If we have Erl variables, we need to call ManageEMS so that they get updated in the Erl data structure
+            if (useEMS) {
+                bool anyRan;
+                ManageEMS(emsCallFromExternalInterface, anyRan);
+            }
+
+            firstCall = false; // bug fix causing external interface to send zero at the beginning of sim, Thierry Nouidui
+
+#else
+            ShowSevereError("ExternalInterface: Error, FNCS desired but not linked.");
+#endif
+            StopExternalInterfaceIfError();
+
+        }
 
         void GetReportVariableKey(const Array1D_string& varKeys,  // Standard variable name
             int const numberOfKeys,        // Number of keys=size(varKeys)
@@ -2893,7 +3480,7 @@ namespace EnergyPlus {
             Array1D_int& varTypes           // Types of variables in keyVarIndexes
         )
         {
-        	std::cout << "inside GetReportVariableKey in externalinterface.cc" << std::endl;
+        	//std::cout << "inside GetReportVariableKey in externalinterface.cc" << std::endl;
             // SUBROUTINE INFORMATION:
             //       AUTHOR         Michael Wetter
             //       DATE WRITTEN   2Dec2007
@@ -2942,7 +3529,7 @@ namespace EnergyPlus {
                     ErrorsFound = true;
                 }
             }
-        	std::cout << "exiting GetReportVariableKey in externalinterface.cc" << std::endl;
+        	//std::cout << "exiting GetReportVariableKey in externalinterface.cc" << std::endl;
         }
 
         void WarnIfExternalInterfaceObjectsAreUsed(std::string const& ObjectWord)
@@ -2993,11 +3580,12 @@ namespace EnergyPlus {
                 cCurrentModuleObject, 1, cAlphaArgs, NumAlphas, rNumericArgs, NumNumbers, IOStatus, _, _, cAlphaFieldNames, cNumericFieldNames);
             if ((!UtilityRoutines::SameString(cAlphaArgs(1), "PtolemyServer")) &&
                 (!UtilityRoutines::SameString(cAlphaArgs(1), "FNCS")) &&
+                (!UtilityRoutines::SameString(cAlphaArgs(1), "HELICS")) &&
                 (!UtilityRoutines::SameString(cAlphaArgs(1), "FunctionalMockupUnitImport")) &&
                 (!UtilityRoutines::SameString(cAlphaArgs(1), "FunctionalMockupUnitExport"))) {
                 ShowSevereError("VerifyExternalInterfaceObject: " + cCurrentModuleObject + ", invalid " + cAlphaFieldNames(1) + "=\"" + cAlphaArgs(1) +
                     "\".");
-                ShowContinueError("only \"PtolemyServer or FNCS or FunctionalMockupUnitImport or FunctionalMockupUnitExport\" allowed.");
+                ShowContinueError("only \"PtolemyServer or FNCS or HELICS or FunctionalMockupUnitImport or FunctionalMockupUnitExport\" allowed.");
                 ErrorsFound = true;
             }
         }
@@ -3014,6 +3602,18 @@ namespace EnergyPlus {
             return std::string(&originalCharArray.front());
         }
 
+        std::string ParseHELICSKey(std::string const &InputString){
+        	//parse helics key to get rid of federate name and only keep variable name.
+
+            std::string ResultString(InputString);
+            auto pos = ResultString.find("/");
+            if (pos != std::string::npos){
+            	ResultString = ResultString.substr(pos + 1, std::string::npos);
+            }
+            ResultString = UtilityRoutines::MakeUPPERCase(ResultString);
+
+            return ResultString;
+        }
     } // namespace ExternalInterface
 
 } // namespace EnergyPlus

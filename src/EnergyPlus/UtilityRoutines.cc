@@ -823,6 +823,8 @@ int EndEnergyPlus()
     using ExternalInterface::CloseExternalInterface;
     using ExternalInterface::haveExternalInterfaceBCVTB;
     using ExternalInterface::NumExternalInterfaces;
+    using ExternalInterface::haveExternalInterfaceFNCS;
+    using ExternalInterface::haveExternalInterfaceHELICS;
     using General::RoundSigDigits;
     using SolarShading::ReportSurfaceErrors;
 
@@ -940,6 +942,8 @@ int EndEnergyPlus()
     // Close the ExternalInterface socket. This call also sends the flag "1" to the ExternalInterface,
     // indicating that E+ finished its simulation
     if ((NumExternalInterfaces > 0) && haveExternalInterfaceBCVTB) CloseExternalInterface(1);
+    if ((NumExternalInterfaces > 0) && haveExternalInterfaceFNCS) CloseExternalInterface(-1);
+    if ((NumExternalInterfaces > 0) && haveExternalInterfaceHELICS) CloseExternalInterface(-1);
     return EXIT_SUCCESS;
 }
 

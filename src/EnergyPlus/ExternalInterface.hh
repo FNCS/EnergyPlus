@@ -300,12 +300,14 @@ namespace EnergyPlus {
         extern int NumExternalInterfaces;                           // Number of ExternalInterface objects
         extern int NumExternalInterfacesBCVTB;                      // Number of BCVTB ExternalInterface objects
         extern int NumExternalInterfacesFNCS;                       //Number of FNCS ExternalInterface objects
+        extern int NumExternalInterfacesHELICS;                     //Number of HELICS ExternalInterface objects
         extern int NumExternalInterfacesFMUImport;                  // Number of FMU ExternalInterface objects
         extern int NumExternalInterfacesFMUExport;                  // Number of FMU ExternalInterface objects
         extern int NumFMUObjects;                                   // Number of FMU objects
         extern int FMUExportActivate;                               // FMU Export flag
         extern bool haveExternalInterfaceBCVTB;                     // Flag for BCVTB interface
         extern bool haveExternalInterfaceFNCS;                      //Flag for FNCS interface
+        extern bool haveExternalInterfaceHELICS;                    //Flag for HELICS interface
         extern bool haveExternalInterfaceFMUImport;                 // Flag for FMU-Import interface
         extern bool haveExternalInterfaceFMUExport;                 // Flag for FMU-Export interface
         extern int simulationStatus;                                // Status flag. Used to report during
@@ -377,7 +379,9 @@ namespace EnergyPlus {
         void CloseExternalInterface(int const FlagToWriteToSocket);
         void InitExternalInterfaceFNCS();
         void CalcExternalInterfaceFNCS();
-
+        void InitExternalInterfaceHELICS();
+        void CalcExternalInterfaceHELICS();
+        std::string ParseHELICSKey(std::string const &InputString);
 
     } // namespace ExternalInterface
 

@@ -14,7 +14,9 @@ if(LINK_WITH_PYTHON)
 else()
   add_definitions("-DLINK_WITH_PYTHON=0")
 endif()
-
+#set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_EXTENSIONS OFF)
 SET( SRC
   "${PROJECT_SOURCE_DIR}/third_party/milo/dtoa.h"
   "${PROJECT_SOURCE_DIR}/third_party/milo/itoa.h"
@@ -725,6 +727,9 @@ if(BUILD_GROUND_PLOT)
 endif()
 if (FNCS_FOUND)
     target_link_libraries( energypluslib ${FNCS_LIBRARIES} )
+endif()
+if (HELICS_FOUND)
+    target_link_libraries( energypluslib ${HELICS_LIBRARIES} )
 endif()
 if(UNIX AND NOT APPLE)
   target_link_libraries( energypluslib dl )
