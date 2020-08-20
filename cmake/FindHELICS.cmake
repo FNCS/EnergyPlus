@@ -1,6 +1,6 @@
 message("inside FindHELICS.cmake")
 include(FindPkgConfig)
-PKG_CHECK_MODULES(PC_HELICS "helicsSharedLibd")# "helics-shared" "helics-apps-shared")
+PKG_CHECK_MODULES(PC_HELICS "helicsSharedLib")# "helicsSharedLibd" "helics-shared" "helics-apps-shared")
 message("PKG_CONFIG_FOUND=${PKG_CONFIG_FOUND}")
 message("PKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}")
 message("PKG_CONFIG_VERSION_STRING=${PKG_CONFIG_VERSION_STRING}")
@@ -25,7 +25,7 @@ message("HELICS_LIBRARY=${HELICS_LIBRARY}")
 
 find_library(
     HELICS_LIBRARY
-    NAMES helicsSharedLibd # helics-shared helics-apps-shared
+    NAMES helicsSharedLib # helics-shared helics-apps-shared
     HINTS ${PC_HELICS_LIBDIR} ${PC_HELICS_LIBRARY_DIRS}
 )
 message("PC_HELICS_LIBDIR=${PC_HELICS_LIBDIR}")
