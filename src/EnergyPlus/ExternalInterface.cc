@@ -3398,7 +3398,10 @@ namespace EnergyPlus {
                         if (foundpub != mpubs.end()){
                             auto thispub = mpubs[key];
                             thispub.publish(TrimSigDigits(value, 10));
-                            thispub.publish(TrimSigDigits(value, 10));
+                            //thispub.publish(TrimSigDigits(value, 10));
+                            if (key == "EMS COOLING SETPOINT TEMPERATURE" || key == "EMS HEATING SETPOINT TEMPERATURE"){
+                            	std::cout << key << " publishes: " << TrimSigDigits(value, 10) << std::endl;
+                            }
                         }
                     }
                 }
@@ -3412,7 +3415,10 @@ namespace EnergyPlus {
                         if (foundpub != mpubs.end()){
                             auto thispub = mpubs[key];
                             thispub.publish(TrimSigDigits(value, 10));
-                            thispub.publish(TrimSigDigits(value, 10));
+                            //thispub.publish(TrimSigDigits(value, 10));
+                            if (key == "EMS COOLING SETPOINT TEMPERATURE" || key == "EMS HEATING SETPOINT TEMPERATURE"){
+                            	std::cout << key << " publishes: " << TrimSigDigits(value, 10) << std::endl;
+                            }
                         }
                     }
                 }
