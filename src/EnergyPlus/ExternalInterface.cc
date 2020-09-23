@@ -3350,8 +3350,8 @@ namespace EnergyPlus {
                 DisplayString("ExternalInterface starts first data exchange. (HELICS)");
                 simulationStatus = 2;
                 preSimTim = 0; // In the first call, E+ did not reset SimTimeSteps to zero
-                //helics_time cTime = pHelicsFederate->helicsFederateGetCurrentTime(vfp, nullptr);
-                helics_time cTime = pHelicsFederate->getCurrentTime();
+                helics_time cTime = helicsFederateGetCurrentTime(pHelicsFederate->baseObject(), NULL);
+                //helics_time cTime = pHelicsFederate->getCurrentTime();
                 //std::cout << "current time is: " << cTime << std::endl;
                 if (preSimTim != cTime) {
                     ShowFatalError("helics::getCurrentTime() was interrupted with earlier time");
@@ -3399,9 +3399,9 @@ namespace EnergyPlus {
                             auto thispub = mpubs[key];
                             thispub.publish(TrimSigDigits(value, 10));
                             //thispub.publish(TrimSigDigits(value, 10));
-                            if (key == "EMS COOLING SETPOINT TEMPERATURE" || key == "EMS HEATING SETPOINT TEMPERATURE"){
+/*                            if (key == "EMS COOLING SETPOINT TEMPERATURE" || key == "EMS HEATING SETPOINT TEMPERATURE"){
                             	std::cout << key << " publishes: " << TrimSigDigits(value, 10) << std::endl;
-                            }
+                            }*/
                         }
                     }
                 }
@@ -3416,9 +3416,9 @@ namespace EnergyPlus {
                             auto thispub = mpubs[key];
                             thispub.publish(TrimSigDigits(value, 10));
                             //thispub.publish(TrimSigDigits(value, 10));
-                            if (key == "EMS COOLING SETPOINT TEMPERATURE" || key == "EMS HEATING SETPOINT TEMPERATURE"){
+/*                            if (key == "EMS COOLING SETPOINT TEMPERATURE" || key == "EMS HEATING SETPOINT TEMPERATURE"){
                             	std::cout << key << " publishes: " << TrimSigDigits(value, 10) << std::endl;
-                            }
+                            }*/
                         }
                     }
                 }
