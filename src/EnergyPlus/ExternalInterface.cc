@@ -950,7 +950,7 @@ namespace EnergyPlus {
                                     NamesOfKeys.allocate(numKeys);
                                     keyIndexes.allocate(numKeys);
                                     GetVariableKeys(VarName, varType, NamesOfKeys, keyIndexes);
-                                	std::cout << "Number Of Keys: " << numKeys << std::endl;
+                                    std::cout << "Number Of Keys: " << numKeys << std::endl;
                                     for (iKey = 1; iKey <= numKeys; ++iKey) {
                                     	//std::cout << iKey << " : " << NamesOfKeys(iKey) << std::endl;
                                         DisplayString("    : " + NamesOfKeys(iKey));
@@ -3255,7 +3255,7 @@ namespace EnergyPlus {
                     for (i = 1; i <= nDblWri; ++i) {
                         Real64 value = GetInternalVariableValue(varTypes(i), keyVarIndexes(i));
                         std::string key = varKeys(i) + " " + varNames(i);
-                        std::cout << "first call -- varTypes(i): " << varTypes(i) << ", keyVarIndexes(i): " << keyVarIndexes(i) << ", value: " << value << ", key: " << key << std::endl;
+                        // std::cout << "first call -- varTypes(i): " << varTypes(i) << ", keyVarIndexes(i): " << keyVarIndexes(i) << ", value: " << value << ", key: " << key << std::endl;
                         fncs::publish(key, TrimSigDigits(value, 10));
                         fncs::publish(fncs_encode(key), TrimSigDigits(value, 10));
                     }
@@ -3294,11 +3294,11 @@ namespace EnergyPlus {
                     Real64 dblVal = std::stod(value);
                     if (inpVarTypes(i) == indexSchedule) {
                         ExternalInterfaceSetSchedule(varInd(i), dblVal);
-                        std::cout << "ExternalInterfaceSetSchedule varInd(i): " << varInd(i) << dblVal << std::endl;
+                        // std::cout << "ExternalInterfaceSetSchedule varInd(i): " << varInd(i) << dblVal << std::endl;
                     }
                     else if ((inpVarTypes(i) == indexVariable) || (inpVarTypes(i) == indexActuator)) {
                         ExternalInterfaceSetErlVariable(varInd(i), dblVal);
-                        std::cout << "ExternalInterfaceSetErlVariable varInd(i): " << varInd(i) << dblVal << std::endl;
+                        // std::cout << "ExternalInterfaceSetErlVariable varInd(i): " << varInd(i) << dblVal << std::endl;
                     }
                     else {
                         ShowContinueError("ExternalInterface: Error in finding the type of the input variable for EnergyPlus");
