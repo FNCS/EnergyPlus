@@ -1308,6 +1308,7 @@ namespace EnergyPlus {
                 }
                 pHelicsFederate = new helicscpp::ValueFederate(configFile);
                 pHelicsFederate->setFlagOption(helics_flag_terminate_on_error, true);
+                pHelicsFederate->setFlagOption(helics_flag_slow_responding, false);
                 int pub_count = pHelicsFederate->getPublicationCount();
                 int sub_count = pHelicsFederate->getInputCount();
                 pubs.allocate(pub_count);
@@ -3445,7 +3446,28 @@ namespace EnergyPlus {
                         //value = (foundsub->second).getDouble();
                         //std::cout << "fncsEncode is false, value: " << value << std::endl;
                         auto thissub = msubs[inpVarNames(i)];
-                    	Real64 dblVal = thissub.getDouble();
+                    	//Real64 dblVal = thissub.getDouble();
+                        Real64 dblVal;
+                    	// in src/helics/application_api/Inputs.hpp
+                    	// a null value was initialized to a very small number
+                    	// defV lastValue{invalidDouble};
+                    	// in src/helics/application_api/helicsTypes.hpp
+                    	// defined constexpr double invalidDouble = -1e48;
+                    	// therefore, if this getDouble() call does not return a number
+                    	// dblVal will be set to -1e48 can cause incorrect output from Energypus
+                    	// therefore, we set it to 0.0 later
+                        if(thissub.isValid() && thissub.isUpdated()) {
+                            try {
+                                dblVal = thissub.getDouble();
+                            } catch (...) {
+                                //std::cout << "Woops" << std::endl;
+                            }
+                        } else {
+                            dblVal = 0.0;
+                        }
+
+                        if (dblVal == -0.0) dblVal = 0.0;
+
                         //std::cout << "fncsEncode is false again, value: " << value << std::endl;
 //                    }
                     //Real64 dblVal = value;
